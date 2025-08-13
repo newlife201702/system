@@ -1,0 +1,352 @@
+const props = defineProps({
+        str: String,
+        num: Number,
+        bool: Boolean,
+        arr: Array,
+        obj: Object,
+        date: Date,
+        getConsole: Function,
+        message: Object,
+        a: Symbol,
+        b: Symbol
+    })
+
+interface Props {
+  data: { [key: string]: number | string }[]
+  changeCollapse: (args: string[]) => void
+}
+
+函数的话看你要求有多高，如果只要是函数就行，那么Function就行，如果需要比较限制一点就需要给参数或者返回类型之类的。
+interface PropsObj {
+    title: string;
+    data: IObject[];
+    type: string;
+    QC: string;
+    activeKey: string[];
+    changeCollapse: Function | (name: string) => string;
+}
+
+定义类型
+type MyFunc = (a: number, b: number)=>string;
+使用实例
+const testFunc2: MyFunc = (a,b)=>{
+    return (a+b).toString();
+};
+
+定义类型
+type MyFunc = (a: number, b: number)=>void;
+使用实例
+const testFunc2: MyFunc = (a,b)=>{
+    alert((a+b).toString());
+};
+不使用类型别名
+const testFunc1: (a: number, b: number)=>string = (a, b)=>{
+    return (a+b).toString();
+};
+===========
+function fnB(myarr:number[]){
+  return myarr[0]
+}
+
+const resultB=fnB([1,2,3])
+
+反类型
+Array<number>
+等同下面
+number[]
+
+props 默认值
+const props = withDefaults(
+  defineProps<{
+    reportAll: boolean;
+    exportApi: any;
+  }>(),
+  {
+    reportAll: false,
+  }
+);
+
+
+// 运行时
+const emit = defineEmits(['change', 'update'])
+ 
+// 基于类型
+const emit = defineEmits<{
+  (e: 'change', id: number): void
+  (e: 'update', value: string): void
+}>()
+
+变量赋值对象
+const formData=Ref<Record<string, unknown>[]> = ref()
+
+const uids =ref<number[]>([1,2,3])
+//字符串数组
+const names = ref<string[]>(['Tom', 'Petter', 'Andy'])
+
+// reactive 保持相应赋值的方法
+ let obj = reactive({
+            id:1,
+            name:'张三',
+            age:18
+        })
+        obj.id = 2;
+        obj.name = '李四';
+
+obj = Object.assign(obj,{id:2,name:'李四'})
+
+时间控件：格式化数据
+timestamp
+YYYY-MM-DD HH-mm-ss
+
+format="YYYY/MM/DD HH-mm-ss"  value-format="x"
+
+
+import {useRouter} from 'vue-router'
+
+const router = useRouter();
+ 
+const handlerId =(id,tips) =>{
+            //params的属性值只能为  对象
+            router.push({name:'listSecond',params:{id,tips}})
+        }
+
+router?.query?.id
+
+const data: unknown = [
+  {
+    name: 'James',
+    country: 'Chile',
+  },
+  {
+    name: 'Alice',
+    country: 'Germany',
+  },
+];
+
+
+type Person = {
+  name: string;
+  country: string;
+};
+
+let people: Person[] = [];
+
+if (Array.isArray(data)) {
+  people = data as Person[];
+}
+
+函数调用函数 以及参数定义与返回参数
+
+function fntD(callback: (bl: boolean) => boolean) {
+    callback(true)
+}
+function callback(bl: boolean): boolean {
+    console.log(bl)
+    return bl
+}
+const dResult = fntD(callback)
+
+=================
+
+function getTotal2(one: number, two: number): boolean {
+    return Boolean(one + two);
+}
+const total2 = getTotal(1, 2);
+
+==============
+
+function sayName1(): void {
+    console.log('无返回值')
+}
+
+==============
+
+function error(message: string): never {
+    throw new Error(message);
+}
+
+==============
+
+// 先利用interface声明一个函数
+interface AddFun {
+     (a:number, b:number):number   
+}
+或者
+// 先利用type声明一个函数
+type AddFun = (a:number, b:number)=>number;
+// 再根据声明去实现这个函数
+// 此时函数的参数和返回值可以不需要写类型声明了，因为ts可以通过这个函数声明推断出来类型了
+let add:AddFun = function (x, y) {
+    return x + y;
+};
+let res = add(30, 20);
+console.log(res);
+
+
+================
+
+function add(x:number, y:number=10):number {
+
+  return x + y;
+
+}
+
+let res = add(10);
+
+let res = add(10, 30);
+
+================
+
+function add(x:number, y:number, z?:number):number {
+
+  return x + y + (z ? z : 0);
+
+}
+
+================
+
+interface FullName{
+    firstName:string
+    lastName:string
+}
+
+let obj = {
+    firstName:'Jonathan',
+    lastName:'Lee'
+};
+
+//{firstName, lastName}使用了解构赋值
+function say({firstName, lastName}:FullName):void {
+    console.log(`我的姓名是:${firstName}_${lastName}`);
+}
+say(obj);
+
+
+=================
+
+let str:any = 'it666';
+// 当还是any的时候是没有.length的提示的
+let len = (str as string).length;
+console.log(len);
+
+================
+
+泛型 针对不确定的类型使用，<T>
+function test<T>(a:T,b:T){
+  console.log(a,b)
+}
+test<any>(1,'你好')
+
+================
+
+// 使用集合的泛型
+function loggingIdentity<T>(arg:Array<T>):Array<T>{
+    console.log(arg.length);
+    return arg;
+}
+loggingIdentity([1,2,3]);
+
+================
+
+
+// 泛型变量的使用
+function identity<T>(arg:T):T{
+    console.log(typeof arg);
+    return arg;
+}
+let output1=identity<string>('myString');
+let output2=identity('myString');
+let output3:number=identity<number>(100);
+let output4:number=identity(200);
+
+
+接口定义可能出现的参数
+ [props: string]: any
+
+interface Info {
+    name: string
+    age: number
+    gender: boolean
+    hobby: string[]
+    city?: string
+    readonly nationality: string
+    [props: string]: any
+}
+
+
+
+export const updateSortNo = (data: { id: number }): Res<Record<string, unknown>> => {
+  return request({
+    url: "/app/department/updateSortNo.do",
+    method: "post",
+    data: { data: data }
+  });
+}
+
+等效 因为返回的是promise对象
+
+export const updateSortNo = async(data: { id: number }): Res<Record<string, unknown>> => {
+  return request({
+    url: "/app/department/updateSortNo.do",
+    method: "post",
+    data: { data: data }
+  });
+}
+
+手动编写一个promise对象
+function doubleAfter2seconds (num) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(num * 2)
+        }, 2000)
+      })
+    }
+非promise对象需要 async才能与await使用
+ export const execute = async(times): Res<Record<string, unknown>> => {
+  for(let i=0;i<times;i++)
+  return "执行完了"
+}   
+
+ts中对象名称使用变量
+
+obj = { a: "hey", b: "you", c: "guys", d: 12345 };
+
+for (k in obj) {
+  console.log(obj[k as keyof typeof obj].toUpperCase()); // okay
+}
+
+
+
+
+这样props就可以拥有ts的类型推断。
+
+这是带默认值的写法：
+
+const props = withDefaults(
+  defineProps<{
+    consentValue?: any;
+    type?: string;
+    contentType?: string;
+    contentName?: string;
+  }>(),
+  {
+    type: 'singpass'
+  }
+);
+这是不带默认值得写法
+
+const props = defineProps<{
+  consentType?: any;
+  type?: any;
+  typeValue?: any;
+}>();
+
+
+
+Promise<void>
+
+
+
+function identity<T>(arg: T): T {
+    return arg;
+}

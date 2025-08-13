@@ -1,0 +1,159 @@
+@import '~bpmn-js/dist/assets/diagram-js.css';
+@import '~bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
+@import '~bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css';
+@import '~bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
+@import '~bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css';
+.djs-container {
+  background-image: linear-gradient(90deg, hsla(0, 0%, 78.4%, 0.08) 10%, transparent 0), linear-gradient(hsla(0, 0%, 78.4%, 0.08) 10%, transparent 0);
+  background-size: 10px 10px;
+  background-color: #ffffff;
+}
+.djs-palette {
+  width: 130px !important;
+}
+.djs-palette .entry {
+  width: 130px;
+}
+.djs-palette .entry:hover {
+  background-color: #e5edf4;
+}
+.bjs-powered-by {
+  display: none;
+}
+.icon-custom {
+  /* 定义一个公共的类名 创建的元素默认的样式 */
+  border-radius: 8px;
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.djs-connection path,
+.djs-container path {
+  stroke: #ccc !important;
+}
+.djs-container defs path {
+  fill: #ccc !important;
+}
+.djs-element.selected .djs-outline,
+.djs-element.hover .djs-outline {
+  stroke: red;
+}
+.tool1 {
+  background-image: url('../assets/bpmn/tool/1.svg');
+}
+.tool2 {
+  background-image: url('../assets/bpmn/tool/2.svg');
+}
+.tool3 {
+  background-image: url('../assets/bpmn/tool/3.svg');
+}
+.tool4 {
+  background-image: url('../assets/bpmn/tool/4.svg');
+}
+.event1 {
+  background-image: url('../assets/bpmn/event/1.svg');
+}
+.event2 {
+  background-image: url('../assets/bpmn/event/2.svg');
+}
+.event3 {
+  background-image: url('../assets/bpmn/event/3.svg');
+}
+.event4 {
+  background-image: url('../assets/bpmn/event/4.svg');
+}
+.event5 {
+  background-image: url('../assets/bpmn/event/5.svg');
+}
+.event6 {
+  background-image: url('../assets/bpmn/event/6.svg');
+}
+.event7 {
+  background-image: url('../assets/bpmn/event/7.svg');
+}
+.event8 {
+  background-image: url('../assets/bpmn/event/8.svg');
+}
+.event9 {
+  background-image: url('../assets/bpmn/event/9.svg');
+}
+.event10 {
+  background-image: url('../assets/bpmn/event/10.svg');
+}
+.event11 {
+  background-image: url('../assets/bpmn/event/11.svg');
+}
+.event12 {
+  background-image: url('../assets/bpmn/event/12.svg');
+}
+.event13 {
+  background-image: url('../assets/bpmn/event/13.svg');
+}
+.event14 {
+  background-image: url('../assets/bpmn/event/14.svg');
+}
+.mypanelContainer {
+  border: 1px solid #eee;
+  background-color: #fff;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 400px;
+  padding: 10px;
+  height: calc(100vh - 136px);
+  min-height: 674px;
+  transition: right 0.5s;
+}
+.mypanelContainer > div {
+  height: calc(100vh - 166px);
+  min-height: 654px;
+  padding: 8px;
+  overflow: auto;
+}
+.mypanelContainer .el-input-group__append {
+  cursor: pointer;
+}
+.mypanelContainer .el-select {
+  width: 100%;
+}
+.hidenPanelContainer {
+  right: -408px;
+}
+.mypanelbgContainer {
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.nodeContainer {
+  display: block;
+  width: calc(100% - 30px);
+}
+.nodeContainer > span {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+}
+.el-tree-node__content {
+  line-height: 34px;
+  height: 34px;
+}
+.flowActionListContainer {
+  text-align: right;
+  margin-right: 550px;
+  display: block;
+  position: relative;
+}
+.flowActionListContainer > span {
+  font-size: 14px;
+  position: absolute;
+  right: 0px;
+  top: -50px;
+}
+.flowActionListContainer > span > div {
+  display: inline-block;
+}

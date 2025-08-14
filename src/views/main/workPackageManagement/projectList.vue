@@ -50,7 +50,7 @@
             <el-button type="primary" class="create-project-btn">
               完成项目
             </el-button>
-            <el-button type="primary" class="create-project-btn">
+            <el-button type="primary" class="create-project-btn" @click="goUrl('addWorkPackageManagement')">
               创建项目
             </el-button>
           </div>
@@ -190,6 +190,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { 
   ArrowRight, 
   Search, 
@@ -201,6 +202,9 @@ import {
   Delete,
   Share
 } from '@element-plus/icons-vue'
+
+// 路由
+const router = useRouter()
 
 // 搜索和筛选
 const searchKeyword = ref('')
@@ -310,6 +314,11 @@ const deleteProject = (row: any) => {
 
 const shareProject = (row: any) => {
   console.log('分享项目', row)
+}
+
+// 页面跳转函数
+const goUrl = (urlName: string) => {
+  router.push({ name: urlName })
 }
 
 onMounted(() => {

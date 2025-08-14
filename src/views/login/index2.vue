@@ -1,6 +1,6 @@
 <template>
   <div class="loginContainer">
-    <img :src="'./images/login/3.png'" id="pic1" alt=""  style="width: 100%; height: 100%;"/>
+    <img :src="'./images/login/4.png'" id="pic1" alt=""  style="width: 100%; height: 100%;"/>
     <div class="formContainer">
       <h3>
         <img :src="'./images/logo.png'" alt="" />

@@ -150,6 +150,15 @@ const routes: Array<RouteRecordRaw> = [
                 },
             },
             {
+                path: 'list2',
+                name: 'listWorkPackageManagement2',
+                component: () => import(/* webpackChunkName: "workPackageManagementlist" */ '../views/main/workPackageManagement/projectList.vue'),
+                meta: {
+                  title: '我的项目',
+                  keepAlive: false
+                },
+            },
+            {
               path: 'add',
               name: 'addWorkPackageManagement',
               component: () => import(/* webpackChunkName: "workPackageManagementAdd" */ '../views/main/workPackageManagement/add.vue'),

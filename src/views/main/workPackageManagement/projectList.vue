@@ -50,7 +50,7 @@
             <el-button type="primary" class="create-project-btn">
               完成项目
             </el-button>
-            <el-button type="primary" class="create-project-btn" @click="goUrl('addWorkPackageManagement')">
+            <el-button type="primary" class="create-project-btn" @click="openCreateDrawer">
               创建项目
             </el-button>
           </div>
@@ -185,12 +185,20 @@
         </el-table>
       </div>
     </div>
+
+    <!-- 创建项目抽屉 -->
+    <create-project 
+      v-model:visible="createDrawerVisible"
+      @project-created="handleProjectCreated"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import CreateProject from './createProject.vue'
 import { 
   ArrowRight, 
   Search, 
@@ -210,6 +218,9 @@ const router = useRouter()
 const searchKeyword = ref('')
 const selectedResponsible = ref('')
 const selectedStatus = ref('')
+
+// 创建项目抽屉
+const createDrawerVisible = ref(false)
 
 // 项目列表数据
 const projectList = ref([
@@ -319,6 +330,37 @@ const shareProject = (row: any) => {
 // 页面跳转函数
 const goUrl = (urlName: string) => {
   router.push({ name: urlName })
+}
+
+// 打开创建项目抽屉
+const openCreateDrawer = () => {
+  createDrawerVisible.value = true
+}
+
+// 处理项目创建完成
+const handleProjectCreated = (project: any) => {
+  // 添加新项目到列表
+  const newProject = {
+    id: Date.now(),
+    name: project.name,
+    status: '待派发',
+    taskCount: '0/0',
+    progress: 0,
+    responsible: project.projectManager,
+    department: project.militaryBranch,
+    specialty: project.taskType,
+    source: '来源1',
+    level: '公开',
+    period: {
+      start: project.timeRange[0]?.replace(/-/g, '.'),
+      end: project.timeRange[1]?.replace(/-/g, '.')
+    },
+    requirement: '这里是活动要求',
+    description: project.description || '这里是场景描述'
+  }
+  
+  projectList.value.unshift(newProject)
+  ElMessage.success('项目创建成功！')
 }
 
 onMounted(() => {

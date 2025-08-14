@@ -168,6 +168,15 @@ const routes: Array<RouteRecordRaw> = [
               },
             },
             {
+              path: 'add2',
+              name: 'addWorkPackageManagement2',
+              component: () => import(/* webpackChunkName: "workPackageManagementAdd" */ '../views/main/workPackageManagement/createProject.vue'),
+              meta: {
+                title: '创建',
+                keepAlive: false
+              },
+            },
+            {
                 path: 'edit',
                 name: 'editWorkPackageManagement',
                 component: () => import(/* webpackChunkName: "workPackageManagementEdit" */ '../views/main/workPackageManagement/add.vue'),

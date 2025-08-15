@@ -222,6 +222,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { 
@@ -243,6 +244,9 @@ const emit = defineEmits<{
   'update:visible': [value: boolean]
   'project-created': [project: any]
 }>()
+
+// 路由
+const router = useRouter()
 
 // 抽屉显示状态
 const drawerVisible = computed({
@@ -322,6 +326,19 @@ const nextStep = async () => {
   const isValid = await projectFormRef.value.validate()
   if (isValid) {
     currentStep.value = 1
+    // 跳转到创建任务页面，传递项目数据
+    const projectData = { ...projectForm }
+    const projectId = Date.now().toString() // 生成临时项目ID，实际应用中应该是保存后的真实ID
+    
+    router.push({
+      name: 'createTask',
+      params: {
+        projectId: projectId
+      },
+      query: {
+        projectData: JSON.stringify(projectData)
+      }
+    })
   }
 }
 

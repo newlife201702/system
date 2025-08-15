@@ -204,6 +204,19 @@ const routes: Array<RouteRecordRaw> = [
                 },
               },
               {
+                path: 'createTask/:projectId?',
+                name: 'createTask',
+                component: () => import(/* webpackChunkName: "createTask" */ '../views/main/workPackageManagement/components/flow/createTask.vue'),
+                meta: {
+                  title: '创建任务',
+                  keepAlive: false
+                },
+                props: route => ({
+                  projectId: route.params.projectId,
+                  projectData: route.query.projectData ? JSON.parse(route.query.projectData as string) : null
+                })
+              },
+              {
                  path: 'demo1',
                 name: 'demo1',
                 component: () => import(/* webpackChunkName: "demo1" */ '../views/demo/demo1.vue'),

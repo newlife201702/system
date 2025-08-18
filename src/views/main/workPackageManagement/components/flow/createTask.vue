@@ -83,36 +83,56 @@
 
     <!-- 中间流程图区域 -->
     <div class="center-flowchart" :class="{ 'full-width': leftDrawerCollapsed && rightDrawerCollapsed }">
-      <div class="flowchart-header">
-        <h2>任务流程设计</h2>
-        <div class="toolbar">
-          <el-button size="small" @click="addTask">
-            <el-icon><Plus /></el-icon>
-            添加任务
-          </el-button>
-          <el-button size="small" @click="saveFlow">
-            <el-icon><Document /></el-icon>
-            保存流程
-          </el-button>
-          <el-popover 
-            placement="bottom" 
-            width="300" 
-            trigger="hover"
-            content="使用说明：
-            • 鼠标悬停节点可显示连接点
-            • 拖拽连接点可创建连线
-            • 双击连线可删除连接
-            • 点击节点查看详细信息"
-          >
-            <template #reference>
-              <el-button size="small" type="info" link>
-                <el-icon><Document /></el-icon>
-                使用说明
-              </el-button>
-            </template>
-          </el-popover>
-        </div>
-      </div>
+             <div class="flowchart-header">
+         <h2>任务流程设计</h2>
+         <div class="toolbar">
+                       <div class="flow-toggle">
+              <div class="toggle-buttons">
+               <el-button 
+                 :type="isTaskFlow ? 'primary' : 'default'"
+                 size="small"
+                 @click="switchToTaskFlow"
+                 class="toggle-btn"
+               >
+                 任务流
+               </el-button>
+               <el-button 
+                 :type="!isTaskFlow ? 'primary' : 'default'"
+                 size="small"
+                 @click="switchToParameterFlow"
+                 class="toggle-btn"
+               >
+                 参数流
+               </el-button>
+             </div>
+           </div>
+           <el-button size="small" @click="addTask">
+             <el-icon><Plus /></el-icon>
+             添加任务
+           </el-button>
+           <el-button size="small" @click="saveFlow">
+             <el-icon><Document /></el-icon>
+             保存流程
+           </el-button>
+           <el-popover 
+             placement="bottom" 
+             width="300" 
+             trigger="hover"
+             content="使用说明：
+             • 鼠标悬停节点可显示连接点
+             • 拖拽连接点可创建连线
+             • 双击连线可删除连接
+             • 点击节点查看详细信息"
+           >
+             <template #reference>
+               <el-button size="small" type="info" link>
+                 <el-icon><Document /></el-icon>
+                 使用说明
+               </el-button>
+             </template>
+           </el-popover>
+         </div>
+       </div>
       
       <div class="flowchart-canvas" ref="canvasRef"></div>
     </div>
@@ -307,6 +327,7 @@ const rightDrawerCollapsed = ref(false)
 const canvasRef = ref<HTMLElement>()
 const graph = ref<Graph>()
 const selectedTask = ref<any>(null)
+const isTaskFlow = ref(true) // 默认显示任务流
 
 // 项目信息
 const projectInfo = reactive(props.projectData || {})
@@ -1416,6 +1437,20 @@ const handleResize = () => {
   }
 }
 
+// 切换到任务流
+const switchToTaskFlow = () => {
+  isTaskFlow.value = true
+  console.log('切换到任务流')
+  // 这里可以添加切换到任务流的逻辑
+}
+
+// 切换到参数流
+const switchToParameterFlow = () => {
+  isTaskFlow.value = false
+  console.log('切换到参数流')
+  // 这里可以添加切换到参数流的逻辑
+}
+
 // 完成任务创建后的回调
 const emit = defineEmits<{
   'task-created': [data: any]
@@ -1544,14 +1579,67 @@ const emit = defineEmits<{
         margin: 0;
       }
 
-      .toolbar {
-        display: flex;
-        gap: 8px;
-
-        .el-button {
-          font-size: 12px;
-        }
-      }
+             .toolbar {
+         display: flex;
+         gap: 8px;
+         align-items: center;
+ 
+                   .flow-toggle {
+            display: flex;
+            align-items: center;
+            margin-right: 16px;
+            
+            .toggle-buttons {
+             display: flex;
+             
+             .toggle-btn {
+               border-radius: 0;
+               margin: 0;
+               border: 1px solid #d9d9d9;
+               
+               &:first-child {
+                 border-top-left-radius: 4px;
+                 border-bottom-left-radius: 4px;
+                 border-right: none;
+               }
+               
+               &:last-child {
+                 border-top-right-radius: 4px;
+                 border-bottom-right-radius: 4px;
+                 border-left: none;
+               }
+               
+               &:not(:first-child):not(:last-child) {
+                 border-left: none;
+                 border-right: none;
+               }
+               
+               &.el-button--primary {
+                 background-color: #1890ff;
+                 border-color: #1890ff;
+                 color: #fff;
+                 z-index: 1;
+               }
+               
+               &.el-button--default {
+                 background-color: #fff;
+                 border-color: #d9d9d9;
+                 color: #595959;
+                 
+                 &:hover {
+                   background-color: #f5f5f5;
+                   border-color: #d9d9d9;
+                   color: #595959;
+                 }
+               }
+             }
+           }
+         }
+ 
+         .el-button {
+           font-size: 12px;
+         }
+       }
     }
 
     .flowchart-canvas {

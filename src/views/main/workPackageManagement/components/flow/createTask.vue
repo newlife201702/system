@@ -1383,7 +1383,8 @@ const saveFlow = () => {
     connections: graph.value!.getEdges().map(edge => ({
       source: edge.getSourceCellId(),
       target: edge.getTargetCellId()
-    }))
+    })),
+    graphData: graph.value!.toJSON()
   }
   
   console.log('保存流程数据:', flowData)

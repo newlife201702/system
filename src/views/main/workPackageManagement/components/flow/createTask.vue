@@ -185,7 +185,7 @@
               </el-select>
             </el-form-item>
             
-            <el-form-item label="输入">
+            <el-form-item label="▲">
               <div class="input-section">
                 <div class="section-header">
                   <span>输入 2项</span>
@@ -216,7 +216,7 @@
               </div>
             </el-form-item>
             
-            <el-form-item label="输出">
+            <el-form-item label="▼">
               <div class="output-section">
                 <div class="section-header">
                   <span>输出 2项</span>
@@ -418,21 +418,13 @@ const formatTimeRange = (timeRange: string[] | undefined) => {
 // 切换左侧抽屉
 const toggleLeftDrawer = () => {
   leftDrawerCollapsed.value = !leftDrawerCollapsed.value
-  setTimeout(() => {
-    if (graph.value) {
-      graph.value.resize()
-    }
-  }, 300)
+  // autoResize: true 会自动处理画布大小调整，无需手动调用 resize()
 }
 
 // 切换右侧抽屉
 const toggleRightDrawer = () => {
   rightDrawerCollapsed.value = !rightDrawerCollapsed.value
-  setTimeout(() => {
-    if (graph.value) {
-      graph.value.resize()
-    }
-  }, 300)
+  // autoResize: true 会自动处理画布大小调整，无需手动调用 resize()
 }
 
 // 自定义任务节点
@@ -908,6 +900,7 @@ const initFlowChart = () => {
     container: canvasRef.value,
     width: canvasRef.value.clientWidth,
     height: canvasRef.value.clientHeight,
+    autoResize: true,
     background: {
       color: '#f8f9fa'
     },
@@ -1403,7 +1396,7 @@ const emit = defineEmits<{
 
   // 右侧任务信息抽屉
   .right-drawer {
-    width: 320px;
+    width: 500px;
     background: #fff;
     border-left: 1px solid #e8e8e8;
     transition: all 0.3s ease;

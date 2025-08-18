@@ -365,6 +365,10 @@ const registerCustomNode = () => {
         selector: 'subtitle'
       },
       {
+        tagName: 'text',
+        selector: 'detail'
+      },
+      {
         tagName: 'foreignObject',
         selector: 'expand-btn'
       }
@@ -453,10 +457,14 @@ const updateTaskNode = (task: any) => {
       expandBtn.innerHTML = task.expanded ? '▼' : '▶'
     }
     
+    // 更新基本信息
+    node.attr('title/text', task.name)
+    node.attr('subtitle/text', `负责人: ${task.assignee || '未分配'}`)
+    
     // 添加/移除详细信息
     if (task.expanded) {
       node.attr('detail', {
-        text: `类型: ${task.type}\n预计: ${task.estimatedHours}h\n时间: ${task.startDate}~${task.endDate}`,
+        text: `类型: ${task.type}\n预计: ${task.estimatedHours || 0}h\n时间: ${task.startDate || '未设置'}~${task.endDate || '未设置'}`,
         x: 12,
         y: 52,
         fontSize: 11,
@@ -577,6 +585,17 @@ const initFlowChart = () => {
   // 监听画布点击（取消选择）
   graph.value.on('blank:click', () => {
     selectedTask.value = null
+  })
+
+  // 添加节点悬停效果
+  graph.value.on('node:mouseenter', ({ node }) => {
+    node.attr('body/stroke', '#40a9ff')
+    node.attr('body/strokeWidth', 3)
+  })
+
+  graph.value.on('node:mouseleave', ({ node }) => {
+    node.attr('body/stroke', '#1890ff')
+    node.attr('body/strokeWidth', 2)
   })
 }
 

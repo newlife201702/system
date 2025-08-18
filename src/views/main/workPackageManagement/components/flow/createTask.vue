@@ -739,7 +739,7 @@ const createNormalTaskNode = (task: any) => {
       },
       // 负责人姓名
       assignee: {
-        text: task.assignee || '未分配',
+        text: task.assignee ? `参与者：${task.assignee}` : '参与者：未分配',
         x: 28,
         y: 54,
         fontSize: 11,
@@ -747,7 +747,7 @@ const createNormalTaskNode = (task: any) => {
       },
       // 任务时间
       'task-days': {
-        text: task.taskDays || '',
+        text: task.taskDays ? `任务周期：${task.taskDays}` : '任务周期：未设置',
         x: 28,
         y: 70,
         fontSize: 10,
@@ -828,8 +828,8 @@ const updateTaskNode = (task: any) => {
     
     // 更新基本信息
     node.attr('title/text', task.name)
-    node.attr('assignee/text', task.assignee || '未分配')
-    node.attr('task-days/text', task.taskDays || '')
+    node.attr('assignee/text', task.assignee ? `参与者：${task.assignee}` : '参与者：未分配')
+    node.attr('task-days/text', task.taskDays ? `任务周期：${task.taskDays}` : '任务周期：未设置')
     node.attr('stats-up/text', task.taskStats?.up ? `▲ ${task.taskStats.up}` : '')
     node.attr('stats-down/text', task.taskStats?.down ? `▼ ${task.taskStats.down}` : '')
     

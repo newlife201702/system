@@ -141,28 +141,48 @@
             class="task-form"
           >
             <el-form-item label="任务名称">
-              <span class="task-label">{{ selectedTask.name }}</span>
+              <el-input v-model="selectedTask.name" placeholder="请输入任务名称" />
+            </el-form-item>
+            
+            <el-form-item label="起止时间">
+              <el-date-picker
+                v-model="selectedTask.dateRange"
+                type="daterange"
+                range-separator=" - "
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                format="YYYY.MM.DD"
+                value-format="YYYY-MM-DD"
+              />
             </el-form-item>
             
             <el-form-item label="执行天数">
-              <div class="execution-days">
-                <span>2025.07.5</span>
-                <span> ~ </span>
-                <span>2025.07.15</span>
-              </div>
+              <el-input-number 
+                v-model="selectedTask.executionDays" 
+                :min="1" 
+                :max="365"
+                placeholder="天数"
+              />
             </el-form-item>
             
             <el-form-item label="责任人">
-              <el-input v-model="selectedTask.assignee" placeholder="李强" />
+              <el-select v-model="selectedTask.assignee" placeholder="请选择责任人">
+                <el-option label="方小明" value="方小明" />
+                <el-option label="李强" value="李强" />
+                <el-option label="张三" value="张三" />
+                <el-option label="王五" value="王五" />
+                <el-option label="赵六" value="赵六" />
+              </el-select>
             </el-form-item>
             
-            <el-form-item label="工期关键">
-              <div class="task-stats">
-                <div class="stats-item">
-                  <el-input-number v-model="selectedTask.taskStats.up" :min="0" size="small" />
-                  <span class="stats-label">项</span>
-                </div>
-              </div>
+            <el-form-item label="工具关联">
+              <el-select v-model="selectedTask.toolAssociation" placeholder="请选择关联工具">
+                <el-option label="需求管理工具" value="requirement-tool" />
+                <el-option label="设计工具" value="design-tool" />
+                <el-option label="仿真工具" value="simulation-tool" />
+                <el-option label="测试工具" value="test-tool" />
+                <el-option label="项目管理工具" value="project-tool" />
+              </el-select>
             </el-form-item>
             
             <el-form-item label="输入">
@@ -308,9 +328,10 @@ const taskList = ref<any[]>([
     type: 'analysis',
     nodeType: 'task',
     assignee: '方小明',
-    taskDays: '12.06 - 2024.01.16',
     taskStats: { up: 3, down: 2 },
-    description: '体系需求调研基线',
+    dateRange: ['2024-01-06', '2024-01-16'],
+    executionDays: 10,
+    toolAssociation: '体系需求调研基线',
     x: 200,
     y: 80,
     expanded: false
@@ -321,9 +342,10 @@ const taskList = ref<any[]>([
     type: 'design',
     nodeType: 'task',
     assignee: '',
-    taskDays: '',
     taskStats: { up: 0, down: 0 },
-    description: '',
+    dateRange: null,
+    executionDays: null,
+    toolAssociation: '',
     x: 420,
     y: 180,
     expanded: false
@@ -334,9 +356,10 @@ const taskList = ref<any[]>([
     type: 'evaluation',
     nodeType: 'task',
     assignee: '李强',
-    taskDays: '12.06 - 2024.01.16',
     taskStats: { up: 7, down: 4 },
-    description: '体系需求满足度评估基线',
+    dateRange: ['2024-01-06', '2024-01-16'],
+    executionDays: 10,
+    toolAssociation: '体系需求满足度评估基线',
     x: 220,
     y: 320,
     expanded: false
@@ -347,9 +370,10 @@ const taskList = ref<any[]>([
     type: 'simulation',
     nodeType: 'task',
     assignee: '方小明',
-    taskDays: '12.06 - 2024.01.16',
     taskStats: { up: 3, down: 2 },
-    description: '体系对抗仿真基线',
+    dateRange: ['2024-01-06', '2024-01-16'],
+    executionDays: 10,
+    toolAssociation: '体系对抗仿真基线',
     x: 590,
     y: 320,
     expanded: false
@@ -360,9 +384,10 @@ const taskList = ref<any[]>([
     type: 'performance',
     nodeType: 'task',
     assignee: '李强强',
-    taskDays: '12.06 - 2024.01.16',
     taskStats: { up: 2, down: 4 },
-    description: '体系效能评估基线',
+    dateRange: ['2024-01-06', '2024-01-16'],
+    executionDays: 10,
+    toolAssociation: '体系效能评估基线',
     x: 590,
     y: 450,
     expanded: false
@@ -436,7 +461,7 @@ const registerCustomNode = () => {
       { tagName: 'text', selector: 'task-days' },
       { tagName: 'text', selector: 'stats-up' },
       { tagName: 'text', selector: 'stats-down' },
-      { tagName: 'text', selector: 'description' },
+      { tagName: 'text', selector: 'toolAssociation' },
       { tagName: 'text', selector: 'expand-indicator' }
     ],
     ports: {
@@ -747,7 +772,16 @@ const createNormalTaskNode = (task: any) => {
       },
       // 任务时间
       'task-days': {
-        text: task.taskDays ? `任务周期：${task.taskDays}` : '任务周期：未设置',
+        text: (() => {
+          if (task.dateRange && Array.isArray(task.dateRange) && task.dateRange.length === 2) {
+            const startDate = task.dateRange[0] ? task.dateRange[0].replace(/-/g, '.').substring(2) : ''
+            const endDate = task.dateRange[1] ? task.dateRange[1].replace(/-/g, '.').substring(2) : ''
+            if (startDate && endDate) {
+              return `任务周期：${startDate} - ${endDate}`
+            }
+          }
+          return '任务周期：未设置'
+        })(),
         x: 28,
         y: 70,
         fontSize: 10,
@@ -769,13 +803,13 @@ const createNormalTaskNode = (task: any) => {
         fontSize: 11,
         fill: '#ff4d4f'
       },
-      // 描述信息
-      description: {
-        text: task.description || '',
+      // 工具关联信息
+      toolAssociation: {
+        text: task.toolAssociation || '',
         x: 12,
         y: 88,
         fontSize: 10,
-        fill: '#8c8c8c'
+        fill: '#52c41a'
       },
       // 展开指示符
       'expand-indicator': {
@@ -816,6 +850,8 @@ const toggleTaskExpansion = (taskId: string) => {
   }
 }
 
+
+
 // 更新任务节点
 const updateTaskNode = (task: any) => {
   const node = graph.value!.getCellById(task.id) as Node
@@ -826,25 +862,25 @@ const updateTaskNode = (task: any) => {
     // 更新展开指示符
     node.attr('expand-indicator/text', task.expanded ? '▼' : '▶')
     
+    // 格式化起止时间为任务周期显示
+    let taskPeriod = '任务周期：未设置'
+    if (task.dateRange && Array.isArray(task.dateRange) && task.dateRange.length === 2) {
+      const startDate = task.dateRange[0] ? task.dateRange[0].replace(/-/g, '.').substring(2) : ''
+      const endDate = task.dateRange[1] ? task.dateRange[1].replace(/-/g, '.').substring(2) : ''
+      if (startDate && endDate) {
+        taskPeriod = `任务周期：${startDate} - ${endDate}`
+      }
+    }
+    
     // 更新基本信息
     node.attr('title/text', task.name)
     node.attr('assignee/text', task.assignee ? `参与者：${task.assignee}` : '参与者：未分配')
-    node.attr('task-days/text', task.taskDays ? `任务周期：${task.taskDays}` : '任务周期：未设置')
+    node.attr('task-days/text', taskPeriod)
     node.attr('stats-up/text', task.taskStats?.up ? `▲ ${task.taskStats.up}` : '')
     node.attr('stats-down/text', task.taskStats?.down ? `▼ ${task.taskStats.down}` : '')
     
-    // 更新详细信息
-    if (task.expanded) {
-      node.attr('description', {
-        text: task.description || '',
-        x: 12,
-        y: 120,
-        fontSize: 10,
-        fill: '#8c8c8c'
-      })
-    } else {
-      node.attr('description', null)
-    }
+    // 更新工具关联信息
+    node.attr('toolAssociation/text', task.toolAssociation || '')
   }
 }
 
@@ -1122,9 +1158,10 @@ const addTask = () => {
     type: 'development',
     nodeType: 'task',
     assignee: '',
-    taskDays: '',
     taskStats: { up: 0, down: 0 },
-    description: '',
+    dateRange: null,
+    executionDays: null,
+    toolAssociation: '',
     x: Math.random() * 400 + 200,
     y: Math.random() * 200 + 200,
     expanded: false

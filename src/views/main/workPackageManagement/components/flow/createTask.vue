@@ -1003,9 +1003,14 @@ const initFlowChart = () => {
 
   // 监听节点选择
   graph.value.on('node:click', ({ node, e }) => {
-    // 检查是否点击了展开指示符区域
     const target = e.target as SVGElement
-    if (target && target.getAttribute('selector') === 'expand-indicator') {
+    
+    // 通过文本内容和位置判断是否为展开指示符
+    const isExpandIndicator = 
+      target.textContent === '▼' || 
+      target.textContent === '▶'
+    
+    if (isExpandIndicator) {
       toggleTaskExpansion(node.id)
       return
     }

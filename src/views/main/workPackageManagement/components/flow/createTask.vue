@@ -187,15 +187,12 @@
             
             <el-form-item label="▲">
               <div class="input-section">
-                <div class="section-header">
+                <div class="section-title">
                   <span>输入 2项</span>
-                  <div class="section-actions">
-                    <el-button size="small" text>新增</el-button>
-                    <el-button size="small" text>删除</el-button>
-                    <el-button size="small" text>编辑</el-button>
-                    <el-button size="small" text>模板下载</el-button>
-                    <el-button size="small" text>上传</el-button>
-                  </div>
+                </div>
+                <div class="section-actions">
+                  <el-button size="small" text>新增</el-button>
+                  <el-button size="small" text>模型下载</el-button>
                 </div>
                 <div class="data-table">
                   <div class="table-header">
@@ -210,7 +207,10 @@
                     <span>内部</span>
                     <span>Req</span>
                     <span>xxx需求.Req</span>
-                    <span>✓ ↓</span>
+                    <span>
+                      <el-button size="small" text type="primary">编辑</el-button>
+                      <el-button size="small" text type="danger">删除</el-button>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -218,15 +218,13 @@
             
             <el-form-item label="▼">
               <div class="output-section">
-                <div class="section-header">
+                <div class="section-title">
                   <span>输出 2项</span>
-                  <div class="section-actions">
-                    <el-button size="small" text>新增</el-button>
-                    <el-button size="small" text>删除</el-button>
-                    <el-button size="small" text>编辑</el-button>
-                    <el-button size="small" text>模板下载</el-button>
-                    <el-button size="small" text>上传</el-button>
-                  </div>
+                </div>
+                <div class="section-actions">
+                  <el-button size="small" text>新增</el-button>
+                  <el-button size="small" text>上传至模型库</el-button>
+                  <el-button size="small" text>解析模型</el-button>
                 </div>
                 <div class="data-table">
                   <div class="table-header">
@@ -241,14 +239,20 @@
                     <span>内部</span>
                     <span>Req</span>
                     <span>xxx需求.Req</span>
-                    <span>✓ ↓</span>
+                    <span>
+                      <el-button size="small" text type="primary">编辑</el-button>
+                      <el-button size="small" text type="danger">删除</el-button>
+                    </span>
                   </div>
                   <div class="table-row">
                     <span>新的需求</span>
                     <span>图标</span>
                     <span>附件</span>
                     <span>类型</span>
-                    <span>操作</span>
+                    <span>
+                      <el-button size="small" text type="primary">编辑</el-button>
+                      <el-button size="small" text type="danger">删除</el-button>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1476,24 +1480,26 @@ const emit = defineEmits<{
           border-radius: 6px;
           overflow: hidden;
 
-          .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+          .section-title {
             padding: 8px 12px;
             background: #f5f5f5;
             border-bottom: 1px solid #d9d9d9;
             font-weight: 500;
+            color: #262626;
+          }
+          
+          .section-actions {
+            padding: 8px 12px;
+            background: #fafafa;
+            border-bottom: 1px solid #d9d9d9;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-start;
 
-            .section-actions {
-              display: flex;
-              gap: 8px;
-
-              .el-button {
-                padding: 0;
-                font-size: 12px;
-                color: #1890ff;
-              }
+            .el-button {
+              padding: 0;
+              font-size: 12px;
+              color: #1890ff;
             }
           }
 
@@ -1523,6 +1529,21 @@ const emit = defineEmits<{
 
               &:hover {
                 background: #f5f5f5;
+              }
+
+              // 操作列样式
+              span:last-child {
+                display: flex;
+                gap: 4px;
+                justify-content: center;
+                align-items: center;
+
+                .el-button {
+                  padding: 2px 6px;
+                  font-size: 11px;
+                  min-height: auto;
+                  line-height: 1.2;
+                }
               }
             }
           }

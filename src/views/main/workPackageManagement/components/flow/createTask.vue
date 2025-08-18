@@ -124,70 +124,97 @@
             class="task-form"
           >
             <el-form-item label="任务名称">
-              <el-input v-model="selectedTask.name" placeholder="请输入任务名称" />
+              <span class="task-label">{{ selectedTask.name }}</span>
             </el-form-item>
             
-            <el-form-item label="任务类型">
-              <el-select v-model="selectedTask.type" placeholder="请选择任务类型">
-                <el-option label="开发任务" value="development" />
-                <el-option label="测试任务" value="testing" />
-                <el-option label="设计任务" value="design" />
-                <el-option label="评审任务" value="review" />
-              </el-select>
+            <el-form-item label="执行天数">
+              <div class="execution-days">
+                <span>2025.07.5</span>
+                <span> ~ </span>
+                <span>2025.07.15</span>
+              </div>
             </el-form-item>
             
-            <el-form-item label="负责人">
-              <el-select v-model="selectedTask.assignee" placeholder="请选择负责人">
-                <el-option label="张三" value="张三" />
-                <el-option label="李四" value="李四" />
-                <el-option label="王五" value="王五" />
-              </el-select>
+            <el-form-item label="责任人">
+              <el-input v-model="selectedTask.assignee" placeholder="李强" />
             </el-form-item>
             
-            <el-form-item label="优先级">
-              <el-select v-model="selectedTask.priority" placeholder="请选择优先级">
-                <el-option label="高" value="high" />
-                <el-option label="中" value="medium" />
-                <el-option label="低" value="low" />
-              </el-select>
+            <el-form-item label="工期关键">
+              <div class="task-stats">
+                <div class="stats-item">
+                  <el-input-number v-model="selectedTask.taskStats.up" :min="0" size="small" />
+                  <span class="stats-label">项</span>
+                </div>
+              </div>
             </el-form-item>
             
-            <el-form-item label="预计工时">
-              <el-input-number 
-                v-model="selectedTask.estimatedHours" 
-                :min="0" 
-                :max="999"
-                placeholder="小时"
-              />
+            <el-form-item label="输入">
+              <div class="input-section">
+                <div class="section-header">
+                  <span>输入 2项</span>
+                  <div class="section-actions">
+                    <el-button size="small" text>新增</el-button>
+                    <el-button size="small" text>删除</el-button>
+                    <el-button size="small" text>编辑</el-button>
+                    <el-button size="small" text>模板下载</el-button>
+                    <el-button size="small" text>上传</el-button>
+                  </div>
+                </div>
+                <div class="data-table">
+                  <div class="table-header">
+                    <span>名称</span>
+                    <span>图标</span>
+                    <span>附件</span>
+                    <span>类型</span>
+                    <span>操作</span>
+                  </div>
+                  <div class="table-row">
+                    <span>体系需求</span>
+                    <span>内部</span>
+                    <span>Req</span>
+                    <span>xxx需求.Req</span>
+                    <span>✓ ↓</span>
+                  </div>
+                </div>
+              </div>
             </el-form-item>
             
-            <el-form-item label="开始时间">
-              <el-date-picker
-                v-model="selectedTask.startDate"
-                type="date"
-                placeholder="选择开始时间"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-              />
-            </el-form-item>
-            
-            <el-form-item label="结束时间">
-              <el-date-picker
-                v-model="selectedTask.endDate"
-                type="date"
-                placeholder="选择结束时间"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-              />
-            </el-form-item>
-            
-            <el-form-item label="任务描述">
-              <el-input
-                v-model="selectedTask.description"
-                type="textarea"
-                :rows="4"
-                placeholder="请输入任务描述"
-              />
+            <el-form-item label="输出">
+              <div class="output-section">
+                <div class="section-header">
+                  <span>输出 2项</span>
+                  <div class="section-actions">
+                    <el-button size="small" text>新增</el-button>
+                    <el-button size="small" text>删除</el-button>
+                    <el-button size="small" text>编辑</el-button>
+                    <el-button size="small" text>模板下载</el-button>
+                    <el-button size="small" text>上传</el-button>
+                  </div>
+                </div>
+                <div class="data-table">
+                  <div class="table-header">
+                    <span>名称</span>
+                    <span>图标</span>
+                    <span>附件</span>
+                    <span>类型</span>
+                    <span>操作</span>
+                  </div>
+                  <div class="table-row">
+                    <span>体系需求Req</span>
+                    <span>内部</span>
+                    <span>Req</span>
+                    <span>xxx需求.Req</span>
+                    <span>✓ ↓</span>
+                  </div>
+                  <div class="table-row">
+                    <span>新的需求</span>
+                    <span>图标</span>
+                    <span>附件</span>
+                    <span>类型</span>
+                    <span>操作</span>
+                  </div>
+                </div>
+              </div>
             </el-form-item>
             
             <el-form-item label="前置任务">
@@ -250,49 +277,87 @@ const projectInfo = reactive(props.projectData || {})
 // 任务列表
 const taskList = ref<any[]>([
   {
+    id: 'start',
+    name: '开始',
+    type: 'start',
+    nodeType: 'start',
+    x: 50,
+    y: 150,
+    shape: 'circle'
+  },
+  {
     id: 'task1',
-    name: '需求分析',
-    type: 'design',
-    assignee: '张三',
-    priority: 'high',
-    estimatedHours: 40,
-    startDate: '2024-01-01',
-    endDate: '2024-01-05',
-    description: '进行项目需求分析和整理',
-    dependencies: [],
-    x: 100,
-    y: 100,
+    name: '体系需求分析活动',
+    type: 'analysis',
+    nodeType: 'task',
+    assignee: '方小明',
+    taskDays: '12.06 - 2024.01.16',
+    taskStats: { up: 3, down: 2 },
+    description: '体系需求调研基线',
+    x: 200,
+    y: 80,
     expanded: false
   },
   {
     id: 'task2',
-    name: '系统设计',
+    name: '体系架构设计',
     type: 'design',
-    assignee: '李四',
-    priority: 'high',
-    estimatedHours: 60,
-    startDate: '2024-01-06',
-    endDate: '2024-01-12',
-    description: '进行系统架构设计',
-    dependencies: ['task1'],
-    x: 300,
-    y: 100,
+    nodeType: 'task',
+    assignee: '',
+    taskDays: '',
+    taskStats: { up: 0, down: 0 },
+    description: '',
+    x: 420,
+    y: 180,
     expanded: false
   },
   {
     id: 'task3',
-    name: '开发实现',
-    type: 'development',
-    assignee: '王五',
-    priority: 'medium',
-    estimatedHours: 120,
-    startDate: '2024-01-13',
-    endDate: '2024-01-26',
-    description: '进行功能开发实现',
-    dependencies: ['task2'],
-    x: 500,
-    y: 100,
+    name: '体系需求满足度评估',
+    type: 'evaluation',
+    nodeType: 'task',
+    assignee: '李强',
+    taskDays: '12.06 - 2024.01.16',
+    taskStats: { up: 7, down: 4 },
+    description: '体系需求满足度评估基线',
+    x: 220,
+    y: 320,
     expanded: false
+  },
+  {
+    id: 'task4',
+    name: '体系对抗仿真',
+    type: 'simulation',
+    nodeType: 'task',
+    assignee: '方小明',
+    taskDays: '12.06 - 2024.01.16',
+    taskStats: { up: 3, down: 2 },
+    description: '体系对抗仿真基线',
+    x: 590,
+    y: 320,
+    expanded: false
+  },
+  {
+    id: 'task5',
+    name: '体系效能评估',
+    type: 'performance',
+    nodeType: 'task',
+    assignee: '李强强',
+    taskDays: '12.06 - 2024.01.16',
+    taskStats: { up: 2, down: 4 },
+    description: '体系效能评估基线',
+    x: 590,
+    y: 450,
+    expanded: false
+  },
+  {
+    id: 'end',
+    name: '结束',
+    type: 'end',
+    nodeType: 'end',
+    x: 800,
+    y: 350,
+    shape: 'circle'
   }
 ])
 
@@ -330,52 +395,149 @@ const toggleRightDrawer = () => {
 
 // 自定义任务节点
 const registerCustomNode = () => {
+  // 注册任务节点
   Graph.registerNode('task-node', {
     inherit: 'html',
-    width: 200,
-    height: 80,
+    width: 220,
+    height: 100,
     attrs: {
       body: {
-        strokeWidth: 2,
-        stroke: '#1890ff',
-        fill: '#f0f9ff',
+        stroke: '#d9d9d9',
+        fill: '#ffffff',
         rx: 8,
-        ry: 8
-      },
-      text: {
-        fontSize: 14,
-        fill: '#262626',
-        textAnchor: 'start',
-        textVerticalAnchor: 'top'
+        ry: 8,
+        strokeWidth: 1
       }
     },
     markup: [
-      {
-        tagName: 'rect',
-        selector: 'body'
-      },
-      {
-        tagName: 'text',
-        selector: 'title'
-      },
-      {
-        tagName: 'text', 
-        selector: 'subtitle'
-      },
-      {
-        tagName: 'text',
-        selector: 'detail'
-      },
-      {
-        tagName: 'text',
-        selector: 'expand-indicator'
-      }
+      { tagName: 'rect', selector: 'body' },
+      { tagName: 'rect', selector: 'header' },
+      { tagName: 'text', selector: 'type-icon' },
+      { tagName: 'text', selector: 'title' },
+      { tagName: 'circle', selector: 'avatar' },
+      { tagName: 'text', selector: 'assignee' },
+      { tagName: 'text', selector: 'task-days' },
+      { tagName: 'text', selector: 'stats-up' },
+      { tagName: 'text', selector: 'stats-down' },
+      { tagName: 'text', selector: 'description' },
+      { tagName: 'text', selector: 'expand-indicator' }
     ]
+  }, true)
+
+  // 注册开始节点
+  Graph.registerNode('start-node', {
+    inherit: 'circle',
+    width: 40,
+    height: 40,
+    attrs: {
+      circle: {
+        stroke: '#52c41a',
+        fill: '#52c41a',
+        r: 20
+      },
+      text: {
+        fontSize: 12,
+        fill: '#fff',
+        textAnchor: 'middle',
+        textVerticalAnchor: 'middle'
+      }
+    }
+  }, true)
+
+  // 注册结束节点  
+  Graph.registerNode('end-node', {
+    inherit: 'circle',
+    width: 40,
+    height: 40,
+    attrs: {
+      circle: {
+        stroke: '#ff4d4f',
+        fill: '#ff4d4f',
+        r: 20
+      },
+      text: {
+        fontSize: 12,
+        fill: '#fff',
+        textAnchor: 'middle',
+        textVerticalAnchor: 'middle'
+      }
+    }
   }, true)
 }
 
-// 创建任务节点
+// 创建节点
 const createTaskNode = (task: any) => {
+  if (task.nodeType === 'start') {
+    return createStartNode(task)
+  } else if (task.nodeType === 'end') {
+    return createEndNode(task)  
+  } else {
+    return createNormalTaskNode(task)
+  }
+}
+
+// 创建开始节点
+const createStartNode = (task: any) => {
+  const node = graph.value!.addNode({
+    id: task.id,
+    shape: 'start-node',
+    x: task.x,
+    y: task.y,
+    data: task,
+    attrs: {
+      text: {
+        text: '▶'
+      }
+    },
+
+  })
+  return node
+}
+
+// 创建结束节点
+const createEndNode = (task: any) => {
+  const node = graph.value!.addNode({
+    id: task.id,
+    shape: 'end-node',
+    x: task.x,
+    y: task.y,
+    data: task,
+    attrs: {
+      text: {
+        text: '■'
+      }
+    },
+
+  })
+  return node
+}
+
+// 创建普通任务节点
+const createNormalTaskNode = (task: any) => {
+  // 获取任务类型图标
+  const getTypeIcon = (type: string) => {
+    const iconMap: Record<string, string> = {
+      'analysis': '需要',
+      'design': '设计', 
+      'evaluation': '任务',
+      'simulation': '仿真',
+      'performance': '性能'
+    }
+    return iconMap[type] || '任务'
+  }
+
+  // 获取任务类型背景色
+  const getTypeColor = (type: string) => {
+    const colorMap: Record<string, string> = {
+      'analysis': '#722ed1',
+      'design': '#1890ff',
+      'evaluation': '#f5222d', 
+      'simulation': '#fa8c16',
+      'performance': '#52c41a'
+    }
+    return colorMap[type] || '#1890ff'
+  }
+
   const node = graph.value!.addNode({
     id: task.id,
     shape: 'task-node',
@@ -383,39 +545,103 @@ const createTaskNode = (task: any) => {
     y: task.y,
     data: task,
     attrs: {
+      // 头部区域
+      header: {
+        x: 0,
+        y: 0,
+        width: 220,
+        height: 32,
+        fill: '#f5f5f5',
+        stroke: '#d9d9d9',
+        strokeWidth: 1
+      },
+      // 任务类型图标
+      'type-icon': {
+        text: getTypeIcon(task.type),
+        x: 12,
+        y: 20,
+        fontSize: 12,
+        fill: '#fff',
+        fontWeight: 'bold'
+      },
+      // 任务标题
       title: {
         text: task.name,
-        x: 12,
-        y: 12,
-        fontSize: 14,
+        x: 45,
+        y: 20,
+        fontSize: 13,
         fontWeight: 'bold',
         fill: '#262626'
       },
-      subtitle: {
-        text: `负责人: ${task.assignee}`,
-        x: 12,
-        y: 32,
-        fontSize: 12,
+      // 负责人头像
+      avatar: {
+        cx: 12,
+        cy: 50,
+        r: 10,
+        fill: '#fa8c16',
+        stroke: '#fff',
+        strokeWidth: 2
+      },
+      // 负责人姓名
+      assignee: {
+        text: task.assignee || '未分配',
+        x: 28,
+        y: 54,
+        fontSize: 11,
+        fill: '#595959'
+      },
+      // 任务时间
+      'task-days': {
+        text: task.taskDays || '',
+        x: 28,
+        y: 70,
+        fontSize: 10,
         fill: '#8c8c8c'
       },
-      'expand-btn': {
-        x: 170,
-        y: 8,
-        width: 20,
-        height: 20
+      // 上箭头统计
+      'stats-up': {
+        text: task.taskStats?.up ? `▲ ${task.taskStats.up}` : '',
+        x: 150,
+        y: 54,
+        fontSize: 11,
+        fill: '#52c41a'
+      },
+      // 下箭头统计  
+      'stats-down': {
+        text: task.taskStats?.down ? `▼ ${task.taskStats.down}` : '',
+        x: 180,
+        y: 54,
+        fontSize: 11,
+        fill: '#ff4d4f'
+      },
+      // 描述信息
+      description: {
+        text: task.description || '',
+        x: 12,
+        y: 88,
+        fontSize: 10,
+        fill: '#8c8c8c'
+      },
+      // 展开指示符
+      'expand-indicator': {
+        text: task.expanded ? '▼' : '▶',
+        x: 200,
+        y: 20,
+        fontSize: 12,
+        fill: '#1890ff',
+        cursor: 'pointer'
       }
     }
   })
 
-  // 添加展开/收起指示符
-  node.attr('expand-indicator', {
-    text: task.expanded ? '▼' : '▶',
-    x: 175,
-    y: 16,
-    fontSize: 12,
-    fill: '#1890ff',
-    cursor: 'pointer'
-  })
+  // 添加任务类型背景色（暂时注释掉，避免TypeScript错误）
+  // setTimeout(() => {
+  //   try {
+  //     // TODO: 实现任务类型背景色
+  //   } catch (error) {
+  //     console.warn('Failed to add type background:', error)
+  //   }
+  // }, 0)
 
   return node
 }
@@ -432,28 +658,31 @@ const toggleTaskExpansion = (taskId: string) => {
 // 更新任务节点
 const updateTaskNode = (task: any) => {
   const node = graph.value!.getCellById(task.id) as Node
-  if (node) {
-    const height = task.expanded ? 120 : 80
-    node.resize(200, height)
+  if (node && task.nodeType === 'task') {
+    const height = task.expanded ? 140 : 100
+    node.resize(220, height)
     
     // 更新展开指示符
     node.attr('expand-indicator/text', task.expanded ? '▼' : '▶')
     
     // 更新基本信息
     node.attr('title/text', task.name)
-    node.attr('subtitle/text', `负责人: ${task.assignee || '未分配'}`)
+    node.attr('assignee/text', task.assignee || '未分配')
+    node.attr('task-days/text', task.taskDays || '')
+    node.attr('stats-up/text', task.taskStats?.up ? `▲ ${task.taskStats.up}` : '')
+    node.attr('stats-down/text', task.taskStats?.down ? `▼ ${task.taskStats.down}` : '')
     
-    // 添加/移除详细信息
+    // 更新详细信息
     if (task.expanded) {
-      node.attr('detail', {
-        text: `类型: ${task.type}\n预计: ${task.estimatedHours || 0}h\n时间: ${task.startDate || '未设置'}~${task.endDate || '未设置'}`,
+      node.attr('description', {
+        text: task.description || '',
         x: 12,
-        y: 52,
-        fontSize: 11,
-        fill: '#595959'
+        y: 120,
+        fontSize: 10,
+        fill: '#8c8c8c'
       })
     } else {
-      node.attr('detail', null)
+      node.attr('description', null)
     }
   }
 }
@@ -484,11 +713,7 @@ const initFlowChart = () => {
         }
       ]
     },
-    selecting: {
-      enabled: true,
-      rubberband: true,
-      movable: true
-    },
+
     connecting: {
       router: 'manhattan',
       connector: {
@@ -531,31 +756,80 @@ const initFlowChart = () => {
         }
       }
     },
-    resizing: true,
-    rotating: false,
-    keyboard: true,
-    clipboard: true
+
   })
 
   // 注册自定义节点
   registerCustomNode()
 
-  // 添加任务节点
+
+
+  // 添加所有节点
   taskList.value.forEach(task => {
     createTaskNode(task)
   })
 
-  // 添加连接线
-  taskList.value.forEach(task => {
-    if (task.dependencies && task.dependencies.length > 0) {
-      task.dependencies.forEach((depId: string) => {
-        graph.value!.addEdge({
-          source: depId,
-          target: task.id
-        })
-      })
+  // 添加连线
+  setTimeout(() => {
+    const edgeStyle = {
+      attrs: {
+        line: {
+          stroke: '#A2A2A2',
+          strokeWidth: 2,
+          targetMarker: 'classic'
+        }
+      }
     }
-  })
+
+    // 开始节点 -> 体系需求分析活动
+    graph.value!.addEdge({
+      source: { cell: 'start', anchor: { name: 'bottom' } },
+      target: { cell: 'task1', anchor: { name: 'top' } },
+      ...edgeStyle
+    })
+
+    // 体系需求分析活动 -> 体系架构设计
+    graph.value!.addEdge({
+      source: { cell: 'task1', anchor: { name: 'bottom' } },
+      target: { cell: 'task2', anchor: { name: 'top' } },
+      ...edgeStyle
+    })
+
+    // 体系需求分析活动 -> 体系需求满足度评估
+    graph.value!.addEdge({
+      source: { cell: 'task1', anchor: { name: 'bottom' } },
+      target: { cell: 'task3', anchor: { name: 'top' } },
+      ...edgeStyle
+    })
+
+    // 体系架构设计 -> 体系对抗仿真
+    graph.value!.addEdge({
+      source: { cell: 'task2', anchor: { name: 'bottom' } },
+      target: { cell: 'task4', anchor: { name: 'top' } },
+      ...edgeStyle
+    })
+
+    // 体系需求满足度评估 -> 体系效能评估
+    graph.value!.addEdge({
+      source: { cell: 'task3', anchor: { name: 'bottom' } },
+      target: { cell: 'task5', anchor: { name: 'top' } },
+      ...edgeStyle
+    })
+
+    // 体系对抗仿真 -> 结束节点
+    graph.value!.addEdge({
+      source: { cell: 'task4', anchor: { name: 'bottom' } },
+      target: { cell: 'end', anchor: { name: 'top' } },
+      ...edgeStyle
+    })
+
+    // 体系效能评估 -> 结束节点
+    graph.value!.addEdge({
+      source: { cell: 'task5', anchor: { name: 'bottom' } },
+      target: { cell: 'end', anchor: { name: 'top' } },
+      ...edgeStyle
+    })
+  }, 200)
 
   // 监听节点选择
   graph.value.on('node:click', ({ node, e }) => {
@@ -874,6 +1148,87 @@ const emit = defineEmits<{
           :deep(.el-form-item__label) {
             font-size: 12px;
             color: #8c8c8c;
+          }
+        }
+
+        .task-label {
+          font-weight: bold;
+          color: #262626;
+        }
+
+        .execution-days {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #595959;
+        }
+
+        .task-stats {
+          .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .stats-label {
+            color: #8c8c8c;
+            font-size: 12px;
+          }
+        }
+
+        .input-section, .output-section {
+          border: 1px solid #d9d9d9;
+          border-radius: 6px;
+          overflow: hidden;
+
+          .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border-bottom: 1px solid #d9d9d9;
+            font-weight: 500;
+
+            .section-actions {
+              display: flex;
+              gap: 8px;
+
+              .el-button {
+                padding: 0;
+                font-size: 12px;
+                color: #1890ff;
+              }
+            }
+          }
+
+          .data-table {
+            .table-header {
+              display: grid;
+              grid-template-columns: 2fr 1fr 1fr 2fr 1fr;
+              padding: 8px 12px;
+              background: #fafafa;
+              border-bottom: 1px solid #d9d9d9;
+              font-size: 12px;
+              font-weight: 500;
+              color: #595959;
+            }
+
+            .table-row {
+              display: grid;
+              grid-template-columns: 2fr 1fr 1fr 2fr 1fr;
+              padding: 8px 12px;
+              border-bottom: 1px solid #f0f0f0;
+              font-size: 12px;
+              color: #262626;
+
+              &:last-child {
+                border-bottom: none;
+              }
+
+              &:hover {
+                background: #f5f5f5;
+              }
+            }
           }
         }
 

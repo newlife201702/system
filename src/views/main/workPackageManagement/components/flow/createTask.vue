@@ -94,6 +94,23 @@
             <el-icon><Document /></el-icon>
             保存流程
           </el-button>
+          <el-popover 
+            placement="bottom" 
+            width="300" 
+            trigger="hover"
+            content="使用说明：
+            • 鼠标悬停节点可显示连接点
+            • 拖拽连接点可创建连线
+            • 双击连线可删除连接
+            • 点击节点查看详细信息"
+          >
+            <template #reference>
+              <el-button size="small" type="info" link>
+                <el-icon><Document /></el-icon>
+                使用说明
+              </el-button>
+            </template>
+          </el-popover>
         </div>
       </div>
       
@@ -421,7 +438,71 @@ const registerCustomNode = () => {
       { tagName: 'text', selector: 'stats-down' },
       { tagName: 'text', selector: 'description' },
       { tagName: 'text', selector: 'expand-indicator' }
-    ]
+    ],
+    ports: {
+      groups: {
+        top: {
+          position: 'top',
+          attrs: {
+            circle: {
+              r: 6,
+              magnet: true,
+              stroke: '#31d0c6',
+              strokeWidth: 2,
+              fill: '#fff',
+              style: {
+                visibility: 'hidden'
+              }
+            }
+          }
+        },
+        bottom: {
+          position: 'bottom',
+          attrs: {
+            circle: {
+              r: 6,
+              magnet: true,
+              stroke: '#31d0c6',
+              strokeWidth: 2,
+              fill: '#fff',
+              style: {
+                visibility: 'hidden'
+              }
+            }
+          }
+        },
+        left: {
+          position: 'left',
+          attrs: {
+            circle: {
+              r: 6,
+              magnet: true,
+              stroke: '#31d0c6',
+              strokeWidth: 2,
+              fill: '#fff',
+              style: {
+                visibility: 'hidden'
+              }
+            }
+          }
+        },
+        right: {
+          position: 'right',
+          attrs: {
+            circle: {
+              r: 6,
+              magnet: true,
+              stroke: '#31d0c6',
+              strokeWidth: 2,
+              fill: '#fff',
+              style: {
+                visibility: 'hidden'
+              }
+            }
+          }
+        }
+      }
+    }
   }, true)
 
   // 注册开始节点
@@ -440,6 +521,40 @@ const registerCustomNode = () => {
         fill: '#fff',
         textAnchor: 'middle',
         textVerticalAnchor: 'middle'
+      }
+    },
+    ports: {
+      groups: {
+        bottom: {
+          position: 'bottom',
+          attrs: {
+            circle: {
+              r: 6,
+              magnet: true,
+              stroke: '#31d0c6',
+              strokeWidth: 2,
+              fill: '#fff',
+              style: {
+                visibility: 'hidden'
+              }
+            }
+          }
+        },
+        right: {
+          position: 'right',
+          attrs: {
+            circle: {
+              r: 6,
+              magnet: true,
+              stroke: '#31d0c6',
+              strokeWidth: 2,
+              fill: '#fff',
+              style: {
+                visibility: 'hidden'
+              }
+            }
+          }
+        }
       }
     }
   }, true)
@@ -460,6 +575,40 @@ const registerCustomNode = () => {
         fill: '#fff',
         textAnchor: 'middle',
         textVerticalAnchor: 'middle'
+      }
+    },
+    ports: {
+      groups: {
+        top: {
+          position: 'top',
+          attrs: {
+            circle: {
+              r: 6,
+              magnet: true,
+              stroke: '#31d0c6',
+              strokeWidth: 2,
+              fill: '#fff',
+              style: {
+                visibility: 'hidden'
+              }
+            }
+          }
+        },
+        left: {
+          position: 'left',
+          attrs: {
+            circle: {
+              r: 6,
+              magnet: true,
+              stroke: '#31d0c6',
+              strokeWidth: 2,
+              fill: '#fff',
+              style: {
+                visibility: 'hidden'
+              }
+            }
+          }
+        }
       }
     }
   }, true)
@@ -489,7 +638,10 @@ const createStartNode = (task: any) => {
         text: '▶'
       }
     },
-
+    ports: [
+      { group: 'bottom', id: `${task.id}-bottom` },
+      { group: 'right', id: `${task.id}-right` }
+    ]
   })
   return node
 }
@@ -507,7 +659,10 @@ const createEndNode = (task: any) => {
         text: '■'
       }
     },
-
+    ports: [
+      { group: 'top', id: `${task.id}-top` },
+      { group: 'left', id: `${task.id}-left` }
+    ]
   })
   return node
 }
@@ -631,7 +786,13 @@ const createNormalTaskNode = (task: any) => {
         fill: '#1890ff',
         cursor: 'pointer'
       }
-    }
+    },
+    ports: [
+      { group: 'top', id: `${task.id}-top` },
+      { group: 'bottom', id: `${task.id}-bottom` },
+      { group: 'left', id: `${task.id}-left` },
+      { group: 'right', id: `${task.id}-right` }
+    ]
   })
 
   // 添加任务类型背景色（暂时注释掉，避免TypeScript错误）
@@ -727,6 +888,15 @@ const initFlowChart = () => {
       allowBlank: false,
       snap: {
         radius: 20
+      },
+      allowMulti: false,
+      allowLoop: false,
+      highlight: true,
+      validateMagnet({ magnet }) {
+        return magnet.getAttribute('port-group') !== 'in'
+      },
+      validateConnection({ sourceMagnet, targetMagnet }) {
+        return !!(sourceMagnet && targetMagnet && sourceMagnet !== targetMagnet)
       },
       createEdge() {
         return graph.value!.createEdge({
@@ -854,11 +1024,88 @@ const initFlowChart = () => {
   graph.value.on('node:mouseenter', ({ node }) => {
     node.attr('body/stroke', '#40a9ff')
     node.attr('body/strokeWidth', 3)
+    // 显示连接点
+    const ports = node.getPorts()
+    ports.forEach(port => {
+      node.setPortProp(port.id!, 'attrs/circle/style/visibility', 'visible')
+    })
   })
 
   graph.value.on('node:mouseleave', ({ node }) => {
     node.attr('body/stroke', '#1890ff')
     node.attr('body/strokeWidth', 2)
+    // 隐藏连接点
+    const ports = node.getPorts()
+    ports.forEach(port => {
+      node.setPortProp(port.id!, 'attrs/circle/style/visibility', 'hidden')
+    })
+  })
+
+  // 监听连接点悬停
+  graph.value.on('node:port:mouseenter', ({ node, port }) => {
+    node.setPortProp(port!, 'attrs/circle/fill', '#31d0c6')
+    node.setPortProp(port!, 'attrs/circle/r', 8)
+  })
+
+  graph.value.on('node:port:mouseleave', ({ node, port }) => {
+    node.setPortProp(port!, 'attrs/circle/fill', '#fff')
+    node.setPortProp(port!, 'attrs/circle/r', 6)
+  })
+
+  // 监听连接事件
+  graph.value.on('edge:connected', ({ edge }) => {
+    console.log('连接创建:', edge.getSourceCellId(), '->', edge.getTargetCellId())
+  })
+
+  // 监听连接断开事件
+  graph.value.on('edge:removed', ({ edge }) => {
+    console.log('连接删除:', edge.getSourceCellId(), '->', edge.getTargetCellId())
+  })
+
+  // 支持双击连线删除
+  graph.value.on('edge:dblclick', ({ edge }) => {
+    graph.value!.removeEdge(edge)
+  })
+
+  // 右键菜单
+  graph.value.on('node:contextmenu', ({ node, e }) => {
+    e.preventDefault()
+    // 这里可以添加右键菜单逻辑
+    console.log('右键节点:', node.id)
+  })
+
+  graph.value.on('edge:contextmenu', ({ edge, e }) => {
+    e.preventDefault()
+    // 删除连线
+    if (confirm('确定要删除这条连线吗？')) {
+      graph.value!.removeEdge(edge)
+    }
+  })
+
+  // 画布右键菜单
+  graph.value.on('blank:contextmenu', ({ e }) => {
+    e.preventDefault()
+    // 可以在此位置添加新节点
+    const { x, y } = graph.value!.clientToGraph(e.clientX, e.clientY)
+    console.log('右键画布位置:', x, y)
+  })
+
+  // 简化的键盘事件监听
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Delete' && selectedTask.value) {
+      if (confirm('确定要删除选中的任务吗？')) {
+        const nodeToRemove = graph.value!.getCellById(selectedTask.value.id)
+        if (nodeToRemove) {
+          graph.value!.removeCell(nodeToRemove)
+          // 从任务列表中移除
+          const index = taskList.value.findIndex(t => t.id === selectedTask.value!.id)
+          if (index > -1) {
+            taskList.value.splice(index, 1)
+          }
+          selectedTask.value = null
+        }
+      }
+    }
   })
 }
 
@@ -868,15 +1115,13 @@ const addTask = () => {
     id: `task${Date.now()}`,
     name: '新任务',
     type: 'development',
+    nodeType: 'task',
     assignee: '',
-    priority: 'medium',
-    estimatedHours: 8,
-    startDate: '',
-    endDate: '',
+    taskDays: '',
+    taskStats: { up: 0, down: 0 },
     description: '',
-    dependencies: [],
-    x: Math.random() * 400 + 100,
-    y: Math.random() * 200 + 100,
+    x: Math.random() * 400 + 200,
+    y: Math.random() * 200 + 200,
     expanded: false
   }
   
@@ -1250,6 +1495,87 @@ const emit = defineEmits<{
         height: 200px;
       }
     }
+  }
+}
+
+// X6 连接点和连线样式
+:deep(.x6-port) {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+:deep(.x6-node:hover .x6-port) {
+  opacity: 1;
+}
+
+:deep(.x6-port-body) {
+  fill: #fff;
+  stroke: #31d0c6;
+  stroke-width: 2;
+  r: 6;
+  cursor: crosshair;
+  
+  &:hover {
+    fill: #31d0c6;
+    r: 8;
+    stroke-width: 3;
+  }
+}
+
+:deep(.x6-port-magnet) {
+  fill: transparent;
+  stroke: transparent;
+}
+
+// 连线样式
+:deep(.x6-edge) {
+  cursor: pointer;
+  
+  &:hover .x6-edge-path {
+    stroke: #1890ff;
+    stroke-width: 3;
+  }
+  
+  &.x6-edge-selected .x6-edge-path {
+    stroke: #1890ff;
+    stroke-width: 3;
+  }
+}
+
+:deep(.x6-edge-path) {
+  transition: all 0.2s ease;
+}
+
+:deep(.x6-edge-target-marker) {
+  fill: #A2A2A2;
+  stroke: #A2A2A2;
+}
+
+// 拖拽创建连线时的样式
+:deep(.x6-graph-svg-stage) {
+  .x6-edge.x6-edge-ghost {
+    .x6-edge-path {
+      stroke: #1890ff;
+      stroke-width: 2;
+      stroke-dasharray: 5, 5;
+      animation: dash 1s linear infinite;
+    }
+  }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+// 连接点吸附效果
+:deep(.x6-port.x6-port-highlighted) {
+  .x6-port-body {
+    fill: #52c41a;
+    stroke: #52c41a;
+    r: 10;
+    stroke-width: 3;
   }
 }
 

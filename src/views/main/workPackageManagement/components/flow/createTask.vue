@@ -441,7 +441,7 @@ const registerCustomNode = () => {
   Graph.registerNode('task-node', {
     inherit: 'html',
     width: 220,
-    height: 100,
+    height: 32,
     attrs: {
       body: {
         stroke: '#d9d9d9',
@@ -760,11 +760,12 @@ const createNormalTaskNode = (task: any) => {
         r: 10,
         fill: '#fa8c16',
         stroke: '#fff',
-        strokeWidth: 2
+        strokeWidth: 2,
+        display: task.expanded ? 'block' : 'none'
       },
       // 负责人姓名
       assignee: {
-        text: task.assignee ? `参与者：${task.assignee}` : '参与者：未分配',
+        text: task.expanded ? (task.assignee ? `参与者：${task.assignee}` : '参与者：未分配') : '',
         x: 28,
         y: 54,
         fontSize: 11,
@@ -773,9 +774,10 @@ const createNormalTaskNode = (task: any) => {
       // 任务时间
       'task-days': {
         text: (() => {
+          if (!task.expanded) return ''
           if (task.dateRange && Array.isArray(task.dateRange) && task.dateRange.length === 2) {
-            const startDate = task.dateRange[0] ? task.dateRange[0].replace(/-/g, '.').substring(2) : ''
-            const endDate = task.dateRange[1] ? task.dateRange[1].replace(/-/g, '.').substring(2) : ''
+            const startDate = task.dateRange[0] ? task.dateRange[0].replace(/-/g, '.') : ''
+            const endDate = task.dateRange[1] ? task.dateRange[1].replace(/-/g, '.') : ''
             if (startDate && endDate) {
               return `任务周期：${startDate} - ${endDate}`
             }
@@ -789,7 +791,7 @@ const createNormalTaskNode = (task: any) => {
       },
       // 上箭头统计
       'stats-up': {
-        text: task.taskStats?.up ? `▲ ${task.taskStats.up}` : '',
+        text: task.expanded && task.taskStats?.up ? `▲ ${task.taskStats.up}` : '',
         x: 150,
         y: 54,
         fontSize: 11,
@@ -797,7 +799,7 @@ const createNormalTaskNode = (task: any) => {
       },
       // 下箭头统计  
       'stats-down': {
-        text: task.taskStats?.down ? `▼ ${task.taskStats.down}` : '',
+        text: task.expanded && task.taskStats?.down ? `▼ ${task.taskStats.down}` : '',
         x: 180,
         y: 54,
         fontSize: 11,
@@ -805,7 +807,7 @@ const createNormalTaskNode = (task: any) => {
       },
       // 工具关联信息
       toolAssociation: {
-        text: task.toolAssociation || '',
+        text: task.expanded ? (task.toolAssociation || '') : '',
         x: 12,
         y: 88,
         fontSize: 10,
@@ -856,7 +858,7 @@ const toggleTaskExpansion = (taskId: string) => {
 const updateTaskNode = (task: any) => {
   const node = graph.value!.getCellById(task.id) as Node
   if (node && task.nodeType === 'task') {
-    const height = task.expanded ? 140 : 100
+    const height = task.expanded ? 140 : 32
     node.resize(220, height)
     
     // 更新展开指示符
@@ -865,8 +867,8 @@ const updateTaskNode = (task: any) => {
     // 格式化起止时间为任务周期显示
     let taskPeriod = '任务周期：未设置'
     if (task.dateRange && Array.isArray(task.dateRange) && task.dateRange.length === 2) {
-      const startDate = task.dateRange[0] ? task.dateRange[0].replace(/-/g, '.').substring(2) : ''
-      const endDate = task.dateRange[1] ? task.dateRange[1].replace(/-/g, '.').substring(2) : ''
+      const startDate = task.dateRange[0] ? task.dateRange[0].replace(/-/g, '.') : ''
+      const endDate = task.dateRange[1] ? task.dateRange[1].replace(/-/g, '.') : ''
       if (startDate && endDate) {
         taskPeriod = `任务周期：${startDate} - ${endDate}`
       }
@@ -874,13 +876,27 @@ const updateTaskNode = (task: any) => {
     
     // 更新基本信息
     node.attr('title/text', task.name)
-    node.attr('assignee/text', task.assignee ? `参与者：${task.assignee}` : '参与者：未分配')
-    node.attr('task-days/text', taskPeriod)
-    node.attr('stats-up/text', task.taskStats?.up ? `▲ ${task.taskStats.up}` : '')
-    node.attr('stats-down/text', task.taskStats?.down ? `▼ ${task.taskStats.down}` : '')
     
-    // 更新工具关联信息
-    node.attr('toolAssociation/text', task.toolAssociation || '')
+    // 根据展开状态显示或隐藏内容
+    if (task.expanded) {
+      // 展开状态：显示所有内容
+      node.attr('assignee/text', task.assignee ? `参与者：${task.assignee}` : '参与者：未分配')
+      node.attr('task-days/text', taskPeriod)
+      node.attr('stats-up/text', task.taskStats?.up ? `▲ ${task.taskStats.up}` : '')
+      node.attr('stats-down/text', task.taskStats?.down ? `▼ ${task.taskStats.down}` : '')
+      node.attr('toolAssociation/text', task.toolAssociation || '')
+      // 显示头像
+      node.attr('avatar/display', 'block')
+    } else {
+      // 收起状态：隐藏除头部以外的所有内容
+      node.attr('assignee/text', '')
+      node.attr('task-days/text', '')
+      node.attr('stats-up/text', '')
+      node.attr('stats-down/text', '')
+      node.attr('toolAssociation/text', '')
+      // 隐藏头像
+      node.attr('avatar/display', 'none')
+    }
   }
 }
 

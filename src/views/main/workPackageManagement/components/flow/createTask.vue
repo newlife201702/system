@@ -228,9 +228,7 @@ import {
   ArrowLeft, 
   ArrowRight, 
   Plus, 
-  Document,
-  CaretRight,
-  CaretDown
+  Document
 } from '@element-plus/icons-vue'
 
 // 定义组件的 props
@@ -333,7 +331,7 @@ const toggleRightDrawer = () => {
 // 自定义任务节点
 const registerCustomNode = () => {
   Graph.registerNode('task-node', {
-    inherit: 'rect',
+    inherit: 'html',
     width: 200,
     height: 80,
     attrs: {
@@ -369,8 +367,8 @@ const registerCustomNode = () => {
         selector: 'detail'
       },
       {
-        tagName: 'foreignObject',
-        selector: 'expand-btn'
+        tagName: 'text',
+        selector: 'expand-indicator'
       }
     ]
   }, true)
@@ -409,28 +407,15 @@ const createTaskNode = (task: any) => {
     }
   })
 
-  // 添加展开/收起按钮
-  const expandBtn = document.createElement('div')
-  expandBtn.innerHTML = task.expanded ? '▼' : '▶'
-  expandBtn.style.cssText = `
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    color: #1890ff;
-  `
-  expandBtn.addEventListener('click', (e) => {
-    e.stopPropagation()
-    toggleTaskExpansion(task.id)
+  // 添加展开/收起指示符
+  node.attr('expand-indicator', {
+    text: task.expanded ? '▼' : '▶',
+    x: 175,
+    y: 16,
+    fontSize: 12,
+    fill: '#1890ff',
+    cursor: 'pointer'
   })
-
-  const foreignObject = node.findOne('expand-btn') as any
-  if (foreignObject) {
-    foreignObject.appendChild(expandBtn)
-  }
 
   return node
 }
@@ -451,11 +436,8 @@ const updateTaskNode = (task: any) => {
     const height = task.expanded ? 120 : 80
     node.resize(200, height)
     
-    // 更新展开按钮
-    const expandBtn = node.findOne('expand-btn')?.firstChild as HTMLElement
-    if (expandBtn) {
-      expandBtn.innerHTML = task.expanded ? '▼' : '▶'
-    }
+    // 更新展开指示符
+    node.attr('expand-indicator/text', task.expanded ? '▼' : '▶')
     
     // 更新基本信息
     node.attr('title/text', task.name)
@@ -471,7 +453,7 @@ const updateTaskNode = (task: any) => {
         fill: '#595959'
       })
     } else {
-      node.removeAttr('detail')
+      node.attr('detail', null)
     }
   }
 }
@@ -576,7 +558,14 @@ const initFlowChart = () => {
   })
 
   // 监听节点选择
-  graph.value.on('node:click', ({ node }) => {
+  graph.value.on('node:click', ({ node, e }) => {
+    // 检查是否点击了展开指示符区域
+    const target = e.target as SVGElement
+    if (target && target.getAttribute('selector') === 'expand-indicator') {
+      toggleTaskExpansion(node.id)
+      return
+    }
+    
     const taskData = node.getData()
     selectedTask.value = { ...taskData }
     rightDrawerCollapsed.value = false

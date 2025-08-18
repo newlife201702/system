@@ -188,10 +188,10 @@
             <el-form-item label="▲">
               <div class="input-section">
                 <div class="section-title">
-                  <span>输入 2项</span>
+                  <span>输入 {{ selectedTask.inputs ? selectedTask.inputs.length : 0 }}项</span>
                 </div>
                 <div class="section-actions">
-                  <el-button size="small" text>新增</el-button>
+                  <el-button size="small" text @click="addInput">新增</el-button>
                   <el-button size="small" text>模型下载</el-button>
                 </div>
                 <div class="data-table">
@@ -202,15 +202,18 @@
                     <span>类型</span>
                     <span>操作</span>
                   </div>
-                  <div class="table-row">
-                    <span>体系需求</span>
-                    <span>内部</span>
-                    <span>Req</span>
-                    <span>xxx需求.Req</span>
+                  <div class="table-row" v-for="(input, index) in selectedTask.inputs" :key="index">
+                    <span>{{ input.name }}</span>
+                    <span>{{ input.icon }}</span>
+                    <span>{{ input.attachment }}</span>
+                    <span>{{ input.type }}</span>
                     <span>
-                      <el-button size="small" text type="primary">编辑</el-button>
-                      <el-button size="small" text type="danger">删除</el-button>
+                      <el-button size="small" text type="primary" @click="editInput(index)">编辑</el-button>
+                      <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
                     </span>
+                  </div>
+                  <div class="table-row" v-if="!selectedTask.inputs || selectedTask.inputs.length === 0">
+                    <span colspan="5" style="text-align: center; color: #999;">暂无数据</span>
                   </div>
                 </div>
               </div>
@@ -219,10 +222,10 @@
             <el-form-item label="▼">
               <div class="output-section">
                 <div class="section-title">
-                  <span>输出 2项</span>
+                  <span>输出 {{ selectedTask.outputs ? selectedTask.outputs.length : 0 }}项</span>
                 </div>
                 <div class="section-actions">
-                  <el-button size="small" text>新增</el-button>
+                  <el-button size="small" text @click="addOutput">新增</el-button>
                   <el-button size="small" text>上传至模型库</el-button>
                   <el-button size="small" text>解析模型</el-button>
                 </div>
@@ -234,25 +237,18 @@
                     <span>类型</span>
                     <span>操作</span>
                   </div>
-                  <div class="table-row">
-                    <span>体系需求Req</span>
-                    <span>内部</span>
-                    <span>Req</span>
-                    <span>xxx需求.Req</span>
+                  <div class="table-row" v-for="(output, index) in selectedTask.outputs" :key="index">
+                    <span>{{ output.name }}</span>
+                    <span>{{ output.icon }}</span>
+                    <span>{{ output.attachment }}</span>
+                    <span>{{ output.type }}</span>
                     <span>
-                      <el-button size="small" text type="primary">编辑</el-button>
-                      <el-button size="small" text type="danger">删除</el-button>
+                      <el-button size="small" text type="primary" @click="editOutput(index)">编辑</el-button>
+                      <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
                     </span>
                   </div>
-                  <div class="table-row">
-                    <span>新的需求</span>
-                    <span>图标</span>
-                    <span>附件</span>
-                    <span>类型</span>
-                    <span>
-                      <el-button size="small" text type="primary">编辑</el-button>
-                      <el-button size="small" text type="danger">删除</el-button>
-                    </span>
+                  <div class="table-row" v-if="!selectedTask.outputs || selectedTask.outputs.length === 0">
+                    <span colspan="5" style="text-align: center; color: #999;">暂无数据</span>
                   </div>
                 </div>
               </div>
@@ -332,13 +328,30 @@ const taskList = ref<any[]>([
     type: 'analysis',
     nodeType: 'task',
     assignee: '方小明',
-    taskStats: { up: 3, down: 2 },
+    taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
     toolAssociation: '体系需求调研基线',
     x: 200,
     y: 80,
-    expanded: false
+    expanded: false,
+    // 输入输出数据
+    inputs: [
+      {
+        name: '体系需求',
+        icon: '内部',
+        attachment: 'Req',
+        type: 'xxx需求.Req'
+      }
+    ],
+    outputs: [
+      {
+        name: '体系需求Req',
+        icon: '内部',
+        attachment: 'Req',
+        type: 'xxx需求.Req'
+      }
+    ]
   },
   {
     id: 'task2',
@@ -352,7 +365,9 @@ const taskList = ref<any[]>([
     toolAssociation: '',
     x: 420,
     y: 180,
-    expanded: false
+    expanded: false,
+    inputs: [],
+    outputs: []
   },
   {
     id: 'task3',
@@ -360,13 +375,35 @@ const taskList = ref<any[]>([
     type: 'evaluation',
     nodeType: 'task',
     assignee: '李强',
-    taskStats: { up: 7, down: 4 },
+    taskStats: { up: 1, down: 2 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
     toolAssociation: '体系需求满足度评估基线',
     x: 220,
     y: 320,
-    expanded: false
+    expanded: false,
+    inputs: [
+      {
+        name: '体系需求',
+        icon: '内部',
+        attachment: 'Req',
+        type: 'xxx需求.Req'
+      }
+    ],
+    outputs: [
+      {
+        name: '体系需求Req',
+        icon: '内部',
+        attachment: 'Req',
+        type: 'xxx需求.Req'
+      },
+      {
+        name: '新的需求',
+        icon: '图标',
+        attachment: '附件',
+        type: '类型'
+      }
+    ]
   },
   {
     id: 'task4',
@@ -374,13 +411,29 @@ const taskList = ref<any[]>([
     type: 'simulation',
     nodeType: 'task',
     assignee: '方小明',
-    taskStats: { up: 3, down: 2 },
+    taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
     toolAssociation: '体系对抗仿真基线',
     x: 590,
     y: 320,
-    expanded: false
+    expanded: false,
+    inputs: [
+      {
+        name: '体系需求',
+        icon: '内部',
+        attachment: 'Req',
+        type: 'xxx需求.Req'
+      }
+    ],
+    outputs: [
+      {
+        name: '体系需求Req',
+        icon: '内部',
+        attachment: 'Req',
+        type: 'xxx需求.Req'
+      }
+    ]
   },
   {
     id: 'task5',
@@ -388,13 +441,29 @@ const taskList = ref<any[]>([
     type: 'performance',
     nodeType: 'task',
     assignee: '李强强',
-    taskStats: { up: 2, down: 4 },
+    taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
     toolAssociation: '体系效能评估基线',
     x: 590,
     y: 450,
-    expanded: false
+    expanded: false,
+    inputs: [
+      {
+        name: '体系需求',
+        icon: '内部',
+        attachment: 'Req',
+        type: 'xxx需求.Req'
+      }
+    ],
+    outputs: [
+      {
+        name: '体系需求Req',
+        icon: '内部',
+        attachment: 'Req',
+        type: 'xxx需求.Req'
+      }
+    ]
   },
   {
     id: 'end',
@@ -785,22 +854,30 @@ const createNormalTaskNode = (task: any) => {
         fontSize: 10,
         fill: '#8c8c8c'
       },
-      // 上箭头统计
-      'stats-up': {
-        text: task.expanded && task.taskStats?.up ? `▲ ${task.taskStats.up}` : '',
-        x: 150,
-        y: 54,
-        fontSize: 11,
-        fill: '#52c41a'
-      },
-      // 下箭头统计  
-      'stats-down': {
-        text: task.expanded && task.taskStats?.down ? `▼ ${task.taskStats.down}` : '',
-        x: 180,
-        y: 54,
-        fontSize: 11,
-        fill: '#ff4d4f'
-      },
+             // 上箭头统计
+       'stats-up': {
+         text: (() => {
+           if (!task.expanded) return ''
+           const inputCount = task.inputs ? task.inputs.length : 0
+           return inputCount > 0 ? `▲ ${inputCount}` : ''
+         })(),
+         x: 150,
+         y: 54,
+         fontSize: 11,
+         fill: '#52c41a'
+       },
+       // 下箭头统计  
+       'stats-down': {
+         text: (() => {
+           if (!task.expanded) return ''
+           const outputCount = task.outputs ? task.outputs.length : 0
+           return outputCount > 0 ? `▼ ${outputCount}` : ''
+         })(),
+         x: 180,
+         y: 54,
+         fontSize: 11,
+         fill: '#ff4d4f'
+       },
       // 工具关联信息
       toolAssociation: {
         text: task.expanded ? (task.toolAssociation || '') : '',
@@ -873,13 +950,17 @@ const updateTaskNode = (task: any) => {
     // 更新基本信息
     node.attr('title/text', task.name)
     
+    // 确保taskStats存在且正确
+    const inputCount = task.inputs ? task.inputs.length : 0
+    const outputCount = task.outputs ? task.outputs.length : 0
+    
     // 根据展开状态显示或隐藏内容
     if (task.expanded) {
       // 展开状态：显示所有内容
       node.attr('assignee/text', task.assignee ? `参与者：${task.assignee}` : '参与者：未分配')
       node.attr('task-days/text', taskPeriod)
-      node.attr('stats-up/text', task.taskStats?.up ? `▲ ${task.taskStats.up}` : '')
-      node.attr('stats-down/text', task.taskStats?.down ? `▼ ${task.taskStats.down}` : '')
+      node.attr('stats-up/text', inputCount > 0 ? `▲ ${inputCount}` : '')
+      node.attr('stats-down/text', outputCount > 0 ? `▼ ${outputCount}` : '')
       node.attr('toolAssociation/text', task.toolAssociation || '')
       // 显示头像
       node.attr('avatar/display', 'block')
@@ -1177,7 +1258,9 @@ const addTask = () => {
     toolAssociation: '',
     x: Math.random() * 400 + 200,
     y: Math.random() * 200 + 200,
-    expanded: false
+    expanded: false,
+    inputs: [],
+    outputs: []
   }
   
   taskList.value.push(newTask)
@@ -1196,10 +1279,88 @@ const updateTask = () => {
   
   const taskIndex = taskList.value.findIndex(t => t.id === selectedTask.value.id)
   if (taskIndex !== -1) {
+    // 更新taskStats以反映输入输出的实际数量
+    selectedTask.value.taskStats = {
+      up: selectedTask.value.inputs ? selectedTask.value.inputs.length : 0,
+      down: selectedTask.value.outputs ? selectedTask.value.outputs.length : 0
+    }
+    
     taskList.value[taskIndex] = { ...selectedTask.value }
     updateTaskNode(selectedTask.value)
     ElMessage.success('任务更新成功')
   }
+}
+
+// 添加输入项
+const addInput = () => {
+  if (!selectedTask.value) return
+  
+  if (!selectedTask.value.inputs) {
+    selectedTask.value.inputs = []
+  }
+  
+  selectedTask.value.inputs.push({
+    name: '新输入项',
+    icon: '内部',
+    attachment: '附件',
+    type: '类型'
+  })
+  
+  // 自动更新taskStats
+  selectedTask.value.taskStats.up = selectedTask.value.inputs.length
+}
+
+// 编辑输入项
+const editInput = (index: number) => {
+  if (!selectedTask.value || !selectedTask.value.inputs) return
+  // 这里可以添加编辑逻辑，比如打开一个对话框
+  console.log('编辑输入项:', index, selectedTask.value.inputs[index])
+}
+
+// 删除输入项
+const deleteInput = (index: number) => {
+  if (!selectedTask.value || !selectedTask.value.inputs) return
+  
+  selectedTask.value.inputs.splice(index, 1)
+  
+  // 自动更新taskStats
+  selectedTask.value.taskStats.up = selectedTask.value.inputs.length
+}
+
+// 添加输出项
+const addOutput = () => {
+  if (!selectedTask.value) return
+  
+  if (!selectedTask.value.outputs) {
+    selectedTask.value.outputs = []
+  }
+  
+  selectedTask.value.outputs.push({
+    name: '新输出项',
+    icon: '内部',
+    attachment: '附件',
+    type: '类型'
+  })
+  
+  // 自动更新taskStats
+  selectedTask.value.taskStats.down = selectedTask.value.outputs.length
+}
+
+// 编辑输出项
+const editOutput = (index: number) => {
+  if (!selectedTask.value || !selectedTask.value.outputs) return
+  // 这里可以添加编辑逻辑，比如打开一个对话框
+  console.log('编辑输出项:', index, selectedTask.value.outputs[index])
+}
+
+// 删除输出项
+const deleteOutput = (index: number) => {
+  if (!selectedTask.value || !selectedTask.value.outputs) return
+  
+  selectedTask.value.outputs.splice(index, 1)
+  
+  // 自动更新taskStats
+  selectedTask.value.taskStats.down = selectedTask.value.outputs.length
 }
 
 // 删除任务

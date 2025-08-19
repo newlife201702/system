@@ -498,31 +498,36 @@ const erData = ref({
   ],
   relations: [
     {
-      id: 'user_order',
-      source: 'user',
-      target: 'order',
-      sourceKey: 'id',
-      targetKey: 'user_id',
-      relation: 'one-to-many',
-      label: '拥有'
+      id: 'user_id_relation',
+      sourceEntity: 'user',
+      sourceAttribute: 'id',
+      targetEntity: 'order',
+      targetAttribute: 'user_id',
+      label: '用户关联'
     },
     {
-      id: 'order_item_order',
-      source: 'order',
-      target: 'order_item',
-      sourceKey: 'id',
-      targetKey: 'order_id',
-      relation: 'one-to-many',
-      label: '包含'
+      id: 'order_id_relation',
+      sourceEntity: 'order',
+      sourceAttribute: 'id',
+      targetEntity: 'order_item',
+      targetAttribute: 'order_id',
+      label: '订单关联'
     },
     {
-      id: 'order_item_product',
-      source: 'product',
-      target: 'order_item',
-      sourceKey: 'id',
-      targetKey: 'product_id',
-      relation: 'one-to-many',
-      label: '属于'
+      id: 'product_id_relation',
+      sourceEntity: 'product',
+      sourceAttribute: 'id',
+      targetEntity: 'order_item',
+      targetAttribute: 'product_id',
+      label: '产品关联'
+    },
+    {
+      id: 'name_relation',
+      sourceEntity: 'user',
+      sourceAttribute: 'name',
+      targetEntity: 'product',
+      targetAttribute: 'name',
+      label: '名称关联'
     }
   ]
 })
@@ -1676,8 +1681,12 @@ const renderERGraph = () => {
     createEREntity(entity)
   })
   
-  // 注意：不再自动添加节点级别的连线
-  // 用户可以手动连接各个数据项
+  // 添加属性间的连线
+  setTimeout(() => {
+    erData.value.relations.forEach(relation => {
+      createAttributeRelation(relation)
+    })
+  }, 100)
 }
 
 // 创建ER实体
@@ -1782,6 +1791,80 @@ const createAttributesHTML = (attributes: any[]) => {
       }).join('')}
     </div>
   `
+}
+
+// 创建属性间的关系连线
+const createAttributeRelation = (relation: any) => {
+  if (!erGraph.value) return
+  
+  const sourcePortId = `${relation.sourceEntity}-${relation.sourceAttribute}-right`
+  const targetPortId = `${relation.targetEntity}-${relation.targetAttribute}-left`
+  
+  // 检查源端口和目标端口是否存在
+  const sourceCell = erGraph.value.getCellById(relation.sourceEntity)
+  const targetCell = erGraph.value.getCellById(relation.targetEntity)
+  
+  if (!sourceCell || !targetCell) {
+    console.warn(`节点不存在: ${relation.sourceEntity} 或 ${relation.targetEntity}`)
+    return
+  }
+  
+  // 将Cell转换为Node类型
+  const sourceNode = sourceCell as Node
+  const targetNode = targetCell as Node
+  
+  // 检查端口是否存在
+  const sourcePorts = sourceNode.getPorts()
+  const targetPorts = targetNode.getPorts()
+  
+  const sourcePortExists = sourcePorts.some((port: any) => port.id === sourcePortId)
+  const targetPortExists = targetPorts.some((port: any) => port.id === targetPortId)
+  
+  if (!sourcePortExists || !targetPortExists) {
+    console.warn(`端口不存在: ${sourcePortId} 或 ${targetPortId}`)
+    return
+  }
+  
+  // 创建连线
+  try {
+    erGraph.value.addEdge({
+      id: relation.id,
+      source: {
+        cell: relation.sourceEntity,
+        port: sourcePortId
+      },
+      target: {
+        cell: relation.targetEntity,
+        port: targetPortId
+      },
+      attrs: {
+        line: {
+          stroke: '#A2A2A2',
+          strokeWidth: 2,
+          targetMarker: {
+            name: 'block',
+            width: 8,
+            height: 8
+          }
+        }
+      },
+      labels: [
+        {
+          attrs: {
+            text: {
+              text: relation.label || '',
+              fontSize: 10,
+              fill: '#666'
+            }
+          },
+          position: 0.5
+        }
+      ],
+      zIndex: 0
+    })
+  } catch (error) {
+    console.error('创建连线失败:', error)
+  }
 }
 
 

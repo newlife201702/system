@@ -1508,22 +1508,117 @@ const initERGraph = () => {
     interacting: {
       nodeMovable: true,
       edgeMovable: false
+    },
+    connecting: {
+      router: 'manhattan',
+      connector: {
+        name: 'rounded',
+        args: {
+          radius: 8
+        }
+      },
+      anchor: 'center',
+      connectionPoint: 'anchor',
+      allowBlank: false,
+      snap: {
+        radius: 20
+      },
+      allowMulti: true,
+      allowLoop: false,
+      highlight: true,
+      createEdge() {
+        return erGraph.value!.createEdge({
+          attrs: {
+            line: {
+              stroke: '#A2A2A2',
+              strokeWidth: 2,
+              targetMarker: {
+                name: 'block',
+                width: 8,
+                height: 8
+              }
+            }
+          },
+          zIndex: 0
+        })
+      },
+      validateConnection({ sourceMagnet, targetMagnet }) {
+        // 只允许在不同节点的属性之间建立连接
+        const sourceAttr = sourceMagnet?.getAttribute('data-attr')
+        const targetAttr = targetMagnet?.getAttribute('data-attr')
+        const sourceSide = sourceMagnet?.getAttribute('data-side')
+        const targetSide = targetMagnet?.getAttribute('data-side')
+        
+        // 必须有属性信息，且不能是同一侧的连接点
+        return !!(sourceAttr && targetAttr && sourceSide !== targetSide)
+      }
+    },
+    highlighting: {
+      magnetAdsorbed: {
+        name: 'stroke',
+        args: {
+          attrs: {
+            fill: '#31d0c6',
+            stroke: '#31d0c6'
+          }
+        }
+      }
     }
   })
 
   // 注册ER节点
   registerERNode()
   
+  // 添加事件监听
+  setupEREventListeners()
+  
   // 渲染ER图
   renderERGraph()
+}
+
+// 设置ER图事件监听
+const setupEREventListeners = () => {
+  if (!erGraph.value) return
+  
+  // 鼠标进入节点显示连接点
+  erGraph.value.on('node:mouseenter', ({ node }) => {
+    const ports = node.getPorts()
+    ports.forEach(port => {
+      node.setPortProp(port.id!, 'attrs/circle/style/visibility', 'visible')
+    })
+  })
+  
+  // 鼠标离开节点隐藏连接点
+  erGraph.value.on('node:mouseleave', ({ node }) => {
+    const ports = node.getPorts()
+    ports.forEach(port => {
+      node.setPortProp(port.id!, 'attrs/circle/style/visibility', 'hidden')
+    })
+  })
+  
+  // 端口鼠标进入高亮
+  erGraph.value.on('node:port:mouseenter', ({ node, port }) => {
+    if (port) {
+      node.setPortProp(port, 'attrs/circle/fill', '#31d0c6')
+      node.setPortProp(port, 'attrs/circle/r', 6)
+    }
+  })
+  
+  // 端口鼠标离开取消高亮
+  erGraph.value.on('node:port:mouseleave', ({ node, port }) => {
+    if (port) {
+      node.setPortProp(port, 'attrs/circle/fill', '#ffffff')
+      node.setPortProp(port, 'attrs/circle/r', 4)
+    }
+  })
 }
 
 // 注册ER节点
 const registerERNode = () => {
   Graph.registerNode('er-entity', {
-    inherit: 'html',
+    inherit: 'rect',
     width: 200,
-    height: 120,
+    height: 150,
     attrs: {
       body: {
         strokeWidth: 2,
@@ -1537,8 +1632,35 @@ const registerERNode = () => {
       { tagName: 'rect', selector: 'body' },
       { tagName: 'rect', selector: 'header' },
       { tagName: 'text', selector: 'title' },
-      { tagName: 'text', selector: 'attrs' }
-    ]
+      { tagName: 'foreignObject', selector: 'attrs-container' }
+    ],
+    ports: {
+      groups: {
+        'attr-port': {
+          position: {
+            name: 'absolute'
+          },
+          attrs: {
+            circle: {
+              r: 4,
+              magnet: true,
+              stroke: '#31d0c6',
+              strokeWidth: 2,
+              fill: '#ffffff',
+              style: {
+                visibility: 'hidden'
+              }
+            }
+          },
+          markup: [
+            {
+              tagName: 'circle',
+              selector: 'circle'
+            }
+          ]
+        }
+      }
+    }
   }, true)
 }
 
@@ -1554,33 +1676,27 @@ const renderERGraph = () => {
     createEREntity(entity)
   })
   
-  // 添加关系连线
-  setTimeout(() => {
-    erData.value.relations.forEach(relation => {
-      createERRelation(relation)
-    })
-  }, 100)
+  // 注意：不再自动添加节点级别的连线
+  // 用户可以手动连接各个数据项
 }
 
 // 创建ER实体
 const createEREntity = (entity: any) => {
-  const attrsText = entity.attributes
-    .map((attr: any) => {
-      let prefix = ''
-      if (attr.key === 'primary') prefix = '🔑 '
-      else if (attr.key === 'foreign') prefix = '🔗 '
-      else if (attr.key === 'unique') prefix = '⭐ '
-      return `${prefix}${attr.name}: ${attr.type}`
-    })
-    .join('\n')
-    
+  // 动态计算节点高度：头部30px + 属性行数*20px + 底部边距10px
+  const attrCount = entity.attributes.length
+  const nodeHeight = Math.max(120, 30 + attrCount * 20 + 10)
+  
+  // 创建节点
   const node = erGraph.value!.addNode({
     id: entity.id,
     shape: 'er-entity',
     x: entity.x,
     y: entity.y,
+    size: { width: 200, height: nodeHeight },
     attrs: {
       body: {
+        width: 200,
+        height: nodeHeight,
         fill: '#ffffff',
         stroke: '#5F95FF'
       },
@@ -1603,52 +1719,72 @@ const createEREntity = (entity: any) => {
         textAnchor: 'middle',
         fill: '#ffffff'
       },
-      attrs: {
-        text: attrsText,
-        x: 10,
-        y: 45,
-        fontSize: 11,
-        fill: '#333333',
-        fontFamily: 'monospace'
+      'attrs-container': {
+        width: 200,
+        height: nodeHeight - 30,
+        x: 0,
+        y: 30,
+        html: createAttributesHTML(entity.attributes)
       }
     }
+  })
+  
+  // 为每个属性添加连接点
+  entity.attributes.forEach((attr: any, index: number) => {
+    const portY = 40 + index * 20
+    
+    // 左侧连接点（输入）
+    node.addPort({
+      id: `${entity.id}-${attr.name}-left`,
+      group: 'attr-port',
+      args: {
+        x: -4,
+        y: portY
+      },
+      attrs: {
+        circle: {
+          'data-attr': attr.name,
+          'data-side': 'left'
+        }
+      }
+    })
+    
+    // 右侧连接点（输出）
+    node.addPort({
+      id: `${entity.id}-${attr.name}-right`,
+      group: 'attr-port',
+      args: {
+        x: 204,
+        y: portY
+      },
+      attrs: {
+        circle: {
+          'data-attr': attr.name,
+          'data-side': 'right'
+        }
+      }
+    })
   })
   
   return node
 }
 
-// 创建ER关系
-const createERRelation = (relation: any) => {
-  const sourceNode = erGraph.value!.getCellById(relation.source)
-  const targetNode = erGraph.value!.getCellById(relation.target)
-  
-  if (sourceNode && targetNode) {
-    erGraph.value!.addEdge({
-      id: relation.id,
-      source: relation.source,
-      target: relation.target,
-      labels: [{
-        attrs: {
-          text: {
-            text: relation.label,
-            fill: '#666666',
-            fontSize: 12
-          }
-        }
-      }],
-      attrs: {
-        line: {
-          stroke: '#A2A2A2',
-          strokeWidth: 2,
-          targetMarker: {
-            name: 'classic',
-            size: 8
-          }
-        }
-      }
-    })
-  }
+// 创建属性HTML
+const createAttributesHTML = (attributes: any[]) => {
+  return `
+    <div style="padding: 10px; font-family: monospace; font-size: 11px; line-height: 20px;">
+      ${attributes.map((attr: any) => {
+        let prefix = ''
+        if (attr.key === 'primary') prefix = '🔑 '
+        else if (attr.key === 'foreign') prefix = '🔗 '
+        else if (attr.key === 'unique') prefix = '⭐ '
+        return `<div style="position: relative; padding: 0 8px;">${prefix}${attr.name}: ${attr.type}</div>`
+      }).join('')}
+    </div>
+  `
 }
+
+
 
 // 添加任务
 const addTask = () => {

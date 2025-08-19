@@ -450,10 +450,10 @@ const erData = ref({
       x: 100,
       y: 100,
       attributes: [
-        { name: 'id', type: 'int', key: 'primary' },
-        { name: 'name', type: 'varchar(50)', key: null },
-        { name: 'email', type: 'varchar(100)', key: 'unique' },
-        { name: 'created_at', type: 'datetime', key: null }
+        { name: 'id', type: 'int' },
+        { name: 'name', type: 'varchar(50)' },
+        { name: 'email', type: 'varchar(100)' },
+        { name: 'created_at', type: 'datetime' }
       ]
     },
     {
@@ -462,11 +462,11 @@ const erData = ref({
       x: 400,
       y: 100,
       attributes: [
-        { name: 'id', type: 'int', key: 'primary' },
-        { name: 'user_id', type: 'int', key: 'foreign' },
-        { name: 'amount', type: 'decimal(10,2)', key: null },
-        { name: 'status', type: 'varchar(20)', key: null },
-        { name: 'created_at', type: 'datetime', key: null }
+        { name: 'id', type: 'int' },
+        { name: 'user_id', type: 'int' },
+        { name: 'amount', type: 'decimal(10,2)' },
+        { name: 'status', type: 'varchar(20)' },
+        { name: 'created_at', type: 'datetime' }
       ]
     },
     {
@@ -475,11 +475,11 @@ const erData = ref({
       x: 700,
       y: 100,
       attributes: [
-        { name: 'id', type: 'int', key: 'primary' },
-        { name: 'name', type: 'varchar(100)', key: null },
-        { name: 'price', type: 'decimal(8,2)', key: null },
-        { name: 'category_id', type: 'int', key: 'foreign' },
-        { name: 'created_at', type: 'datetime', key: null }
+        { name: 'id', type: 'int' },
+        { name: 'name', type: 'varchar(100)' },
+        { name: 'price', type: 'decimal(8,2)' },
+        { name: 'category_id', type: 'int' },
+        { name: 'created_at', type: 'datetime' }
       ]
     },
     {
@@ -488,11 +488,11 @@ const erData = ref({
       x: 400,
       y: 300,
       attributes: [
-        { name: 'id', type: 'int', key: 'primary' },
-        { name: 'order_id', type: 'int', key: 'foreign' },
-        { name: 'product_id', type: 'int', key: 'foreign' },
-        { name: 'quantity', type: 'int', key: null },
-        { name: 'price', type: 'decimal(8,2)', key: null }
+        { name: 'id', type: 'int' },
+        { name: 'order_id', type: 'int' },
+        { name: 'product_id', type: 'int' },
+        { name: 'quantity', type: 'int' },
+        { name: 'price', type: 'decimal(8,2)' }
       ]
     }
   ],
@@ -502,32 +502,28 @@ const erData = ref({
       sourceEntity: 'user',
       sourceAttribute: 'id',
       targetEntity: 'order',
-      targetAttribute: 'user_id',
-      label: '用户关联'
+      targetAttribute: 'user_id'
     },
     {
       id: 'order_id_relation',
       sourceEntity: 'order',
       sourceAttribute: 'id',
       targetEntity: 'order_item',
-      targetAttribute: 'order_id',
-      label: '订单关联'
+      targetAttribute: 'order_id'
     },
     {
       id: 'product_id_relation',
       sourceEntity: 'product',
       sourceAttribute: 'id',
       targetEntity: 'order_item',
-      targetAttribute: 'product_id',
-      label: '产品关联'
+      targetAttribute: 'product_id'
     },
     {
       id: 'name_relation',
       sourceEntity: 'user',
       sourceAttribute: 'name',
       targetEntity: 'product',
-      targetAttribute: 'name',
-      label: '名称关联'
+      targetAttribute: 'name'
     }
   ]
 })
@@ -1783,11 +1779,7 @@ const createAttributesHTML = (attributes: any[]) => {
   return `
     <div style="padding: 10px; font-family: monospace; font-size: 11px; line-height: 20px;">
       ${attributes.map((attr: any) => {
-        let prefix = ''
-        if (attr.key === 'primary') prefix = '🔑 '
-        else if (attr.key === 'foreign') prefix = '🔗 '
-        else if (attr.key === 'unique') prefix = '⭐ '
-        return `<div style="position: relative; padding: 0 8px;">${prefix}${attr.name}: ${attr.type}</div>`
+        return `<div style="position: relative; padding: 0 8px;">${attr.name}: ${attr.type}</div>`
       }).join('')}
     </div>
   `
@@ -1848,18 +1840,7 @@ const createAttributeRelation = (relation: any) => {
           }
         }
       },
-      labels: [
-        {
-          attrs: {
-            text: {
-              text: relation.label || '',
-              fontSize: 10,
-              fill: '#666'
-            }
-          },
-          position: 0.5
-        }
-      ],
+
       zIndex: 0
     })
   } catch (error) {

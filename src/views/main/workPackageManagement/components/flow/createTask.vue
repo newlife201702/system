@@ -230,15 +230,17 @@
                                <el-input v-model="input.name" size="small" placeholder="请输入名称" />
                              </span>
                              <span>
-                               <el-select v-model="input.level" size="small" placeholder="请选择密级">
-                                 <el-option label="公开" value="公开" />
-                                 <el-option label="内部" value="内部" />
-                                 <el-option label="秘密" value="秘密" />
-                                 <el-option label="机密" value="机密" />
+                               <el-select v-model="input.securityLevelCode" size="small" placeholder="请选择密级" @change="updateInputSecurityLevelName(input)">
+                                 <el-option label="公开" value="SECRET_LEVEL_OPEN" />
+                                 <el-option label="内部" value="SECRET_LEVEL_INTERNAL" />
+                                 <el-option label="普通商密" value="SECRET_LEVEL_NORMAL_COMMERCIAL" />
+                                 <el-option label="秘密" value="SECRET_LEVEL_SECRET" />
+                                 <el-option label="机密" value="SECRET_LEVEL_CONFIDENTIALITY" />
+                                 <el-option label="核心商密" value="SECRET_LEVEL_CORE_COMMERCIAL" />
                                </el-select>
                              </span>
                              <span>
-                               <el-select v-model="input.type" size="small" placeholder="请选择类型">
+                               <el-select v-model="input.dataTypeCode" size="small" placeholder="请选择类型">
                                  <el-option label="文件" value="文件" />
                                  <el-option label="数据" value="数据" />
                                  <el-option label="模型" value="模型" />
@@ -258,8 +260,8 @@
                                      选择文件
                                    </el-button>
                                  </el-upload>
-                                 <div v-if="input.attachment" class="file-info">
-                                   <span class="file-name">{{ input.attachment.name }}</span>
+                                 <div v-if="input.dataTypeValue" class="file-info">
+                                   <span class="file-name">{{ input.dataTypeValue.name }}</span>
                                    <el-button size="small" type="danger" text @click="handleInputFileRemove(index)">
                                      删除
                                    </el-button>
@@ -275,9 +277,9 @@
                            <!-- 非编辑态 -->
                            <template v-else>
                              <span>{{ input.name }}</span>
-                             <span>{{ input.level }}</span>
-                             <span>{{ input.type }}</span>
-                             <span>{{ input.attachment ? input.attachment.name : '无' }}</span>
+                             <span>{{ input.securityLevelName }}</span>
+                             <span>{{ input.dataTypeCode }}</span>
+                             <span>{{ input.dataTypeValue ? input.dataTypeValue.name : '无' }}</span>
                              <span>
                                <el-button size="small" text type="primary" @click="editInput(index)">编辑</el-button>
                                <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
@@ -316,15 +318,17 @@
                                <el-input v-model="output.name" size="small" placeholder="请输入名称" />
                              </span>
                              <span>
-                               <el-select v-model="output.level" size="small" placeholder="请选择密级">
-                                 <el-option label="公开" value="公开" />
-                                 <el-option label="内部" value="内部" />
-                                 <el-option label="秘密" value="秘密" />
-                                 <el-option label="机密" value="机密" />
+                               <el-select v-model="output.securityLevelCode" size="small" placeholder="请选择密级" @change="updateOutputSecurityLevelName(output)">
+                                 <el-option label="公开" value="SECRET_LEVEL_OPEN" />
+                                 <el-option label="内部" value="SECRET_LEVEL_INTERNAL" />
+                                 <el-option label="普通商密" value="SECRET_LEVEL_NORMAL_COMMERCIAL" />
+                                 <el-option label="秘密" value="SECRET_LEVEL_SECRET" />
+                                 <el-option label="机密" value="SECRET_LEVEL_CONFIDENTIALITY" />
+                                 <el-option label="核心商密" value="SECRET_LEVEL_CORE_COMMERCIAL" />
                                </el-select>
                              </span>
                              <span>
-                               <el-select v-model="output.type" size="small" placeholder="请选择类型">
+                               <el-select v-model="output.dataTypeCode" size="small" placeholder="请选择类型">
                                  <el-option label="文件" value="文件" />
                                  <el-option label="数据" value="数据" />
                                  <el-option label="模型" value="模型" />
@@ -344,8 +348,8 @@
                                      选择文件
                                    </el-button>
                                  </el-upload>
-                                 <div v-if="output.attachment" class="file-info">
-                                   <span class="file-name">{{ output.attachment.name }}</span>
+                                 <div v-if="output.dataTypeValue" class="file-info">
+                                   <span class="file-name">{{ output.dataTypeValue.name }}</span>
                                    <el-button size="small" type="danger" text @click="handleOutputFileRemove(index)">
                                      删除
                                    </el-button>
@@ -361,9 +365,9 @@
                            <!-- 非编辑态 -->
                            <template v-else>
                              <span>{{ output.name }}</span>
-                             <span>{{ output.level }}</span>
-                             <span>{{ output.type }}</span>
-                             <span>{{ output.attachment ? output.attachment.name : '无' }}</span>
+                             <span>{{ output.securityLevelName }}</span>
+                             <span>{{ output.dataTypeCode }}</span>
+                             <span>{{ output.dataTypeValue ? output.dataTypeValue.name : '无' }}</span>
                              <span>
                                <el-button size="small" text type="primary" @click="editOutput(index)">编辑</el-button>
                                <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
@@ -551,18 +555,20 @@ const taskList = ref<any[]>([
     inputs: [
       {
         name: '体系需求',
-        level: '内部',
-        type: 'xxx需求.Req',
-        attachment: null,
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'xxx需求.Req',
+        dataTypeValue: null,
         isEditing: false
       }
     ],
     outputs: [
       {
         name: '体系需求Req',
-        level: '内部',
-        type: 'xxx需求.Req', 
-        attachment: null,
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'xxx需求.Req',
+        dataTypeValue: null,
         isEditing: false
       }
     ]
@@ -599,25 +605,29 @@ const taskList = ref<any[]>([
     inputs: [
       {
         name: '体系需求',
-        level: '内部',
-        attachment: null,
-        isEditing: false,
-        type: 'xxx需求.Req'
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'xxx需求.Req',
+        dataTypeValue: null,
+        isEditing: false
       }
     ],
     outputs: [
       {
         name: '体系需求Req',
-        level: '内部',
-        attachment: null,
-        isEditing: false,
-        type: 'xxx需求.Req'
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'xxx需求.Req',
+        dataTypeValue: null,
+        isEditing: false
       },
       {
         name: '新的需求',
-        icon: '图标',
-        attachment: '附件',
-        type: '类型'
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: '类型',
+        dataTypeValue: null,
+        isEditing: false
       }
     ]
   },
@@ -637,19 +647,21 @@ const taskList = ref<any[]>([
     inputs: [
       {
         name: '体系需求',
-        level: '内部',
-        attachment: null,
-        isEditing: false,
-        type: 'xxx需求.Req'
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'xxx需求.Req',
+        dataTypeValue: null,
+        isEditing: false
       }
     ],
     outputs: [
       {
         name: '体系需求Req',
-        level: '内部',
-        attachment: null,
-        isEditing: false,
-        type: 'xxx需求.Req'
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'xxx需求.Req',
+        dataTypeValue: null,
+        isEditing: false
       }
     ]
   },
@@ -669,19 +681,21 @@ const taskList = ref<any[]>([
     inputs: [
       {
         name: '体系需求',
-        level: '内部',
-        attachment: null,
-        isEditing: false,
-        type: 'xxx需求.Req'
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'xxx需求.Req',
+        dataTypeValue: null,
+        isEditing: false
       }
     ],
     outputs: [
       {
         name: '体系需求Req',
-        level: '内部',
-        attachment: null,
-        isEditing: false,
-        type: 'xxx需求.Req'
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'xxx需求.Req',
+        dataTypeValue: null,
+        isEditing: false
       }
     ]
   },
@@ -1693,9 +1707,10 @@ const addInput = () => {
   
   selectedTask.value.inputs.push({
     name: '',
-    level: '内部',
-    type: '文件',
-    attachment: null,
+    securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+    securityLevelName: '内部',
+    dataTypeCode: '文件',
+    dataTypeValue: null,
     isEditing: true
   })
   
@@ -1742,13 +1757,26 @@ const handleInputFileChange = (file: File | any, index: number) => {
     type: file.type || file.raw?.type || '',
     raw: file.raw || file
   }
-  selectedTask.value.inputs[index].attachment = fileObj
+  selectedTask.value.inputs[index].dataTypeValue = fileObj
 }
 
 // 移除输入文件
 const handleInputFileRemove = (index: number) => {
   if (!selectedTask.value || !selectedTask.value.inputs) return
-  selectedTask.value.inputs[index].attachment = null
+  selectedTask.value.inputs[index].dataTypeValue = null
+}
+
+// 更新输入项密级名称
+const updateInputSecurityLevelName = (input: any) => {
+  const securityLevelMap: Record<string, string> = {
+    'SECRET_LEVEL_OPEN': '公开',
+    'SECRET_LEVEL_INTERNAL': '内部',
+    'SECRET_LEVEL_NORMAL_COMMERCIAL': '普通商密',
+    'SECRET_LEVEL_SECRET': '秘密',
+    'SECRET_LEVEL_CONFIDENTIALITY': '机密',
+    'SECRET_LEVEL_CORE_COMMERCIAL': '核心商密'
+  }
+  input.securityLevelName = securityLevelMap[input.securityLevelCode] || input.securityLevelCode
 }
 
 // 添加输出项
@@ -1761,9 +1789,10 @@ const addOutput = () => {
   
   selectedTask.value.outputs.push({
     name: '',
-    level: '内部',
-    type: '文件',
-    attachment: null,
+    securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+    securityLevelName: '内部',
+    dataTypeCode: '文件',
+    dataTypeValue: null,
     isEditing: true
   })
   
@@ -1810,13 +1839,26 @@ const handleOutputFileChange = (file: File | any, index: number) => {
     type: file.type || file.raw?.type || '',
     raw: file.raw || file
   }
-  selectedTask.value.outputs[index].attachment = fileObj
+  selectedTask.value.outputs[index].dataTypeValue = fileObj
 }
 
 // 移除输出文件
 const handleOutputFileRemove = (index: number) => {
   if (!selectedTask.value || !selectedTask.value.outputs) return
-  selectedTask.value.outputs[index].attachment = null
+  selectedTask.value.outputs[index].dataTypeValue = null
+}
+
+// 更新输出项密级名称
+const updateOutputSecurityLevelName = (output: any) => {
+  const securityLevelMap: Record<string, string> = {
+    'SECRET_LEVEL_OPEN': '公开',
+    'SECRET_LEVEL_INTERNAL': '内部',
+    'SECRET_LEVEL_NORMAL_COMMERCIAL': '普通商密',
+    'SECRET_LEVEL_SECRET': '秘密',
+    'SECRET_LEVEL_CONFIDENTIALITY': '机密',
+    'SECRET_LEVEL_CORE_COMMERCIAL': '核心商密'
+  }
+  output.securityLevelName = securityLevelMap[output.securityLevelCode] || output.securityLevelCode
 }
 
 // 删除任务

@@ -31,7 +31,7 @@ const nav1 = [
         ]
     },
     {
-        title: "任务", ico: "TrendCharts", key: "/main/project",
+        title: "项目", ico: "TrendCharts", key: "/main/myWorkPackage/list2",
     },
     {
         title: "个人中心", ico: "Histogram", key: "/main/persondata",

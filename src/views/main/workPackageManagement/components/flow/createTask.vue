@@ -134,7 +134,8 @@
          </div>
        </div>
       
-      <div class="flowchart-canvas" ref="canvasRef"></div>
+      <div v-show="isTaskFlow" class="flowchart-canvas" ref="canvasRef"></div>
+      <div v-show="!isTaskFlow" class="er-canvas" ref="erCanvasRef"></div>
     </div>
 
     <!-- 右侧任务基础信息抽屉 -->
@@ -305,7 +306,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import { Graph, Node, Edge, Shape } from '@antv/x6'
 import { ElMessage } from 'element-plus'
 import { 
@@ -325,12 +326,100 @@ const props = defineProps<{
 const leftDrawerCollapsed = ref(false)
 const rightDrawerCollapsed = ref(false)
 const canvasRef = ref<HTMLElement>()
+const erCanvasRef = ref<HTMLElement>()
 const graph = ref<Graph>()
+const erGraph = ref<Graph>()
 const selectedTask = ref<any>(null)
 const isTaskFlow = ref(true) // 默认显示任务流
 
 // 项目信息
 const projectInfo = reactive(props.projectData || {})
+
+// ER图数据
+const erData = ref({
+  entities: [
+    {
+      id: 'user',
+      name: '用户',
+      x: 100,
+      y: 100,
+      attributes: [
+        { name: 'id', type: 'int', key: 'primary' },
+        { name: 'name', type: 'varchar(50)', key: null },
+        { name: 'email', type: 'varchar(100)', key: 'unique' },
+        { name: 'created_at', type: 'datetime', key: null }
+      ]
+    },
+    {
+      id: 'order',
+      name: '订单',
+      x: 400,
+      y: 100,
+      attributes: [
+        { name: 'id', type: 'int', key: 'primary' },
+        { name: 'user_id', type: 'int', key: 'foreign' },
+        { name: 'amount', type: 'decimal(10,2)', key: null },
+        { name: 'status', type: 'varchar(20)', key: null },
+        { name: 'created_at', type: 'datetime', key: null }
+      ]
+    },
+    {
+      id: 'product',
+      name: '产品',
+      x: 700,
+      y: 100,
+      attributes: [
+        { name: 'id', type: 'int', key: 'primary' },
+        { name: 'name', type: 'varchar(100)', key: null },
+        { name: 'price', type: 'decimal(8,2)', key: null },
+        { name: 'category_id', type: 'int', key: 'foreign' },
+        { name: 'created_at', type: 'datetime', key: null }
+      ]
+    },
+    {
+      id: 'order_item',
+      name: '订单项',
+      x: 400,
+      y: 300,
+      attributes: [
+        { name: 'id', type: 'int', key: 'primary' },
+        { name: 'order_id', type: 'int', key: 'foreign' },
+        { name: 'product_id', type: 'int', key: 'foreign' },
+        { name: 'quantity', type: 'int', key: null },
+        { name: 'price', type: 'decimal(8,2)', key: null }
+      ]
+    }
+  ],
+  relations: [
+    {
+      id: 'user_order',
+      source: 'user',
+      target: 'order',
+      sourceKey: 'id',
+      targetKey: 'user_id',
+      relation: 'one-to-many',
+      label: '拥有'
+    },
+    {
+      id: 'order_item_order',
+      source: 'order',
+      target: 'order_item',
+      sourceKey: 'id',
+      targetKey: 'order_id',
+      relation: 'one-to-many',
+      label: '包含'
+    },
+    {
+      id: 'order_item_product',
+      source: 'product',
+      target: 'order_item',
+      sourceKey: 'id',
+      targetKey: 'product_id',
+      relation: 'one-to-many',
+      label: '属于'
+    }
+  ]
+})
 
 // 任务列表
 const taskList = ref<any[]>([
@@ -1265,6 +1354,178 @@ const initFlowChart = () => {
   })
 }
 
+// 初始化ER图
+const initERGraph = () => {
+  if (!erCanvasRef.value) return
+
+  erGraph.value = new Graph({
+    container: erCanvasRef.value,
+    width: erCanvasRef.value.clientWidth,
+    height: erCanvasRef.value.clientHeight,
+    autoResize: true,
+    background: {
+      color: '#f8f9fa'
+    },
+    grid: {
+      visible: true,
+      type: 'doubleMesh',
+      args: [
+        {
+          color: '#eee',
+          thickness: 1
+        },
+        {
+          color: '#ddd',
+          thickness: 1,
+          factor: 4
+        }
+      ]
+    },
+    interacting: {
+      nodeMovable: true,
+      edgeMovable: false
+    }
+  })
+
+  // 注册ER节点
+  registerERNode()
+  
+  // 渲染ER图
+  renderERGraph()
+}
+
+// 注册ER节点
+const registerERNode = () => {
+  Graph.registerNode('er-entity', {
+    inherit: 'html',
+    width: 200,
+    height: 120,
+    attrs: {
+      body: {
+        strokeWidth: 2,
+        stroke: '#5F95FF',
+        fill: '#ffffff',
+        rx: 8,
+        ry: 8
+      }
+    },
+    markup: [
+      { tagName: 'rect', selector: 'body' },
+      { tagName: 'rect', selector: 'header' },
+      { tagName: 'text', selector: 'title' },
+      { tagName: 'text', selector: 'attrs' }
+    ]
+  }, true)
+}
+
+// 渲染ER图
+const renderERGraph = () => {
+  if (!erGraph.value) return
+  
+  // 清空画布
+  erGraph.value.clearCells()
+  
+  // 添加实体节点
+  erData.value.entities.forEach(entity => {
+    createEREntity(entity)
+  })
+  
+  // 添加关系连线
+  setTimeout(() => {
+    erData.value.relations.forEach(relation => {
+      createERRelation(relation)
+    })
+  }, 100)
+}
+
+// 创建ER实体
+const createEREntity = (entity: any) => {
+  const attrsText = entity.attributes
+    .map((attr: any) => {
+      let prefix = ''
+      if (attr.key === 'primary') prefix = '🔑 '
+      else if (attr.key === 'foreign') prefix = '🔗 '
+      else if (attr.key === 'unique') prefix = '⭐ '
+      return `${prefix}${attr.name}: ${attr.type}`
+    })
+    .join('\n')
+    
+  const node = erGraph.value!.addNode({
+    id: entity.id,
+    shape: 'er-entity',
+    x: entity.x,
+    y: entity.y,
+    attrs: {
+      body: {
+        fill: '#ffffff',
+        stroke: '#5F95FF'
+      },
+      header: {
+        width: 200,
+        height: 30,
+        x: 0,
+        y: 0,
+        fill: '#5F95FF',
+        stroke: 'none',
+        rx: 8,
+        ry: 8
+      },
+      title: {
+        text: entity.name,
+        x: 100,
+        y: 20,
+        fontSize: 14,
+        fontWeight: 'bold',
+        textAnchor: 'middle',
+        fill: '#ffffff'
+      },
+      attrs: {
+        text: attrsText,
+        x: 10,
+        y: 45,
+        fontSize: 11,
+        fill: '#333333',
+        fontFamily: 'monospace'
+      }
+    }
+  })
+  
+  return node
+}
+
+// 创建ER关系
+const createERRelation = (relation: any) => {
+  const sourceNode = erGraph.value!.getCellById(relation.source)
+  const targetNode = erGraph.value!.getCellById(relation.target)
+  
+  if (sourceNode && targetNode) {
+    erGraph.value!.addEdge({
+      id: relation.id,
+      source: relation.source,
+      target: relation.target,
+      labels: [{
+        attrs: {
+          text: {
+            text: relation.label,
+            fill: '#666666',
+            fontSize: 12
+          }
+        }
+      }],
+      attrs: {
+        line: {
+          stroke: '#A2A2A2',
+          strokeWidth: 2,
+          targetMarker: {
+            name: 'classic',
+            size: 8
+          }
+        }
+      }
+    })
+  }
+}
+
 // 添加任务
 const addTask = () => {
   const newTask = {
@@ -1441,14 +1702,21 @@ const handleResize = () => {
 const switchToTaskFlow = () => {
   isTaskFlow.value = true
   console.log('切换到任务流')
-  // 这里可以添加切换到任务流的逻辑
+  selectedTask.value = null // 清空选中状态
 }
 
 // 切换到参数流
 const switchToParameterFlow = () => {
   isTaskFlow.value = false
   console.log('切换到参数流')
-  // 这里可以添加切换到参数流的逻辑
+  selectedTask.value = null // 清空选中状态
+  
+  // 初始化ER图（如果还没有初始化）
+  if (!erGraph.value) {
+    nextTick(() => {
+      initERGraph()
+    })
+  }
 }
 
 // 完成任务创建后的回调
@@ -1642,7 +1910,7 @@ const emit = defineEmits<{
        }
     }
 
-    .flowchart-canvas {
+    .flowchart-canvas, .er-canvas {
       flex: 1;
       position: relative;
     }

@@ -215,28 +215,79 @@
                   <el-button size="small" text @click="addInput">新增</el-button>
                   <el-button size="small" text>模型下载</el-button>
                 </div>
-                <div class="data-table">
-                  <div class="table-header">
-                    <span>名称</span>
-                    <span>图标</span>
-                    <span>附件</span>
-                    <span>类型</span>
-                    <span>操作</span>
-                  </div>
-                  <div class="table-row" v-for="(input, index) in selectedTask.inputs" :key="index">
-                    <span>{{ input.name }}</span>
-                    <span>{{ input.icon }}</span>
-                    <span>{{ input.attachment }}</span>
-                    <span>{{ input.type }}</span>
-                    <span>
-                      <el-button size="small" text type="primary" @click="editInput(index)">编辑</el-button>
-                      <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
-                    </span>
-                  </div>
-                  <div class="table-row" v-if="!selectedTask.inputs || selectedTask.inputs.length === 0">
-                    <span colspan="5" style="text-align: center; color: #999;">暂无数据</span>
-                  </div>
-                </div>
+                                       <div class="data-table">
+                         <div class="table-header">
+                           <span>名称</span>
+                           <span>密级</span>
+                           <span>类型</span>
+                           <span>附件</span>
+                           <span>操作</span>
+                         </div>
+                         <div class="table-row" v-for="(input, index) in selectedTask.inputs" :key="index">
+                           <!-- 编辑态 -->
+                           <template v-if="input.isEditing">
+                             <span>
+                               <el-input v-model="input.name" size="small" placeholder="请输入名称" />
+                             </span>
+                             <span>
+                               <el-select v-model="input.level" size="small" placeholder="请选择密级">
+                                 <el-option label="公开" value="公开" />
+                                 <el-option label="内部" value="内部" />
+                                 <el-option label="秘密" value="秘密" />
+                                 <el-option label="机密" value="机密" />
+                               </el-select>
+                             </span>
+                             <span>
+                               <el-select v-model="input.type" size="small" placeholder="请选择类型">
+                                 <el-option label="文件" value="文件" />
+                                 <el-option label="数据" value="数据" />
+                                 <el-option label="模型" value="模型" />
+                                 <el-option label="需求" value="需求" />
+                               </el-select>
+                             </span>
+                             <span>
+                               <div class="file-upload-wrapper">
+                                 <el-upload
+                                   :file-list="[]"
+                                   :on-change="(file: any) => handleInputFileChange(file, index)"
+                                   :before-upload="() => false"
+                                   :show-file-list="false"
+                                   accept="*"
+                                 >
+                                   <el-button size="small" type="primary" text>
+                                     选择文件
+                                   </el-button>
+                                 </el-upload>
+                                 <div v-if="input.attachment" class="file-info">
+                                   <span class="file-name">{{ input.attachment.name }}</span>
+                                   <el-button size="small" type="danger" text @click="handleInputFileRemove(index)">
+                                     删除
+                                   </el-button>
+                                 </div>
+                                 <span v-else class="no-file">无文件</span>
+                               </div>
+                             </span>
+                             <span>
+                               <el-button size="small" text type="primary" @click="confirmInputEdit(index)">确定</el-button>
+                               <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
+                             </span>
+                           </template>
+                           <!-- 非编辑态 -->
+                           <template v-else>
+                             <span>{{ input.name }}</span>
+                             <span>{{ input.level }}</span>
+                             <span>{{ input.type }}</span>
+                             <span>{{ input.attachment ? input.attachment.name : '无' }}</span>
+                             <span>
+                               <el-button size="small" text type="primary" @click="editInput(index)">编辑</el-button>
+                               <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
+                             </span>
+                           </template>
+                         </div>
+                         <div class="table-row" v-if="!selectedTask.inputs || selectedTask.inputs.length === 0">
+                           <span colspan="5" style="text-align: center; color: #999;">暂无数据</span>
+                         </div>
+                       </div>
               </div>
             </el-form-item>
             
@@ -250,28 +301,79 @@
                   <el-button size="small" text>上传至模型库</el-button>
                   <el-button size="small" text>解析模型</el-button>
                 </div>
-                <div class="data-table">
-                  <div class="table-header">
-                    <span>名称</span>
-                    <span>图标</span>
-                    <span>附件</span>
-                    <span>类型</span>
-                    <span>操作</span>
-                  </div>
-                  <div class="table-row" v-for="(output, index) in selectedTask.outputs" :key="index">
-                    <span>{{ output.name }}</span>
-                    <span>{{ output.icon }}</span>
-                    <span>{{ output.attachment }}</span>
-                    <span>{{ output.type }}</span>
-                    <span>
-                      <el-button size="small" text type="primary" @click="editOutput(index)">编辑</el-button>
-                      <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
-                    </span>
-                  </div>
-                  <div class="table-row" v-if="!selectedTask.outputs || selectedTask.outputs.length === 0">
-                    <span colspan="5" style="text-align: center; color: #999;">暂无数据</span>
-                  </div>
-                </div>
+                                       <div class="data-table">
+                         <div class="table-header">
+                           <span>名称</span>
+                           <span>密级</span>
+                           <span>类型</span>
+                           <span>附件</span>
+                           <span>操作</span>
+                         </div>
+                         <div class="table-row" v-for="(output, index) in selectedTask.outputs" :key="index">
+                           <!-- 编辑态 -->
+                           <template v-if="output.isEditing">
+                             <span>
+                               <el-input v-model="output.name" size="small" placeholder="请输入名称" />
+                             </span>
+                             <span>
+                               <el-select v-model="output.level" size="small" placeholder="请选择密级">
+                                 <el-option label="公开" value="公开" />
+                                 <el-option label="内部" value="内部" />
+                                 <el-option label="秘密" value="秘密" />
+                                 <el-option label="机密" value="机密" />
+                               </el-select>
+                             </span>
+                             <span>
+                               <el-select v-model="output.type" size="small" placeholder="请选择类型">
+                                 <el-option label="文件" value="文件" />
+                                 <el-option label="数据" value="数据" />
+                                 <el-option label="模型" value="模型" />
+                                 <el-option label="需求" value="需求" />
+                               </el-select>
+                             </span>
+                             <span>
+                               <div class="file-upload-wrapper">
+                                 <el-upload
+                                   :file-list="[]"
+                                   :on-change="(file: any) => handleOutputFileChange(file, index)"
+                                   :before-upload="() => false"
+                                   :show-file-list="false"
+                                   accept="*"
+                                 >
+                                   <el-button size="small" type="primary" text>
+                                     选择文件
+                                   </el-button>
+                                 </el-upload>
+                                 <div v-if="output.attachment" class="file-info">
+                                   <span class="file-name">{{ output.attachment.name }}</span>
+                                   <el-button size="small" type="danger" text @click="handleOutputFileRemove(index)">
+                                     删除
+                                   </el-button>
+                                 </div>
+                                 <span v-else class="no-file">无文件</span>
+                               </div>
+                             </span>
+                             <span>
+                               <el-button size="small" text type="primary" @click="confirmOutputEdit(index)">确定</el-button>
+                               <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
+                             </span>
+                           </template>
+                           <!-- 非编辑态 -->
+                           <template v-else>
+                             <span>{{ output.name }}</span>
+                             <span>{{ output.level }}</span>
+                             <span>{{ output.type }}</span>
+                             <span>{{ output.attachment ? output.attachment.name : '无' }}</span>
+                             <span>
+                               <el-button size="small" text type="primary" @click="editOutput(index)">编辑</el-button>
+                               <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
+                             </span>
+                           </template>
+                         </div>
+                         <div class="table-row" v-if="!selectedTask.outputs || selectedTask.outputs.length === 0">
+                           <span colspan="5" style="text-align: center; color: #999;">暂无数据</span>
+                         </div>
+                       </div>
               </div>
             </el-form-item>
             
@@ -449,17 +551,19 @@ const taskList = ref<any[]>([
     inputs: [
       {
         name: '体系需求',
-        icon: '内部',
-        attachment: 'Req',
-        type: 'xxx需求.Req'
+        level: '内部',
+        type: 'xxx需求.Req',
+        attachment: null,
+        isEditing: false
       }
     ],
     outputs: [
       {
         name: '体系需求Req',
-        icon: '内部',
-        attachment: 'Req',
-        type: 'xxx需求.Req'
+        level: '内部',
+        type: 'xxx需求.Req', 
+        attachment: null,
+        isEditing: false
       }
     ]
   },
@@ -495,16 +599,18 @@ const taskList = ref<any[]>([
     inputs: [
       {
         name: '体系需求',
-        icon: '内部',
-        attachment: 'Req',
+        level: '内部',
+        attachment: null,
+        isEditing: false,
         type: 'xxx需求.Req'
       }
     ],
     outputs: [
       {
         name: '体系需求Req',
-        icon: '内部',
-        attachment: 'Req',
+        level: '内部',
+        attachment: null,
+        isEditing: false,
         type: 'xxx需求.Req'
       },
       {
@@ -531,16 +637,18 @@ const taskList = ref<any[]>([
     inputs: [
       {
         name: '体系需求',
-        icon: '内部',
-        attachment: 'Req',
+        level: '内部',
+        attachment: null,
+        isEditing: false,
         type: 'xxx需求.Req'
       }
     ],
     outputs: [
       {
         name: '体系需求Req',
-        icon: '内部',
-        attachment: 'Req',
+        level: '内部',
+        attachment: null,
+        isEditing: false,
         type: 'xxx需求.Req'
       }
     ]
@@ -561,16 +669,18 @@ const taskList = ref<any[]>([
     inputs: [
       {
         name: '体系需求',
-        icon: '内部',
-        attachment: 'Req',
+        level: '内部',
+        attachment: null,
+        isEditing: false,
         type: 'xxx需求.Req'
       }
     ],
     outputs: [
       {
         name: '体系需求Req',
-        icon: '内部',
-        attachment: 'Req',
+        level: '内部',
+        attachment: null,
+        isEditing: false,
         type: 'xxx需求.Req'
       }
     ]
@@ -1582,10 +1692,11 @@ const addInput = () => {
   }
   
   selectedTask.value.inputs.push({
-    name: '新输入项',
-    icon: '内部',
-    attachment: '附件',
-    type: '类型'
+    name: '',
+    level: '内部',
+    type: '文件',
+    attachment: null,
+    isEditing: true
   })
   
   // 自动更新taskStats
@@ -1595,8 +1706,19 @@ const addInput = () => {
 // 编辑输入项
 const editInput = (index: number) => {
   if (!selectedTask.value || !selectedTask.value.inputs) return
-  // 这里可以添加编辑逻辑，比如打开一个对话框
-  console.log('编辑输入项:', index, selectedTask.value.inputs[index])
+  selectedTask.value.inputs[index].isEditing = true
+}
+
+// 确认输入项编辑
+const confirmInputEdit = (index: number) => {
+  if (!selectedTask.value || !selectedTask.value.inputs) return
+  const input = selectedTask.value.inputs[index]
+  if (!input.name.trim()) {
+    ElMessage.warning('请输入名称')
+    return
+  }
+  input.isEditing = false
+  updateTask()
 }
 
 // 删除输入项
@@ -1607,6 +1729,26 @@ const deleteInput = (index: number) => {
   
   // 自动更新taskStats
   selectedTask.value.taskStats.up = selectedTask.value.inputs.length
+  updateTask()
+}
+
+// 处理输入文件变化
+const handleInputFileChange = (file: File | any, index: number) => {
+  if (!selectedTask.value || !selectedTask.value.inputs) return
+  // 确保文件对象包含name属性
+  const fileObj = {
+    name: file.name || file.raw?.name || '未知文件',
+    size: file.size || file.raw?.size || 0,
+    type: file.type || file.raw?.type || '',
+    raw: file.raw || file
+  }
+  selectedTask.value.inputs[index].attachment = fileObj
+}
+
+// 移除输入文件
+const handleInputFileRemove = (index: number) => {
+  if (!selectedTask.value || !selectedTask.value.inputs) return
+  selectedTask.value.inputs[index].attachment = null
 }
 
 // 添加输出项
@@ -1618,10 +1760,11 @@ const addOutput = () => {
   }
   
   selectedTask.value.outputs.push({
-    name: '新输出项',
-    icon: '内部',
-    attachment: '附件',
-    type: '类型'
+    name: '',
+    level: '内部',
+    type: '文件',
+    attachment: null,
+    isEditing: true
   })
   
   // 自动更新taskStats
@@ -1631,8 +1774,19 @@ const addOutput = () => {
 // 编辑输出项
 const editOutput = (index: number) => {
   if (!selectedTask.value || !selectedTask.value.outputs) return
-  // 这里可以添加编辑逻辑，比如打开一个对话框
-  console.log('编辑输出项:', index, selectedTask.value.outputs[index])
+  selectedTask.value.outputs[index].isEditing = true
+}
+
+// 确认输出项编辑
+const confirmOutputEdit = (index: number) => {
+  if (!selectedTask.value || !selectedTask.value.outputs) return
+  const output = selectedTask.value.outputs[index]
+  if (!output.name.trim()) {
+    ElMessage.warning('请输入名称')
+    return
+  }
+  output.isEditing = false
+  updateTask()
 }
 
 // 删除输出项
@@ -1643,6 +1797,26 @@ const deleteOutput = (index: number) => {
   
   // 自动更新taskStats
   selectedTask.value.taskStats.down = selectedTask.value.outputs.length
+  updateTask()
+}
+
+// 处理输出文件变化
+const handleOutputFileChange = (file: File | any, index: number) => {
+  if (!selectedTask.value || !selectedTask.value.outputs) return
+  // 确保文件对象包含name属性
+  const fileObj = {
+    name: file.name || file.raw?.name || '未知文件',
+    size: file.size || file.raw?.size || 0,
+    type: file.type || file.raw?.type || '',
+    raw: file.raw || file
+  }
+  selectedTask.value.outputs[index].attachment = fileObj
+}
+
+// 移除输出文件
+const handleOutputFileRemove = (index: number) => {
+  if (!selectedTask.value || !selectedTask.value.outputs) return
+  selectedTask.value.outputs[index].attachment = null
 }
 
 // 删除任务
@@ -1923,7 +2097,7 @@ const emit = defineEmits<{
 
   // 右侧任务信息抽屉
   .right-drawer {
-    width: 500px;
+    width: 700px;
     background: #fff;
     border-left: 1px solid #e8e8e8;
     transition: all 0.3s ease;
@@ -2027,48 +2201,97 @@ const emit = defineEmits<{
           }
 
           .data-table {
-            .table-header {
-              display: grid;
-              grid-template-columns: 2fr 1fr 1fr 2fr 1fr;
-              padding: 8px 12px;
-              background: #fafafa;
-              border-bottom: 1px solid #d9d9d9;
-              font-size: 12px;
-              font-weight: 500;
-              color: #595959;
-            }
+                             .table-header {
+                   display: grid;
+                   grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1.5fr;
+                   padding: 8px 12px;
+                   background: #fafafa;
+                   border-bottom: 1px solid #d9d9d9;
+                   font-size: 12px;
+                   font-weight: 500;
+                   color: #595959;
+                 }
 
-            .table-row {
-              display: grid;
-              grid-template-columns: 2fr 1fr 1fr 2fr 1fr;
-              padding: 8px 12px;
-              border-bottom: 1px solid #f0f0f0;
-              font-size: 12px;
-              color: #262626;
+                 .table-row {
+                   display: grid;
+                   grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1.5fr;
+                   padding: 8px 12px;
+                   border-bottom: 1px solid #f0f0f0;
+                   font-size: 12px;
+                   color: #262626;
+                   align-items: center;
 
-              &:last-child {
-                border-bottom: none;
-              }
+                   &:last-child {
+                     border-bottom: none;
+                   }
 
-              &:hover {
-                background: #f5f5f5;
-              }
+                   &:hover {
+                     background: #f5f5f5;
+                   }
 
-              // 操作列样式
-              span:last-child {
-                display: flex;
-                gap: 4px;
-                justify-content: center;
-                align-items: center;
+                   // 每个单元格样式
+                   span {
+                     display: flex;
+                     align-items: center;
+                     min-height: 32px;
+                     
+                     .el-input, .el-select {
+                       width: 100%;
+                       
+                       :deep(.el-input__wrapper) {
+                         padding: 4px 8px;
+                       }
+                       
+                       :deep(.el-select__wrapper) {
+                         padding: 4px 8px;
+                       }
+                     }
+                     
+                     .file-upload-wrapper {
+                       width: 100%;
+                       
+                       .file-info {
+                         display: flex;
+                         align-items: center;
+                         justify-content: space-between;
+                         margin-top: 4px;
+                         padding: 4px 8px;
+                         background: #f5f5f5;
+                         border-radius: 4px;
+                         font-size: 11px;
+                         
+                         .file-name {
+                           flex: 1;
+                           color: #262626;
+                           white-space: nowrap;
+                           overflow: hidden;
+                           text-overflow: ellipsis;
+                           margin-right: 8px;
+                         }
+                       }
+                       
+                       .no-file {
+                         color: #8c8c8c;
+                         font-size: 11px;
+                       }
+                     }
+                   }
 
-                .el-button {
-                  padding: 2px 6px;
-                  font-size: 11px;
-                  min-height: auto;
-                  line-height: 1.2;
-                }
-              }
-            }
+                   // 操作列样式
+                   span:last-child {
+                     display: flex;
+                     gap: 4px;
+                     justify-content: center;
+                     align-items: center;
+
+                     .el-button {
+                       padding: 2px 6px;
+                       font-size: 11px;
+                       min-height: auto;
+                       line-height: 1.2;
+                     }
+                   }
+                 }
           }
         }
 

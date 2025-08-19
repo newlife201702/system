@@ -1661,12 +1661,17 @@ const deleteTask = () => {
 // 保存流程
 const saveFlow = () => {
   const flowData = {
-    tasks: taskList.value,
+    projectId: projectInfo.id,
+    flowId: projectInfo.flowId,
+    businessCode:"",
+    autoNodeSortNo:false,
+    generBackLine:false,
+    workItemParams: taskList.value,
     connections: graph.value!.getEdges().map(edge => ({
       source: edge.getSourceCellId(),
       target: edge.getTargetCellId()
     })),
-    graphData: graph.value!.toJSON()
+    x6NodeJson: graph.value!.toJSON()
   }
   
   console.log('保存流程数据:', flowData)

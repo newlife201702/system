@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/main',
     name: 'main',
     component: () => import(/* webpackChunkName: "about" */ '../views/main/index.vue'),
-    redirect: "/main/dashboard",
+    redirect: "/main/systemOverview",
     meta:{
       title:"主页"
     },
@@ -43,6 +43,15 @@ const routes: Array<RouteRecordRaw> = [
         path: 'dashboard',
         name: 'dashboard',
         component: () => import(/* webpackChunkName: "dashboardIndex" */ '../views/main/dashboard/index.vue'),
+        meta: {
+          title: '门户',
+          keepAlive: false
+        },
+      },
+      {
+        path: 'systemOverview',
+        name: 'systemOverview',
+        component: () => import(/* webpackChunkName: "dashboardIndex" */ '../views/main/dashboard/systemOverview.vue'),
         meta: {
           title: '门户',
           keepAlive: false

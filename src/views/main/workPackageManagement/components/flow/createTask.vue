@@ -1248,11 +1248,21 @@ const addTaskConnections = () => {
         id: connection.id,
         source: { 
           cell: connection.source, 
-          anchor: { name: connection.sourceAnchor } 
+          anchor: { 
+            name: connection.sourceAnchor,
+            args: {
+              offset: 10
+            }
+          }
         },
         target: { 
           cell: connection.target, 
-          anchor: { name: connection.targetAnchor } 
+          anchor: { 
+            name: connection.targetAnchor,
+            args: {
+              offset: 10
+            }
+          }
         },
         ...edgeStyle
       })
@@ -1343,15 +1353,30 @@ const initFlowChart = () => {
     },
 
     connecting: {
-      router: 'manhattan',
+      router: {
+        name: 'manhattan',
+        args: {
+          padding: 10
+        }
+      },
       connector: {
         name: 'rounded',
         args: {
-          radius: 8
+          radius: 10
         }
       },
-      anchor: 'center',
-      connectionPoint: 'anchor',
+      anchor: {
+        name: 'rect',
+        args: {
+          padding: 10
+        }
+      },
+      connectionPoint: {
+        name: 'rect',
+        args: {
+          offset: 10
+        }
+      },
       allowBlank: false,
       snap: {
         radius: 20

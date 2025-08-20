@@ -249,7 +249,7 @@
                              </span>
                              <span>
                                <div class="file-upload-wrapper">
-                                 <el-upload
+                                 <!-- <el-upload
                                    :file-list="[]"
                                    :on-change="(file: any) => handleInputFileChange(file, index)"
                                    :before-upload="() => false"
@@ -259,8 +259,12 @@
                                    <el-button size="small" type="primary" text>
                                      选择文件
                                    </el-button>
-                                 </el-upload>
+                                 </el-upload> -->
+                                 <span @click="uploada(index)">
+                                    上传
+                                 </span>
                                  <div v-if="input.dataTypeValue" class="file-info">
+
                                    <span class="file-name">{{ input.dataTypeValue.name }}</span>
                                    <el-button size="small" type="danger" text @click="handleInputFileRemove(index)">
                                      删除
@@ -337,7 +341,7 @@
                              </span>
                              <span>
                                <div class="file-upload-wrapper">
-                                 <el-upload
+                                 <!-- <el-upload
                                    :file-list="[]"
                                    :on-change="(file: any) => handleOutputFileChange(file, index)"
                                    :before-upload="() => false"
@@ -347,7 +351,11 @@
                                    <el-button size="small" type="primary" text>
                                      选择文件
                                    </el-button>
-                                 </el-upload>
+                                 </el-upload>  -->
+
+                                <span @click="uploada(index)">
+                                    上传
+                                 </span>
                                  <div v-if="output.dataTypeValue" class="file-info">
                                    <span class="file-name">{{ output.dataTypeValue.name }}</span>
                                    <el-button size="small" type="danger" text @click="handleOutputFileRemove(index)">
@@ -407,12 +415,15 @@
           <el-empty description="请选择一个任务节点" />
         </div>
       </div>
+       <file-upload-dialog @setFileList="afterUpload" ref='uploadRef'></file-upload-dialog>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
+import * as api from '@/api'
+import fileUploadDialog from '@/components/fileUploadDialog.vue'
 import { Graph, Node, Edge, Shape } from '@antv/x6'
 import { ElMessage } from 'element-plus'
 import { 
@@ -421,6 +432,7 @@ import {
   Plus, 
   Document
 } from '@element-plus/icons-vue'
+import { number } from 'echarts'
 
 // 定义组件的 props
 const props = defineProps<{
@@ -437,6 +449,7 @@ const graph = ref<Graph>()
 const erGraph = ref<Graph>()
 const selectedTask = ref<any>(null)
 const isTaskFlow = ref(true) // 默认显示任务流
+const uploadRef = ref()
 
 // 项目信息
 const projectInfo = reactive(props.projectData || {})
@@ -529,7 +542,7 @@ const erData = ref({
 })
 
 // 任务列表
-const taskList = ref<any[]>([
+const taskList = ref<any>([
   {
     id: 'start',
     name: '开始',
@@ -2031,6 +2044,7 @@ const deleteOutput = (index: number) => {
 
 // 处理输出文件变化
 const handleOutputFileChange = (file: File | any, index: number) => {
+  console.log("uploadFile")
   if (!selectedTask.value || !selectedTask.value.outputs) return
   // 确保文件对象包含name属性
   const fileObj = {
@@ -2074,23 +2088,44 @@ const deleteTask = () => {
   }
 }
 
+
+const taskForm =  reactive<planFormAdd>({
+  projectId: "",
+  flowId: "",
+  businessCode: "",
+  autoNodeSortNo: false,
+  generBackLine: false,
+  workItemParams: [],
+  connections:[],
+  x6NodeJson: "",
+  cells: []
+})
+
 // 保存流程
-const saveFlow = () => {
-  const flowData = {
-    projectId: projectInfo.id,
-    flowId: projectInfo.flowId,
-    businessCode:"",
-    autoNodeSortNo:false,
-    generBackLine:false,
-    workItemParams: taskList.value,
-    connections: graph.value!.getEdges().map(edge => ({
-      source: edge.getSourceCellId(),
-      target: edge.getTargetCellId()
-    })),
-    x6NodeJson: graph.value!.toJSON()
-  }
-  
-  console.log('保存流程数据:', flowData)
+const saveFlow  =  () => {
+  // const flowData = {
+  //   projectId: projectInfo.id,
+  //   flowId: projectInfo.flowId,
+  //   businessCode:"",
+  //   autoNodeSortNo:false,
+  //   generBackLine:false,
+  //   workItemParams: taskList.value,
+  //   connections: graph.value!.getEdges().map(edge => ({
+  //     source: edge.getSourceCellId(),
+  //     target: edge.getTargetCellId()
+  //   })),
+  //   x6NodeJson: graph.value!.toJSON()
+  // }
+
+  taskForm.projectId = projectInfo.id;
+  taskForm.flowId = projectInfo.flowId;
+  taskForm.businessCode = "";
+  taskForm.workItemParams = taskList.value;
+  taskForm.cells = graph.value!.toJSON()
+  taskForm.x6NodeJson = taskForm.cells
+  api.planTask.addTask(taskForm)
+    
+  console.log('保存流程数据:', taskForm)
   ElMessage.success('流程保存成功')
 }
 
@@ -2144,6 +2179,27 @@ const switchToParameterFlow = () => {
 const emit = defineEmits<{
   'task-created': [data: any]
 }>()
+
+
+function afterUpload(obj: any) {
+    if (obj.id == null) {
+        ElMessage({ message: '文件上传失败', type: 'info' })
+        console.log(obj)
+    }
+    else {
+
+        // ruleForm.fileId = obj.id
+        // ruleForm.fileName = obj.name
+    }
+}
+const currentIndex = ref();
+function uploada(index: number){
+  currentIndex.value = index;
+  uploadRef.value.openDialog()  
+}
+
+
+
 </script>
 
 <style lang="less" scoped>

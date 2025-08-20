@@ -202,7 +202,10 @@
       <!-- 协同消息 -->
       <div class="sidebar-section">
         <div class="section-header-small">
-          <h3 class="sidebar-title">协同消息</h3>
+          <h3 class="sidebar-title">
+            <el-icon><Flag /></el-icon>
+            <span>协同消息</span>
+          </h3>
           <el-icon class="notification-icon"><Bell /></el-icon>
         </div>
         <div class="message-list">
@@ -803,6 +806,14 @@ const openSystem = (systemId: string) => {
     margin: 0 0 16px 0;
     font-size: 16px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #409EFF;
+
+    .el-icon {
+      font-size: 16px;
+    }
   }
 
   .section-header-small {

@@ -4,35 +4,55 @@
     <div class="main-content">
       <!-- 顶部统计卡片 -->
       <div class="stats-cards">
-        <div class="stat-card">
+        <div 
+          class="stat-card" 
+          :class="{ active: selectedTaskType === 'total' }"
+          @click="selectTaskType('total')"
+        >
           <div class="stat-number">{{ taskStats.total }}</div>
           <div class="stat-label">总任务</div>
           <div class="stat-icon">
             <el-icon><Folder /></el-icon>
           </div>
         </div>
-        <div class="stat-card">
+        <div 
+          class="stat-card" 
+          :class="{ active: selectedTaskType === 'pending' }"
+          @click="selectTaskType('pending')"
+        >
           <div class="stat-number">{{ taskStats.pending }}</div>
           <div class="stat-label">待接收</div>
           <div class="stat-icon">
             <el-icon><Download /></el-icon>
           </div>
         </div>
-        <div class="stat-card">
+        <div 
+          class="stat-card" 
+          :class="{ active: selectedTaskType === 'inProgress' }"
+          @click="selectTaskType('inProgress')"
+        >
           <div class="stat-number">{{ taskStats.inProgress }}</div>
           <div class="stat-label">进行中</div>
           <div class="stat-icon">
             <el-icon><Loading /></el-icon>
           </div>
         </div>
-        <div class="stat-card">
+        <div 
+          class="stat-card" 
+          :class="{ active: selectedTaskType === 'waiting' }"
+          @click="selectTaskType('waiting')"
+        >
           <div class="stat-number">{{ taskStats.waiting }}</div>
           <div class="stat-label">待审核</div>
           <div class="stat-icon">
             <el-icon><User /></el-icon>
           </div>
         </div>
-        <div class="stat-card">
+        <div 
+          class="stat-card" 
+          :class="{ active: selectedTaskType === 'overdue' }"
+          @click="selectTaskType('overdue')"
+        >
           <div class="stat-number">{{ taskStats.overdue }}</div>
           <div class="stat-label">超期任务</div>
           <div class="stat-icon">
@@ -40,6 +60,8 @@
           </div>
         </div>
       </div>
+
+
 
       <!-- 体系研发任务 -->
       <div class="task-section">
@@ -90,7 +112,7 @@
               <!-- 项目任务列表 -->
               <div v-show="project.expanded" class="project-tasks">
                 <div 
-                  v-for="task in project.tasks" 
+                  v-for="task in getFilteredTasks(project.tasks)" 
                   :key="task.id" 
                   class="task-row"
                 >
@@ -150,17 +172,29 @@
       <!-- 常用系统 -->
       <div class="sidebar-section">
         <h3 class="sidebar-title">常用系统</h3>
-        <div class="system-grid">
+        <div class="system-groups">
           <div 
-            v-for="system in commonSystems" 
-            :key="system.id"
-            class="system-item"
-            @click="openSystem(system.id)"
+            v-for="group in commonSystems" 
+            :key="group.id"
+            class="system-group"
           >
-            <div class="system-icon" :style="{ backgroundColor: system.color }">
-              <el-icon><component :is="system.icon" /></el-icon>
+            <div class="group-title">
+              <el-icon><Flag /></el-icon>
+              <span>{{ group.title }}</span>
             </div>
-            <div class="system-name">{{ system.name }}</div>
+            <div class="system-grid">
+              <div 
+                v-for="system in group.systems" 
+                :key="system.id"
+                class="system-item"
+                @click="openSystem(system.id)"
+              >
+                <div class="system-icon" :style="{ backgroundColor: system.color }">
+                  <el-icon><component :is="system.icon" /></el-icon>
+                </div>
+                <div class="system-name">{{ system.name }}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -206,6 +240,9 @@ import {
 
 // 视图模式
 const viewMode = ref('list')
+
+// 当前选择的任务类型
+const selectedTaskType = ref('total')
 
 // 任务统计数据
 const taskStats = reactive({
@@ -271,7 +308,7 @@ const taskProjects = ref([
         id: 'task4',
         name: 'XXXX体系效能评估任务',
         type: 'evaluation',
-        status: 'progress',
+        status: 'overdue',
         assignee: '方小明',
         deadline: '2024.01.16',
         duration: '超期8天',
@@ -323,61 +360,73 @@ const taskProjects = ref([
   }
 ])
 
-// 常用系统数据
+// 常用系统数据（分组结构）
 const commonSystems = ref([
   {
-    id: 'system1',
-    name: '体系需求分析环境',
-    icon: 'Document',
-    color: '#409EFF'
+    id: 'planning',
+    title: '体系规划论证系统',
+    systems: [
+      {
+        id: 'system1',
+        name: '体系需求分析环境',
+        icon: 'Document',
+        color: '#409EFF'
+      },
+      {
+        id: 'system2',
+        name: '体系架构设计环境',
+        icon: 'Setting',
+        color: '#9932CC'
+      },
+      {
+        id: 'system3',
+        name: '体系效能评估系统',
+        icon: 'DataAnalysis',
+        color: '#20B2AA'
+      },
+      {
+        id: 'system4',
+        name: '体系需求管理评估系统',
+        icon: 'Monitor',
+        color: '#1E90FF'
+      },
+      {
+        id: 'system5',
+        name: '体系建模服务',
+        icon: 'Box',
+        color: '#FF8C00'
+      },
+      {
+        id: 'system6',
+        name: '体系对抗仿真',
+        icon: 'Connection',
+        color: '#00CED1'
+      }
+    ]
   },
   {
-    id: 'system2',
-    name: '体系架构设计环境',
-    icon: 'Setting',
-    color: '#9932CC'
-  },
-  {
-    id: 'system3',
-    name: '体系效能评估系统',
-    icon: 'DataAnalysis',
-    color: '#20B2AA'
-  },
-  {
-    id: 'system4',
-    name: '体系需求管理评估系统',
-    icon: 'Monitor',
-    color: '#1E90FF'
-  },
-  {
-    id: 'system5',
-    name: '体系建模服务',
-    icon: 'Box',
-    color: '#FF8C00'
-  },
-  {
-    id: 'system6',
-    name: '体系对抗仿真',
-    icon: 'Connection',
-    color: '#00CED1'
-  },
-  {
-    id: 'system7',
-    name: 'XXX分析环境',
-    icon: 'Document',
-    color: '#409EFF'
-  },
-  {
-    id: 'system8',
-    name: '体系XXXX设计环境',
-    icon: 'Setting',
-    color: '#9932CC'
-  },
-  {
-    id: 'system9',
-    name: '体系XXXXX系统',
-    icon: 'DataAnalysis',
-    color: '#20B2AA'
+    id: 'experiment',
+    title: '虚实试验验证系统',
+    systems: [
+      {
+        id: 'system7',
+        name: 'XXX分析环境',
+        icon: 'Document',
+        color: '#409EFF'
+      },
+      {
+        id: 'system8',
+        name: '体系XXXX设计环境',
+        icon: 'Setting',
+        color: '#9932CC'
+      },
+      {
+        id: 'system9',
+        name: '体系XXXXX系统',
+        icon: 'DataAnalysis',
+        color: '#20B2AA'
+      }
+    ]
   }
 ])
 
@@ -426,6 +475,28 @@ const collaborationMessages = ref([
 ])
 
 // 方法
+const selectTaskType = (type: string) => {
+  selectedTaskType.value = type
+}
+
+
+
+const getFilteredTasks = (tasks: any[]) => {
+  if (selectedTaskType.value === 'total') {
+    return tasks
+  }
+  
+  const statusMap: Record<string, string[]> = {
+    pending: ['pending'],
+    inProgress: ['progress'],
+    waiting: ['review'],
+    overdue: ['overdue']
+  }
+  
+  const allowedStatuses = statusMap[selectedTaskType.value] || []
+  return tasks.filter(task => allowedStatuses.includes(task.status))
+}
+
 const toggleProject = (projectId: string) => {
   const project = taskProjects.value.find(p => p.id === projectId)
   if (project) {
@@ -505,17 +576,48 @@ const openSystem = (systemId: string) => {
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &.active {
+    border-color: #409EFF;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.2);
+    position: relative;
+
+    .stat-number {
+      color: #409EFF;
+    }
+
+    .stat-label {
+      color: #409EFF;
+      font-weight: 600;
+    }
+
+    .stat-icon {
+      color: #409EFF;
+      opacity: 1;
+    }
+  }
 
   .stat-number {
     font-size: 32px;
     font-weight: bold;
     color: #409EFF;
     margin-right: 12px;
+    transition: color 0.3s ease;
   }
 
   .stat-label {
     font-size: 14px;
     color: #666;
+    transition: color 0.3s ease;
   }
 
   .stat-icon {
@@ -526,8 +628,11 @@ const openSystem = (systemId: string) => {
     font-size: 24px;
     color: #409EFF;
     opacity: 0.3;
+    transition: all 0.3s ease;
   }
 }
+
+
 
 // 任务部分
 .task-section {
@@ -677,14 +782,22 @@ const openSystem = (systemId: string) => {
 // 侧边栏
 .sidebar {
   width: 350px;
-  background: white;
+  background: #f5f7fa;
   border-left: 1px solid #eee;
   padding: 20px;
   overflow-y: auto;
 }
 
 .sidebar-section {
-  margin-bottom: 32px;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   .sidebar-title {
     margin: 0 0 16px 0;
@@ -701,6 +814,33 @@ const openSystem = (systemId: string) => {
     .notification-icon {
       font-size: 18px;
       color: #666;
+    }
+  }
+}
+
+// 常用系统分组
+.system-groups {
+  .system-group {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .group-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #409EFF;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f0f0f0;
+
+      .el-icon {
+        font-size: 16px;
+      }
     }
   }
 }

@@ -58,6 +58,15 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: 'taskManagement',
+        name: 'taskManagement',
+        component: () => import(/* webpackChunkName: "dashboardIndex" */ '../views/main/dashboard/taskManagement.vue'),
+        meta: {
+          title: '任务列表',
+          keepAlive: false
+        },
+      },
+      {
         path: 'dashboard1',
         name: 'dashboard1',
         component: () => import(/* webpackChunkName: "dashboardIndex" */ '../views/main/dashboard/indexHis.vue'),

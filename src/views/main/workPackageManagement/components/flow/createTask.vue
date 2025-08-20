@@ -725,6 +725,59 @@ const taskList = ref<any>([
   }
 ])
 
+// 任务连线数据
+const taskConnections = ref([
+  {
+    id: 'start-to-task1',
+    source: 'start',
+    target: 'task1',
+    sourceAnchor: 'bottom',
+    targetAnchor: 'top'
+  },
+  {
+    id: 'task1-to-task2',
+    source: 'task1',
+    target: 'task2',
+    sourceAnchor: 'bottom',
+    targetAnchor: 'top'
+  },
+  {
+    id: 'task1-to-task3',
+    source: 'task1',
+    target: 'task3',
+    sourceAnchor: 'bottom',
+    targetAnchor: 'top'
+  },
+  {
+    id: 'task2-to-task4',
+    source: 'task2',
+    target: 'task4',
+    sourceAnchor: 'bottom',
+    targetAnchor: 'top'
+  },
+  {
+    id: 'task3-to-task5',
+    source: 'task3',
+    target: 'task5',
+    sourceAnchor: 'bottom',
+    targetAnchor: 'top'
+  },
+  {
+    id: 'task4-to-end',
+    source: 'task4',
+    target: 'end',
+    sourceAnchor: 'bottom',
+    targetAnchor: 'top'
+  },
+  {
+    id: 'task5-to-end',
+    source: 'task5',
+    target: 'end',
+    sourceAnchor: 'bottom',
+    targetAnchor: 'top'
+  }
+])
+
 // 格式化数组为字符串
 const formatArrayToString = (arr: string[] | undefined) => {
   if (!arr || arr.length === 0) return ''
@@ -1174,6 +1227,41 @@ const toggleTaskExpansion = (taskId: string) => {
   }
 }
 
+// 添加任务连线
+const addTaskConnections = () => {
+  if (!graph.value) return
+  
+  const edgeStyle = {
+    attrs: {
+      line: {
+        stroke: '#A2A2A2',
+        strokeWidth: 2,
+        targetMarker: 'classic'
+      }
+    }
+  }
+  
+  // 遍历连线数据并添加连线
+  taskConnections.value.forEach(connection => {
+    try {
+      graph.value!.addEdge({
+        id: connection.id,
+        source: { 
+          cell: connection.source, 
+          anchor: { name: connection.sourceAnchor } 
+        },
+        target: { 
+          cell: connection.target, 
+          anchor: { name: connection.targetAnchor } 
+        },
+        ...edgeStyle
+      })
+    } catch (error) {
+      console.warn(`Failed to add connection: ${connection.id}`, error)
+    }
+  })
+}
+
 
 
 // 更新任务节点
@@ -1320,64 +1408,7 @@ const initFlowChart = () => {
 
   // 添加连线
   setTimeout(() => {
-    const edgeStyle = {
-      attrs: {
-        line: {
-          stroke: '#A2A2A2',
-          strokeWidth: 2,
-          targetMarker: 'classic'
-        }
-      }
-    }
-
-    // 开始节点 -> 体系需求分析活动
-    graph.value!.addEdge({
-      source: { cell: 'start', anchor: { name: 'bottom' } },
-      target: { cell: 'task1', anchor: { name: 'top' } },
-      ...edgeStyle
-    })
-
-    // 体系需求分析活动 -> 体系架构设计
-    graph.value!.addEdge({
-      source: { cell: 'task1', anchor: { name: 'bottom' } },
-      target: { cell: 'task2', anchor: { name: 'top' } },
-      ...edgeStyle
-    })
-
-    // 体系需求分析活动 -> 体系需求满足度评估
-    graph.value!.addEdge({
-      source: { cell: 'task1', anchor: { name: 'bottom' } },
-      target: { cell: 'task3', anchor: { name: 'top' } },
-      ...edgeStyle
-    })
-
-    // 体系架构设计 -> 体系对抗仿真
-    graph.value!.addEdge({
-      source: { cell: 'task2', anchor: { name: 'bottom' } },
-      target: { cell: 'task4', anchor: { name: 'top' } },
-      ...edgeStyle
-    })
-
-    // 体系需求满足度评估 -> 体系效能评估
-    graph.value!.addEdge({
-      source: { cell: 'task3', anchor: { name: 'bottom' } },
-      target: { cell: 'task5', anchor: { name: 'top' } },
-      ...edgeStyle
-    })
-
-    // 体系对抗仿真 -> 结束节点
-    graph.value!.addEdge({
-      source: { cell: 'task4', anchor: { name: 'bottom' } },
-      target: { cell: 'end', anchor: { name: 'top' } },
-      ...edgeStyle
-    })
-
-    // 体系效能评估 -> 结束节点
-    graph.value!.addEdge({
-      source: { cell: 'task5', anchor: { name: 'bottom' } },
-      target: { cell: 'end', anchor: { name: 'top' } },
-      ...edgeStyle
-    })
+    addTaskConnections()
   }, 200)
 
   // 监听节点选择
@@ -2122,6 +2153,10 @@ const saveFlow  =  () => {
   taskForm.flowId = projectInfo.flowId;
   taskForm.businessCode = "";
   taskForm.workItemParams = taskList.value;
+  taskForm.connections = taskConnections.value.map(conn => ({
+    source: conn.source,
+    target: conn.target
+  }));
   taskForm.cells = graph.value!.toJSON()
   taskForm.x6NodeJson = taskForm.cells
   api.planTask.addTask(taskForm)

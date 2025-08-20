@@ -1630,7 +1630,7 @@ const setupEREventListeners = () => {
 // 注册ER节点
 const registerERNode = () => {
   Graph.registerNode('er-entity', {
-    inherit: 'rect',
+    inherit: 'html',
     width: 200,
     height: 150,
     attrs: {

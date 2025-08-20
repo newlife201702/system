@@ -433,6 +433,7 @@ import {
   Document
 } from '@element-plus/icons-vue'
 import { number } from 'echarts'
+import { uuid } from '@/libs/utils'
 
 // 定义组件的 props
 const props = defineProps<{
@@ -1866,7 +1867,7 @@ const createAttributeRelation = (relation: any) => {
 // 添加任务
 const addTask = () => {
   const newTask = {
-    id: `task${Date.now()}`,
+    id: uuid(32, 62),
     name: '新任务',
     type: 'development',
     nodeType: 'task',

@@ -39,8 +39,8 @@
         </div>
         <div 
           class="stat-card" 
-          :class="{ active: selectedTaskType === 'ongoingTaskNum' }"
-          @click="selectTaskType('ongoingTaskNum')"
+          :class="{ active: selectedTaskType === 'auditTaskNum' }"
+          @click="selectTaskType('auditTaskNum')"
         >
           <div class="stat-number">{{ taskStats. auditTaskNum }}</div>
           <div class="stat-label">待审核</div>
@@ -124,7 +124,7 @@
                   </div>
                   <div class="task-cell task-status">
                     <el-tag 
-                      :type="task.statusCode" 
+                      :type="getStatusType(task.statusCode)" 
                       size="small"
                     >
                       {{ task.statusName }}
@@ -481,15 +481,15 @@ const selectTaskType = (type: string) => {
 
 
 const getFilteredTasks = (tasks: any[]) => {
-  if (selectedTaskType.value === 'total') {
+  if (selectedTaskType.value === 'allTask') {
     return tasks
   }
   
   const statusMap: Record<string, string[]> = {
-    pending: ['TASK_RUN_STATUS_SUBMIT'],
-    inProgress: ['TASK_RUN_STATUS_SEND'],
-    waiting: ['TASK_RUN_STATUS_ONGOING'],
-    overdue: ['TASK_RUN_STATUS_DELAY']
+    submitTaskNum: ['TASK_RUN_STATUS_SUBMIT'],
+    ongoingTaskNum: ['TASK_RUN_STATUS_SEND'],
+    auditTaskNum: ['TASK_RUN_STATUS_ONGOING'],
+    delayTaskNum: ['TASK_RUN_STATUS_DELAY']
   }
   
   const allowedStatuses = statusMap[selectedTaskType.value] || []
@@ -516,11 +516,11 @@ const getTaskTypeLabel = (type: string) => {
 
 const getStatusType = (status: string) => {
   const statusMap: Record<string, string> = {
-    pending: 'TASK_RUN_STATUS_SUBMIT',
-    progress: 'TASK_RUN_STATUS_SEND',
-    review: 'TASK_RUN_STATUS_ONGOING',
-    completed: 'TASK_RUN_STATUS_FINISH',
-    overdue: 'TASK_RUN_STATUS_DELAY'
+    TASK_RUN_STATUS_SUBMIT: 'info',
+    TASK_RUN_STATUS_SEND: 'warning',
+    TASK_RUN_STATUS_ONGOING: 'success',
+    TASK_RUN_STATUS_FINISH: 'success',
+    TASK_RUN_STATUS_DELAY: 'danger'
   }
   return statusMap[status] || 'default'
 }

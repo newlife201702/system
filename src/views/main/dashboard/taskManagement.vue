@@ -97,7 +97,7 @@
           <!-- 项目列表 -->
           <div class="project-list">
             <div 
-              v-for="project in list" 
+              v-for="project in taskProjectsList" 
               :key="project.id" 
               class="project-item"
             >
@@ -249,7 +249,7 @@ import { result } from 'lodash'
 const viewMode = ref('list')
 
 // 当前选择的任务类型
-const selectedTaskType = ref('total')
+const selectedTaskType = ref('allTask')
 
 // 任务统计数据
 const taskStats = reactive({
@@ -279,6 +279,7 @@ const {
     search, // 用于搜索，更新列表数据
     changePageSize
 } = dataList({ moduleName: 'planTask', immediate: false })
+const taskProjectsList = ref(list)
 
 
 // 体系研发任务项目数据
@@ -498,7 +499,7 @@ const getFilteredTasks = (tasks: any[]) => {
 }
 
 const toggleProject = (projectId: string) => {
-  const project = taskProjects.value.find(p => p.id === projectId)
+  const project = taskProjectsList.value.find(p => p.id === projectId)
   if (project) {
     project.expanded = !project.expanded
   }

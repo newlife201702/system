@@ -6,10 +6,10 @@
       <div class="stats-cards">
         <div 
           class="stat-card" 
-          :class="{ active: selectedTaskType === 'total' }"
-          @click="selectTaskType('total')"
+          :class="{ active: selectedTaskType === 'allTask' }"
+          @click="selectTaskType('allTask')"
         >
-          <div class="stat-number">{{ taskStats.total }}</div>
+          <div class="stat-number">{{ taskStats.allTask }}</div>
           <div class="stat-label">总任务</div>
           <div class="stat-icon">
             <el-icon><Folder /></el-icon>
@@ -17,10 +17,10 @@
         </div>
         <div 
           class="stat-card" 
-          :class="{ active: selectedTaskType === 'pending' }"
-          @click="selectTaskType('pending')"
+          :class="{ active: selectedTaskType === 'submitTaskNum' }"
+          @click="selectTaskType('submitTaskNum')"
         >
-          <div class="stat-number">{{ taskStats.pending }}</div>
+          <div class="stat-number">{{ taskStats.submitTaskNum }}</div>
           <div class="stat-label">待接收</div>
           <div class="stat-icon">
             <el-icon><Download /></el-icon>
@@ -28,10 +28,10 @@
         </div>
         <div 
           class="stat-card" 
-          :class="{ active: selectedTaskType === 'inProgress' }"
-          @click="selectTaskType('inProgress')"
+          :class="{ active: selectedTaskType === 'ongoingTaskNum' }"
+          @click="selectTaskType('ongoingTaskNum')"
         >
-          <div class="stat-number">{{ taskStats.inProgress }}</div>
+          <div class="stat-number">{{ taskStats.ongoingTaskNum }}</div>
           <div class="stat-label">进行中</div>
           <div class="stat-icon">
             <el-icon><Loading /></el-icon>
@@ -39,10 +39,10 @@
         </div>
         <div 
           class="stat-card" 
-          :class="{ active: selectedTaskType === 'waiting' }"
-          @click="selectTaskType('waiting')"
+          :class="{ active: selectedTaskType === 'ongoingTaskNum' }"
+          @click="selectTaskType('ongoingTaskNum')"
         >
-          <div class="stat-number">{{ taskStats.waiting }}</div>
+          <div class="stat-number">{{ taskStats. auditTaskNum }}</div>
           <div class="stat-label">待审核</div>
           <div class="stat-icon">
             <el-icon><User /></el-icon>
@@ -50,10 +50,10 @@
         </div>
         <div 
           class="stat-card" 
-          :class="{ active: selectedTaskType === 'overdue' }"
-          @click="selectTaskType('overdue')"
+          :class="{ active: selectedTaskType === 'delayTaskNum' }"
+          @click="selectTaskType('delayTaskNum')"
         >
-          <div class="stat-number">{{ taskStats.overdue }}</div>
+          <div class="stat-number">{{ taskStats.delayTaskNum }}</div>
           <div class="stat-label">超期任务</div>
           <div class="stat-icon">
             <el-icon><WarningFilled /></el-icon>
@@ -97,7 +97,7 @@
           <!-- 项目列表 -->
           <div class="project-list">
             <div 
-              v-for="project in taskProjects" 
+              v-for="project in list" 
               :key="project.id" 
               class="project-item"
             >
@@ -124,10 +124,10 @@
                   </div>
                   <div class="task-cell task-status">
                     <el-tag 
-                      :type="getStatusType(task.status)" 
+                      :type="task.statusCode" 
                       size="small"
                     >
-                      {{ getStatusLabel(task.status) }}
+                      {{ task.statusName }}
                     </el-tag>
                   </div>
                   <div class="task-cell task-assignee">
@@ -136,7 +136,7 @@
                   </div>
                   <div class="task-cell task-schedule">
                     <el-icon><Calendar /></el-icon>
-                    <span>{{ task.deadline }}</span>
+                    <span>{{ task.planEndDate }}</span>
                     <span v-if="task.duration" class="duration">{{ task.duration }}</span>
                   </div>
                   <div class="task-cell task-progress">
@@ -149,7 +149,7 @@
                   </div>
                   <div class="task-cell task-actions">
                     <el-button 
-                      v-for="action in task.actions" 
+                      v-for="action in actions" 
                       :key="action.key"
                       :type="action.type" 
                       size="small" 
@@ -235,11 +235,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { 
   Folder, Download, Loading, User, WarningFilled, Flag, List, Grid, 
   ArrowRight, Calendar, Bell
 } from '@element-plus/icons-vue'
+import dataList from '@/libs/common/dataList'
+import * as api from '@/api'
+import { result } from 'lodash'
+
 
 // 视图模式
 const viewMode = ref('list')
@@ -249,12 +253,33 @@ const selectedTaskType = ref('total')
 
 // 任务统计数据
 const taskStats = reactive({
-  total: 7,
-  pending: 3,
-  inProgress: 1,
-  waiting: 2,
-  overdue: 1
+  allTask: "",
+  submitTaskNum: "",
+  ongoingTaskNum: "",
+  auditTaskNum: "",
+  delayTaskNum: ""
 })
+
+const actions  =  [  
+          { key: 'updpro', label: '更新进度', type: 'primary' },
+          { key: 'submit', label: '提交任务', type: 'success' },
+          { key: 'run', label: '启动工具', type: 'warning' }
+  ];
+
+
+const {
+    sortField,
+    sortType,
+    query, // 用于绑定查询表单
+    page, // 用于绑定当前页
+    limit, // 用于绑定查询条数
+    total, // 记录列表总数
+    list, // 当前列表
+    loadList, // 获取列表数据
+    search, // 用于搜索，更新列表数据
+    changePageSize
+} = dataList({ moduleName: 'planTask', immediate: false })
+
 
 // 体系研发任务项目数据
 const taskProjects = ref([
@@ -269,14 +294,9 @@ const taskProjects = ref([
         type: 'requirement',
         status: 'pending',
         assignee: '方小明',
-        deadline: '2024.01.16',
+        planEndDate: '2024.01.16',
         duration: '剩25天',
-        progress: 0,
-        actions: [
-          { key: 'accept', label: '拒绝接收', type: 'danger' },
-          { key: 'receive', label: '接收任务', type: 'primary' },
-          { key: 'improve', label: '提交任务', type: 'success' }
-        ]
+        progress: 0
       },
       {
         id: 'task2',
@@ -284,13 +304,9 @@ const taskProjects = ref([
         type: 'design',
         status: 'progress',
         assignee: '方小明',
-        deadline: '2024.01.16',
+        planEndDate: '2024.01.16',
         duration: '剩3天',
-        progress: 60,
-        actions: [
-          { key: 'update', label: '更新进度', type: 'primary' },
-          { key: 'detail', label: '更新详情', type: 'default' }
-        ]
+        progress: 60
       },
       {
         id: 'task3',
@@ -298,14 +314,9 @@ const taskProjects = ref([
         type: 'evaluation',
         status: 'progress',
         assignee: '方小明',
-        deadline: '2024.01.16',
+        planEndDate: '2024.01.16',
         duration: '剩25天',
-        progress: 34,
-        actions: [
-          { key: 'update', label: '更新进度', type: 'primary' },
-          { key: 'improve', label: '提交任务', type: 'success' },
-          { key: 'apply', label: '变更申请', type: 'warning' }
-        ]
+        progress: 34
       },
       {
         id: 'task4',
@@ -313,14 +324,9 @@ const taskProjects = ref([
         type: 'evaluation',
         status: 'overdue',
         assignee: '方小明',
-        deadline: '2024.01.16',
+        planEndDate: '2024.01.16',
         duration: '超期8天',
-        progress: 24,
-        actions: [
-          { key: 'update', label: '更新进度', type: 'primary' },
-          { key: 'improve', label: '提交任务', type: 'success' },
-          { key: 'tool', label: '启动工具', type: 'info' }
-        ]
+        progress: 24
       },
       {
         id: 'task5',
@@ -328,14 +334,9 @@ const taskProjects = ref([
         type: 'simulation',
         status: 'review',
         assignee: '方小明',
-        deadline: '2024.01.16',
+        planEndDate: '2024.01.16',
         duration: '剩3天',
-        progress: 0,
-        actions: [
-          { key: 'update', label: '更新进度', type: 'primary' },
-          { key: 'improve', label: '提交任务', type: 'success' },
-          { key: 'tool', label: '启动工具', type: 'info' }
-        ]
+        progress: 0
       }
     ]
   },
@@ -350,14 +351,9 @@ const taskProjects = ref([
         type: 'evaluation',
         status: 'progress',
         assignee: '方小明',
-        deadline: '2024.01.16',
+        planEndDate: '2024.01.16',
         duration: '剩25天',
-        progress: 67,
-        actions: [
-          { key: 'update', label: '更新进度', type: 'primary' },
-          { key: 'activity', label: '提交活动', type: 'success' },
-          { key: 'tool', label: '启动工具', type: 'info' }
-        ]
+        progress: 67
       }
     ]
   }
@@ -490,14 +486,15 @@ const getFilteredTasks = (tasks: any[]) => {
   }
   
   const statusMap: Record<string, string[]> = {
-    pending: ['pending'],
-    inProgress: ['progress'],
-    waiting: ['review'],
-    overdue: ['overdue']
+    pending: ['TASK_RUN_STATUS_SUBMIT'],
+    inProgress: ['TASK_RUN_STATUS_SEND'],
+    waiting: ['TASK_RUN_STATUS_ONGOING'],
+    overdue: ['TASK_RUN_STATUS_DELAY']
   }
   
   const allowedStatuses = statusMap[selectedTaskType.value] || []
-  return tasks.filter(task => allowedStatuses.includes(task.status))
+
+  return tasks.filter(task => allowedStatuses.includes(task.statusCode))
 }
 
 const toggleProject = (projectId: string) => {
@@ -519,11 +516,11 @@ const getTaskTypeLabel = (type: string) => {
 
 const getStatusType = (status: string) => {
   const statusMap: Record<string, string> = {
-    pending: 'info',
-    progress: 'warning',
-    review: 'success',
-    completed: 'success',
-    overdue: 'danger'
+    pending: 'TASK_RUN_STATUS_SUBMIT',
+    progress: 'TASK_RUN_STATUS_SEND',
+    review: 'TASK_RUN_STATUS_ONGOING',
+    completed: 'TASK_RUN_STATUS_FINISH',
+    overdue: 'TASK_RUN_STATUS_DELAY'
   }
   return statusMap[status] || 'default'
 }
@@ -542,12 +539,37 @@ const getStatusLabel = (status: string) => {
 const handleTaskAction = (taskId: string, actionKey: string) => {
   console.log(`Task ${taskId} action: ${actionKey}`)
   // 这里可以添加具体的任务操作逻辑
+    if(actionKey === 'updpro'){
+        
+    }else if(actionKey === 'submit'){
+
+    }else if(actionKey === 'run'){
+        
+    }
 }
 
 const openSystem = (systemId: string) => {
   console.log(`Open system: ${systemId}`)
   // 这里可以添加打开系统的逻辑
 }
+
+onMounted(async() => {
+  // 初始化数据
+    query.value.businessCode='BUSINESS_CODE_TXZJXT'
+    loadList()
+
+    const totalresult =await api.planTask.totalTaskNum(query);
+    const resultData = totalresult.data;
+    // Object.assign(resultData, taskStats)
+    console.log("totalresult" + resultData?.allTask)
+    taskStats.allTask = resultData?.allTask;
+    taskStats.submitTaskNum =  resultData?.submitTaskNum;
+    taskStats.ongoingTaskNum = resultData?.ongoingTaskNum;
+    taskStats.auditTaskNum =  resultData?.auditTaskNum;
+    taskStats.delayTaskNum =  resultData?.delayTaskNum;
+})
+
+
 </script>
 
 <style lang="less" scoped>

@@ -595,6 +595,7 @@ const taskList = ref<any>([
     inputs: [
       {
         name: '体系需求',
+        taskId: 'task1',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
@@ -605,6 +606,7 @@ const taskList = ref<any>([
     outputs: [
       {
         name: '体系需求Req',
+        taskId: 'task1',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
@@ -629,6 +631,7 @@ const taskList = ref<any>([
     inputs: [
       {
         name: '体系需求Req',
+        taskId: 'task2',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
@@ -639,6 +642,7 @@ const taskList = ref<any>([
     outputs: [
       {
         name: '体系模型',
+        taskId: 'task2',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
@@ -663,6 +667,7 @@ const taskList = ref<any>([
     inputs: [
       {
         name: '体系模型',
+        taskId: 'task3',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
@@ -673,6 +678,7 @@ const taskList = ref<any>([
     outputs: [
       {
         name: '体系需求满足度评估报告',
+        taskId: 'task3',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
@@ -697,6 +703,7 @@ const taskList = ref<any>([
     inputs: [
        {
         name: '想定文件',
+        taskId: 'task4',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
@@ -707,6 +714,7 @@ const taskList = ref<any>([
     outputs: [
       {
         name: '仿真场景截图',
+        taskId: 'task4',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
@@ -731,6 +739,7 @@ const taskList = ref<any>([
     inputs: [
       {
         name: '体系模型',
+        taskId: 'task5',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
@@ -741,6 +750,7 @@ const taskList = ref<any>([
     outputs: [
       {
         name: '效能评估报告',
+        taskId: 'task5',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
@@ -1957,8 +1967,9 @@ const createAttributeRelation = (relation: any) => {
 
 // 添加任务
 const addTask = () => {
+  const newTaskId = uuid(32, 62)
   const newTask = {
-    id: uuid(32, 62),
+    id: newTaskId,
     name: '新任务',
     type: 'development',
     nodeType: 'task',
@@ -2012,6 +2023,7 @@ const addInput = () => {
   
   selectedTask.value.inputs.push({
     name: '',
+    taskId: selectedTask.value.id,
     securityLevelCode: 'SECRET_LEVEL_INTERNAL',
     securityLevelName: '内部',
     dataTypeCode: '文件',
@@ -2094,6 +2106,7 @@ const addOutput = () => {
   
   selectedTask.value.outputs.push({
     name: '',
+    taskId: selectedTask.value.id,
     securityLevelCode: 'SECRET_LEVEL_INTERNAL',
     securityLevelName: '内部',
     dataTypeCode: '文件',

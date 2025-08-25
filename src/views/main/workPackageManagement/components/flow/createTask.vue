@@ -280,17 +280,17 @@
                                <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
                              </span>
                            </template>
-                           <!-- 非编辑态 -->
-                           <template v-else>
-                             <span>{{ input.name }}</span>
-                             <span>{{ input.securityLevelName }}</span>
-                             <span>{{ input.dataTypeCode }}</span>
-                             <span>{{ input.dataTypeValue ? input.dataTypeValue.name : '无' }}</span>
-                             <span>
-                               <el-button size="small" text type="primary" @click="editInput(index)">编辑</el-button>
-                               <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
-                             </span>
-                           </template>
+                                                     <!-- 非编辑态 -->
+                          <template v-else>
+                            <span :title="input.name">{{ input.name }}</span>
+                            <span :title="input.securityLevelName">{{ input.securityLevelName }}</span>
+                            <span :title="input.dataTypeCode">{{ input.dataTypeCode }}</span>
+                            <span :title="input.dataTypeValue ? input.dataTypeValue.name : '无'">{{ input.dataTypeValue ? input.dataTypeValue.name : '无' }}</span>
+                            <span>
+                              <el-button size="small" text type="primary" @click="editInput(index)">编辑</el-button>
+                              <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
+                            </span>
+                          </template>
                          </div>
                          <div class="table-row" v-if="!selectedTask.inputs || selectedTask.inputs.length === 0">
                            <span colspan="5" style="text-align: center; color: #999;">暂无数据</span>
@@ -371,17 +371,17 @@
                                <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
                              </span>
                            </template>
-                           <!-- 非编辑态 -->
-                           <template v-else>
-                             <span>{{ output.name }}</span>
-                             <span>{{ output.securityLevelName }}</span>
-                             <span>{{ output.dataTypeCode }}</span>
-                             <span>{{ output.dataTypeValue ? output.dataTypeValue.name : '无' }}</span>
-                             <span>
-                               <el-button size="small" text type="primary" @click="editOutput(index)">编辑</el-button>
-                               <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
-                             </span>
-                           </template>
+                                                     <!-- 非编辑态 -->
+                          <template v-else>
+                            <span :title="output.name">{{ output.name }}</span>
+                            <span :title="output.securityLevelName">{{ output.securityLevelName }}</span>
+                            <span :title="output.dataTypeCode">{{ output.dataTypeCode }}</span>
+                            <span :title="output.dataTypeValue ? output.dataTypeValue.name : '无'">{{ output.dataTypeValue ? output.dataTypeValue.name : '无' }}</span>
+                            <span>
+                              <el-button size="small" text type="primary" @click="editOutput(index)">编辑</el-button>
+                              <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
+                            </span>
+                          </template>
                          </div>
                          <div class="table-row" v-if="!selectedTask.outputs || selectedTask.outputs.length === 0">
                            <span colspan="5" style="text-align: center; color: #999;">暂无数据</span>
@@ -2646,68 +2646,79 @@ function uploada(index: number){
                      background: #f5f5f5;
                    }
 
-                   // 每个单元格样式
-                   span {
-                     display: flex;
-                     align-items: center;
-                     min-height: 32px;
-                     
-                     .el-input, .el-select {
-                       width: 100%;
-                       
-                       :deep(.el-input__wrapper) {
-                         padding: 4px 8px;
-                       }
-                       
-                       :deep(.el-select__wrapper) {
-                         padding: 4px 8px;
-                       }
-                     }
-                     
-                     .file-upload-wrapper {
-                       width: 100%;
-                       
-                       .file-info {
-                         display: flex;
-                         align-items: center;
-                         justify-content: space-between;
-                         margin-top: 4px;
-                         padding: 4px 8px;
-                         background: #f5f5f5;
-                         border-radius: 4px;
-                         font-size: 11px;
-                         
-                         .file-name {
-                           flex: 1;
-                           color: #262626;
-                           white-space: nowrap;
-                           overflow: hidden;
-                           text-overflow: ellipsis;
-                           margin-right: 8px;
-                         }
-                       }
-                       
-                       .no-file {
-                         color: #8c8c8c;
-                         font-size: 11px;
-                       }
-                     }
+                                     // 每个单元格样式
+                  span {
+                    display: flex;
+                    align-items: center;
+                    min-height: 32px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    padding: 0 4px;
+                    
+                    .el-input, .el-select {
+                      width: 100%;
+                      
+                      :deep(.el-input__wrapper) {
+                        padding: 4px 8px;
+                      }
+                      
+                      :deep(.el-select__wrapper) {
+                        padding: 4px 8px;
+                      }
+                    }
+                                         
+                    .file-upload-wrapper {
+                      width: 100%;
+                      overflow: hidden;
+                      
+                      .file-info {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        margin-top: 4px;
+                        padding: 4px 8px;
+                        background: #f5f5f5;
+                        border-radius: 4px;
+                        font-size: 11px;
+                        overflow: hidden;
+                        
+                        .file-name {
+                          flex: 1;
+                          color: #262626;
+                          white-space: nowrap;
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                          margin-right: 8px;
+                        }
+                      }
+                      
+                      .no-file {
+                        color: #8c8c8c;
+                        font-size: 11px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                      }
+                    }
                    }
 
-                   // 操作列样式
-                   span:last-child {
-                     display: flex;
-                     gap: 4px;
-                     justify-content: center;
-                     align-items: center;
+                                     // 操作列样式
+                  span:last-child {
+                    display: flex;
+                    gap: 4px;
+                    justify-content: center;
+                    align-items: center;
+                    white-space: nowrap;
+                    overflow: visible;
 
-                     .el-button {
-                       padding: 2px 6px;
-                       font-size: 11px;
-                       min-height: auto;
-                       line-height: 1.2;
-                     }
-                   }
+                    .el-button {
+                      padding: 2px 6px;
+                      font-size: 11px;
+                      min-height: auto;
+                      line-height: 1.2;
+                    }
+                  }
                  }
           }
         }

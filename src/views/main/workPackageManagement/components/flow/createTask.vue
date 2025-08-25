@@ -165,7 +165,7 @@
               <el-input v-model="selectedTask.name" placeholder="请输入任务名称" />
             </el-form-item>
             
-            <el-form-item label="起止时间">
+            <el-form-item label="起止时间" v-if="systemType !== 'efficiency'">
               <el-date-picker
                 v-model="selectedTask.dateRange"
                 type="daterange"
@@ -177,7 +177,7 @@
               />
             </el-form-item>
             
-            <el-form-item label="执行天数">
+            <el-form-item label="执行天数" v-if="systemType !== 'efficiency'">
               <el-input-number 
                 v-model="selectedTask.executionDays" 
                 :min="1" 
@@ -185,8 +185,127 @@
                 placeholder="天数"
               />
             </el-form-item>
+
+            <!-- 体系需求满足度评估系统特有字段 -->
+            <template v-if="systemType === 'satisfaction'">
+              <el-form-item label="任务类型">
+                <el-select v-model="selectedTask.satisfactionTaskType" placeholder="请选择任务类型">
+                  <el-option label="类型1" value="type1" />
+                  <el-option label="类型2" value="type2" />
+                  <el-option label="类型3" value="type3" />
+                </el-select>
+              </el-form-item>
+              
+              <el-form-item label="任务类别">
+                <el-select v-model="selectedTask.satisfactionTaskCategory" placeholder="请选择任务类别">
+                  <el-option label="类别1" value="category1" />
+                  <el-option label="类别2" value="category2" />
+                  <el-option label="类别3" value="category3" />
+                </el-select>
+              </el-form-item>
+              
+              <el-form-item label="作战方向">
+                <el-select v-model="selectedTask.satisfactionDirection" placeholder="请选择作战方向">
+                  <el-option label="南海" value="nanhai" />
+                  <el-option label="东海" value="donghai" />
+                  <el-option label="黄海" value="huanghai" />
+                </el-select>
+              </el-form-item>
+              
+              <el-form-item label="场景描述">
+                <el-input 
+                  v-model="selectedTask.satisfactionScenario" 
+                  type="textarea" 
+                  placeholder="请输入场景描述"
+                  :rows="3"
+                />
+              </el-form-item>
+              
+              <el-form-item label="来源">
+                <el-input v-model="selectedTask.satisfactionSource" placeholder="请输入来源" />
+              </el-form-item>
+              
+              <el-form-item label="任务要求">
+                <el-input 
+                  v-model="selectedTask.satisfactionRequirement" 
+                  type="textarea" 
+                  placeholder="请输入任务要求"
+                  :rows="3"
+                />
+              </el-form-item>
+              
+              <el-form-item label="描述">
+                <el-input 
+                  v-model="selectedTask.satisfactionDescription" 
+                  type="textarea" 
+                  placeholder="请输入描述"
+                  :rows="3"
+                />
+              </el-form-item>
+            </template>
+
+            <!-- 体系效能评估系统特有字段 -->
+            <template v-if="systemType === 'efficiency'">
+              <el-form-item label="评估时间">
+                <el-date-picker
+                  v-model="selectedTask.efficiencyEvalTime"
+                  type="daterange"
+                  range-separator=" - "
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  format="YYYY.MM.DD"
+                  value-format="YYYY-MM-DD"
+                />
+              </el-form-item>
+              
+              <el-form-item label="评估人员">
+                <el-select v-model="selectedTask.efficiencyEvaluator" multiple placeholder="请选择评估人员" class="form-select">
+                  <el-option v-for="(item, index) in userListOption" :key="'evaluator' + index" :label="item.name" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              
+              <el-form-item label="评估条件">
+                <el-input 
+                  v-model="selectedTask.efficiencyCondition" 
+                  type="textarea" 
+                  placeholder="请输入评估条件"
+                  :rows="3"
+                />
+              </el-form-item>
+              
+              <el-form-item label="评估类型">
+                <el-input v-model="selectedTask.efficiencyType" placeholder="请输入评估类型" />
+              </el-form-item>
+              
+              <el-form-item label="评估目标">
+                <el-input 
+                  v-model="selectedTask.efficiencyTarget" 
+                  type="textarea" 
+                  placeholder="请输入评估目标"
+                  :rows="3"
+                />
+              </el-form-item>
+              
+              <el-form-item label="评估对象">
+                <el-input 
+                  v-model="selectedTask.efficiencyObject" 
+                  type="textarea" 
+                  placeholder="请输入评估对象"
+                  :rows="3"
+                />
+              </el-form-item>
+              
+              <el-form-item label="评估范围">
+                <el-input 
+                  v-model="selectedTask.efficiencyScope" 
+                  type="textarea" 
+                  placeholder="请输入评估范围"
+                  :rows="3"
+                />
+              </el-form-item>
+            </template>
                         
-          <el-form-item label="责任人" prop="assignee" required>
+          <el-form-item label="责任人" prop="assignee" required v-if="systemType !== 'efficiency'">
                 <el-select v-model="selectedTask.assignee" multiple placeholder="请选择" class="form-select">
                     <el-option v-for="(item, index) in userListOption" :key="'person' + index" :label="item.name"
                         :value="item.id" />
@@ -407,7 +526,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, nextTick, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import * as api from '@/api'
 import fileUploadDialog from '@/components/fileUploadDialog.vue'
@@ -443,6 +562,19 @@ const userListOption = ref<any>()
 const toolListOption =  ref<any>()
 // 项目信息
 const projectId =  route?.query?.projectId as string
+
+// 系统类型识别
+const systemType = computed(() => {
+  // 根据业务代码或其他标识来判断系统类型
+  if (projectInfo.businessCode === "BUSINESS_CODE_TXZJXT") {
+    return "requirement" // 体系需求管理系统
+  } else if (projectInfo.businessCode === "BUSINESS_CODE_SATISFACTION") {
+    return "satisfaction" // 体系需求满足度评估系统  
+  } else if (projectInfo.businessCode === "BUSINESS_CODE_EFFICIENCY") {
+    return "efficiency" // 体系效能评估系统
+  }
+  return "requirement" // 默认为需求管理系统
+})
 
 const projectInfo = reactive<ReqMyPackageAddFormData>({
     id: "",
@@ -613,7 +745,23 @@ const taskList = ref<any>([
         dataTypeValue: 'xxx需求.Req',
         isEditing: false
       }
-    ]
+    ],
+    // 体系需求满足度评估系统特有字段
+    satisfactionTaskType: '',
+    satisfactionTaskCategory: '',
+    satisfactionDirection: '',
+    satisfactionScenario: '',
+    satisfactionSource: '',
+    satisfactionRequirement: '',
+    satisfactionDescription: '',
+    // 体系效能评估系统特有字段
+    efficiencyEvalTime: null,
+    efficiencyEvaluator: [],
+    efficiencyCondition: '',
+    efficiencyType: '',
+    efficiencyTarget: '',
+    efficiencyObject: '',
+    efficiencyScope: ''
   },
   {
     id: 'task2',
@@ -649,7 +797,23 @@ const taskList = ref<any>([
         dataTypeValue: 'dodaf',
         isEditing: false
       }
-    ]
+    ],
+    // 体系需求满足度评估系统特有字段
+    satisfactionTaskType: '',
+    satisfactionTaskCategory: '',
+    satisfactionDirection: '',
+    satisfactionScenario: '',
+    satisfactionSource: '',
+    satisfactionRequirement: '',
+    satisfactionDescription: '',
+    // 体系效能评估系统特有字段
+    efficiencyEvalTime: null,
+    efficiencyEvaluator: [],
+    efficiencyCondition: '',
+    efficiencyType: '',
+    efficiencyTarget: '',
+    efficiencyObject: '',
+    efficiencyScope: ''
   },
   {
     id: 'task3',
@@ -685,7 +849,23 @@ const taskList = ref<any>([
         dataTypeValue: '评估报告',
         isEditing: false
       }
-    ]
+    ],
+    // 体系需求满足度评估系统特有字段
+    satisfactionTaskType: '',
+    satisfactionTaskCategory: '',
+    satisfactionDirection: '',
+    satisfactionScenario: '',
+    satisfactionSource: '',
+    satisfactionRequirement: '',
+    satisfactionDescription: '',
+    // 体系效能评估系统特有字段
+    efficiencyEvalTime: null,
+    efficiencyEvaluator: [],
+    efficiencyCondition: '',
+    efficiencyType: '',
+    efficiencyTarget: '',
+    efficiencyObject: '',
+    efficiencyScope: ''
   },
   {
     id: 'task4',
@@ -721,7 +901,23 @@ const taskList = ref<any>([
         dataTypeValue: '仿真场景截图',
         isEditing: false
       }
-    ]
+    ],
+    // 体系需求满足度评估系统特有字段
+    satisfactionTaskType: '',
+    satisfactionTaskCategory: '',
+    satisfactionDirection: '',
+    satisfactionScenario: '',
+    satisfactionSource: '',
+    satisfactionRequirement: '',
+    satisfactionDescription: '',
+    // 体系效能评估系统特有字段
+    efficiencyEvalTime: null,
+    efficiencyEvaluator: [],
+    efficiencyCondition: '',
+    efficiencyType: '',
+    efficiencyTarget: '',
+    efficiencyObject: '',
+    efficiencyScope: ''
   },
   {
     id: 'task5',
@@ -757,7 +953,23 @@ const taskList = ref<any>([
         dataTypeValue: '效能评估报告',
         isEditing: false
       }
-    ]
+    ],
+    // 体系需求满足度评估系统特有字段
+    satisfactionTaskType: '',
+    satisfactionTaskCategory: '',
+    satisfactionDirection: '',
+    satisfactionScenario: '',
+    satisfactionSource: '',
+    satisfactionRequirement: '',
+    satisfactionDescription: '',
+    // 体系效能评估系统特有字段
+    efficiencyEvalTime: null,
+    efficiencyEvaluator: [],
+    efficiencyCondition: '',
+    efficiencyType: '',
+    efficiencyTarget: '',
+    efficiencyObject: '',
+    efficiencyScope: ''
   },
   {
     id: 'end',
@@ -1982,7 +2194,23 @@ const addTask = () => {
     y: Math.random() * 200 + 200,
     expanded: false,
     inputs: [],
-    outputs: []
+    outputs: [],
+    // 体系需求满足度评估系统特有字段
+    satisfactionTaskType: '',
+    satisfactionTaskCategory: '',
+    satisfactionDirection: '',
+    satisfactionScenario: '',
+    satisfactionSource: '',
+    satisfactionRequirement: '',
+    satisfactionDescription: '',
+    // 体系效能评估系统特有字段
+    efficiencyEvalTime: null,
+    efficiencyEvaluator: [],
+    efficiencyCondition: '',
+    efficiencyType: '',
+    efficiencyTarget: '',
+    efficiencyObject: '',
+    efficiencyScope: ''
   }
   
   taskList.value.push(newTask)

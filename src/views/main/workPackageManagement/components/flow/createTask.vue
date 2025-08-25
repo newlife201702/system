@@ -25,12 +25,12 @@
           
           <div class="info-item">
             <label>作战方向：</label>
-            <span>{{ projectInfo.direction || '-' }}</span>
+            <span>{{ projectInfo.directionName || '-' }}</span>
           </div>
           
           <div class="info-item">
             <label>任务类型：</label>
-            <span>{{ formatArrayToString(projectInfo.taskType) || '-' }}</span>
+            <span>{{ projectInfo.taskTypeName || '-' }}</span>
           </div>
           
           <div class="info-item">
@@ -40,22 +40,22 @@
           
           <div class="info-item">
             <label>团队成员：</label>
-            <span>{{ formatArrayToString(projectInfo.teamMembers) || '-' }}</span>
+            <span>{{ projectInfo.userListName || '-' }}</span>
           </div>
           
           <div class="info-item">
             <label>来源：</label>
-            <span>{{ projectInfo.source || '-' }}</span>
+            <span>{{ projectInfo.region || '-' }}</span>
           </div>
           
           <div class="info-item">
             <label>项目负责人：</label>
-            <span>{{ formatArrayToString(projectInfo.projectManager) || '-' }}</span>
+            <span>{{ projectInfo.projLeader || '-' }}</span>
           </div>
           
           <div class="info-item">
             <label>军兵种：</label>
-            <span>{{ formatArrayToString(projectInfo.militaryBranch) || '-' }}</span>
+            <span>{{ projectInfo.troopsName || '-' }}</span>
           </div>
           
           <div class="info-item">
@@ -65,7 +65,7 @@
           
           <div class="info-item">
             <label>活动要求：</label>
-            <div class="description-text">{{ projectInfo.activityRequirement || '-' }}</div>
+            <div class="description-text">{{ projectInfo.requirement || '-' }}</div>
           </div>
           
           <div class="info-item" v-if="projectInfo.attachments">
@@ -185,25 +185,28 @@
                 placeholder="天数"
               />
             </el-form-item>
-            
-            <el-form-item label="责任人">
-              <el-select v-model="selectedTask.assignee" placeholder="请选择责任人">
-                <el-option label="方小明" value="方小明" />
-                <el-option label="李强" value="李强" />
-                <el-option label="张三" value="张三" />
-                <el-option label="王五" value="王五" />
-                <el-option label="赵六" value="赵六" />
-              </el-select>
+                        
+          <el-form-item label="责任人" prop="assignee" required>
+                <el-select v-model="selectedTask.assignee" multiple placeholder="请选择" class="form-select">
+                    <el-option v-for="(item, index) in userListOption" :key="'person' + index" :label="item.name"
+                        :value="item.id" />
+                </el-select>
             </el-form-item>
-            
-            <el-form-item label="工具关联">
-              <el-select v-model="selectedTask.toolAssociation" placeholder="请选择关联工具">
+
+
+            <el-form-item prop="toolAssociation" label="工具关联">
+              <!-- <el-select v-model="selectedTask." placeholder="">
                 <el-option label="需求管理工具" value="requirement-tool" />
                 <el-option label="设计工具" value="design-tool" />
                 <el-option label="仿真工具" value="simulation-tool" />
                 <el-option label="测试工具" value="test-tool" />
                 <el-option label="项目管理工具" value="project-tool" />
-              </el-select>
+              </el-select> -->
+                <el-select v-model="selectedTask.toolAssociation" placeholder="请选择关联工具">
+                    <el-option v-for="(item, index) in toolListOption" :key="'tool' + index" :label="item.name"
+                        :value="item.id" />
+                </el-select>
+              
             </el-form-item>
             
             <el-form-item label="▲">
@@ -241,10 +244,9 @@
                              </span>
                              <span>
                                <el-select v-model="input.dataTypeCode" size="small" placeholder="请选择类型">
-                                 <el-option label="文件" value="文件" />
-                                 <el-option label="数据" value="数据" />
-                                 <el-option label="模型" value="模型" />
-                                 <el-option label="需求" value="需求" />
+                                  <el-option label="文件" value="TASK_INOUTPUT_DATA_TYPE_CODE_FILE" />
+                                 <el-option label="数据" value="TASK_INOUTPUT_DATA_TYPE_CODE_DATA" />
+                                 <el-option label="文本" value="TASK_INOUTPUT_DATA_TYPE_CODE_TEXT" />
                                </el-select>
                              </span>
                              <span>
@@ -333,10 +335,9 @@
                              </span>
                              <span>
                                <el-select v-model="output.dataTypeCode" size="small" placeholder="请选择类型">
-                                 <el-option label="文件" value="文件" />
-                                 <el-option label="数据" value="数据" />
-                                 <el-option label="模型" value="模型" />
-                                 <el-option label="需求" value="需求" />
+                                 <el-option label="文件" value="TASK_INOUTPUT_DATA_TYPE_CODE_FILE" />
+                                 <el-option label="数据" value="TASK_INOUTPUT_DATA_TYPE_CODE_DATA" />
+                                 <el-option label="文本" value="TASK_INOUTPUT_DATA_TYPE_CODE_TEXT" />
                                </el-select>
                              </span>
                              <span>
@@ -388,22 +389,7 @@
                        </div>
               </div>
             </el-form-item>
-            
-            <el-form-item label="前置任务">
-              <el-select 
-                v-model="selectedTask.dependencies" 
-                multiple
-                placeholder="请选择前置任务"
-              >
-                <el-option 
-                  v-for="task in taskList.filter(t => t.id !== selectedTask.id)"
-                  :key="task.id"
-                  :label="task.name"
-                  :value="task.id"
-                />
-              </el-select>
-            </el-form-item>
-            
+                        
             <div class="form-actions">
               <el-button type="primary" @click="updateTask">更新任务</el-button>
               <el-button @click="deleteTask" type="danger">删除任务</el-button>
@@ -422,6 +408,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
+import { useRoute, useRouter } from 'vue-router';
 import * as api from '@/api'
 import fileUploadDialog from '@/components/fileUploadDialog.vue'
 import { Graph, Node, Edge, Shape } from '@antv/x6'
@@ -434,11 +421,12 @@ import {
 } from '@element-plus/icons-vue'
 import { number } from 'echarts'
 import { uuid } from '@/libs/utils'
+const route = useRoute()
 
 // 定义组件的 props
 const props = defineProps<{
   projectId?: string
-  projectData?: any
+  //projectData?: any
 }>()
 
 // 响应式数据
@@ -451,9 +439,46 @@ const erGraph = ref<Graph>()
 const selectedTask = ref<any>(null)
 const isTaskFlow = ref(true) // 默认显示任务流
 const uploadRef = ref()
-
+const userListOption = ref<any>()
+const toolListOption =  ref<any>()
 // 项目信息
-const projectInfo = reactive(props.projectData || {})
+const projectId =  route?.query?.projectId as string
+
+const projectInfo = reactive<ReqMyPackageAddFormData>({
+    id: "",
+    flowId: "",
+    about: "",
+    code: "",
+    departmentRelaName: '研究所',
+    departmentRelaIds: ['CA37C82FC62649A7A9D407072C6B9321'],
+    departmentTypeCode: "PROJECT_DEPT_TYPE_RESPONSIBLE",
+    levelCode: "",
+    levelName: "",
+    memo: "",
+    name: "",
+    personTypeCode: "PROJECT_PERSON_TYPE_RESPONSIBLE",
+    personRelaIds: [],
+    personRelaList: [],
+    extendProjectParam: [],
+    region: "",
+    direction : "",
+    taskType: [],
+    troops: [],
+    securityLevelCode: "",
+    planBeginDate: "",
+    planEndDate: "",
+    description:"",
+    attachments:"",
+    timeRange:[],
+    requirement:"",
+    userListName:"",
+    troopsName:"",
+    taskTypeName:"",
+    directionName:"",
+    projLeader:"",
+    temProjectId:"",
+    businessCode: "BUSINESS_CODE_TXZJXT",
+ })
 
 // ER图数据
 const erData = ref({
@@ -555,14 +580,14 @@ const taskList = ref<any>([
   },
   {
     id: 'task1',
-    name: '体系需求分析活动',
+    name: '体系需求管理系统任务',
     type: 'analysis',
     nodeType: 'task',
-    assignee: '方小明',
+    assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
     taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
-    toolAssociation: '体系需求调研基线',
+    toolAssociation:"1",
     x: 200,
     y: 80,
     expanded: false,
@@ -572,8 +597,8 @@ const taskList = ref<any>([
         name: '体系需求',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
-        dataTypeCode: 'xxx需求.Req',
-        dataTypeValue: null,
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'xxx需求.Req',
         isEditing: false
       }
     ],
@@ -582,134 +607,144 @@ const taskList = ref<any>([
         name: '体系需求Req',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
-        dataTypeCode: 'xxx需求.Req',
-        dataTypeValue: null,
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'xxx需求.Req',
         isEditing: false
       }
     ]
   },
   {
     id: 'task2',
-    name: '体系架构设计',
+    name: '体系架构设计任务',
     type: 'design',
     nodeType: 'task',
-    assignee: '',
+    assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
     taskStats: { up: 0, down: 0 },
-    dateRange: null,
-    executionDays: null,
-    toolAssociation: '',
+    dateRange: ['2024-01-06', '2024-01-16'],
+    executionDays: 10,
+    toolAssociation:"2",
     x: 420,
     y: 180,
     expanded: false,
-    inputs: [],
-    outputs: []
-  },
-  {
-    id: 'task3',
-    name: '体系需求满足度评估',
-    type: 'evaluation',
-    nodeType: 'task',
-    assignee: '李强',
-    taskStats: { up: 1, down: 2 },
-    dateRange: ['2024-01-06', '2024-01-16'],
-    executionDays: 10,
-    toolAssociation: '体系需求满足度评估基线',
-    x: 220,
-    y: 320,
-    expanded: false,
     inputs: [
       {
-        name: '体系需求',
+        name: '体系需求Req',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
-        dataTypeCode: 'xxx需求.Req',
-        dataTypeValue: null,
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'xxx需求.Req',
         isEditing: false
       }
     ],
     outputs: [
       {
-        name: '体系需求Req',
+        name: '体系模型',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
-        dataTypeCode: 'xxx需求.Req',
-        dataTypeValue: null,
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'dodaf',
         isEditing: false
-      },
+      }
+    ]
+  },
+  {
+    id: 'task3',
+    name: '体系需求满足度评估任务',
+    type: 'evaluation',
+    nodeType: 'task',
+    assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+    taskStats: { up: 1, down: 2 },
+    dateRange: ['2024-01-06', '2024-01-16'],
+    executionDays: 10,
+    toolAssociation: "3",
+    x: 220,
+    y: 320,
+    expanded: false,
+    inputs: [
       {
-        name: '新的需求',
+        name: '体系模型',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
-        dataTypeCode: '类型',
-        dataTypeValue: null,
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'dodaf',
+        isEditing: false
+      }
+    ],
+    outputs: [
+      {
+        name: '体系需求满足度评估报告',
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: '评估报告',
         isEditing: false
       }
     ]
   },
   {
     id: 'task4',
-    name: '体系对抗仿真',
+    name: '体系对抗仿真任务',
     type: 'simulation',
     nodeType: 'task',
-    assignee: '方小明',
+    assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
     taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
-    toolAssociation: '体系对抗仿真基线',
+    toolAssociation: "4",
     x: 590,
     y: 320,
     expanded: false,
     inputs: [
-      {
-        name: '体系需求',
+       {
+        name: '想定文件',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
-        dataTypeCode: 'xxx需求.Req',
-        dataTypeValue: null,
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: '想定文件',
         isEditing: false
       }
     ],
     outputs: [
       {
-        name: '体系需求Req',
+        name: '仿真场景截图',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
-        dataTypeCode: 'xxx需求.Req',
-        dataTypeValue: null,
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: '仿真场景截图',
         isEditing: false
       }
     ]
   },
   {
     id: 'task5',
-    name: '体系效能评估',
+    name: '体系效能评估任务',
     type: 'performance',
     nodeType: 'task',
-    assignee: '李强强',
+    assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
     taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
-    toolAssociation: '体系效能评估基线',
+    toolAssociation: "5",
     x: 590,
     y: 450,
     expanded: false,
     inputs: [
       {
-        name: '体系需求',
+        name: '体系模型',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
-        dataTypeCode: 'xxx需求.Req',
-        dataTypeValue: null,
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'dodaf',
         isEditing: false
       }
     ],
     outputs: [
       {
-        name: '体系需求Req',
+        name: '效能评估报告',
         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
         securityLevelName: '内部',
-        dataTypeCode: 'xxx需求.Req',
-        dataTypeValue: null,
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: '效能评估报告',
         isEditing: false
       }
     ]
@@ -1963,7 +1998,7 @@ const updateTask = () => {
     
     taskList.value[taskIndex] = { ...selectedTask.value }
     updateTaskNode(selectedTask.value)
-    ElMessage.success('任务更新成功')
+    //ElMessage.success('任务更新成功')
   }
 }
 
@@ -2174,16 +2209,16 @@ const saveFlow  =  () => {
   //   x6NodeJson: graph.value!.toJSON()
   // }
 
-  taskForm.projectId = projectInfo.id;
-  taskForm.flowId = projectInfo.flowId;
+  taskForm.projectId = projectId;
+//taskForm.flowId = projectInfo.flowId;
   taskForm.businessCode = "";
   taskForm.workItemParams = taskList.value;
-  taskForm.connections = taskConnections.value.map(conn => ({
-    source: conn.source,
-    target: conn.target
-  }));
+  // taskForm.connections = taskConnections.value.map(conn => ({
+  //   source: conn.source,
+  //   target: conn.target
+  // }));
   taskForm.cells = graph.value!.toJSON()
-  taskForm.x6NodeJson = taskForm.cells
+  taskForm.x6NodeJson =  JSON.stringify(taskForm.cells)  
   api.planTask.addTask(taskForm)
     
   console.log('保存流程数据:', taskForm)
@@ -2191,13 +2226,24 @@ const saveFlow  =  () => {
 }
 
 // 组件挂载
-onMounted(() => {
+onMounted(async() => {
   setTimeout(() => {
     initFlowChart()
   }, 100)
   
   // 监听窗口大小变化
   window.addEventListener('resize', handleResize)
+    
+    console.log("projectId"  + projectId)
+    const userresult = await api.commonUser.list({ businessCode : "BUSINESS_CODE_WORKFLOW"})
+    userListOption.value = userresult.data
+
+    const toolList =  await api.planTask.getToolList({isSys:"true"})
+    toolListOption.value =  toolList.data;
+
+    const projectreslt = await await api.packageManage.getInfo({ id: projectId })
+    Object.assign(projectInfo, projectreslt.data)
+
 })
 
 // 组件卸载
@@ -2258,7 +2304,6 @@ function uploada(index: number){
   currentIndex.value = index;
   uploadRef.value.openDialog()  
 }
-
 
 
 </script>

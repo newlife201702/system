@@ -724,28 +724,30 @@ const taskList = ref<any>([
     y: 80,
     expanded: false,
     // 输入输出数据
-    inputs: [
-      {
-        name: '体系需求',
-        taskId: 'task1',
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'xxx需求.Req',
-        isEditing: false
-      }
-    ],
-    outputs: [
-      {
-        name: '体系需求Req',
-        taskId: 'task1',
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'xxx需求.Req',
-        isEditing: false
-      }
-    ],
+         inputs: [
+       {
+         id: '',
+         name: '体系需求',
+         taskId: 'task1',
+         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+         securityLevelName: '内部',
+         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+         dataTypeValue: 'xxx需求.Req',
+         isEditing: false
+       }
+     ],
+     outputs: [
+       {
+         id: '',
+         name: '体系需求Req',
+         taskId: 'task1',
+         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+         securityLevelName: '内部',
+         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+         dataTypeValue: 'xxx需求.Req',
+         isEditing: false
+       }
+     ],
     // 体系需求满足度评估系统特有字段
     satisfactionTaskType: '',
     satisfactionTaskCategory: '',
@@ -776,28 +778,30 @@ const taskList = ref<any>([
     x: 420,
     y: 180,
     expanded: false,
-    inputs: [
-      {
-        name: '体系需求Req',
-        taskId: 'task2',
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'xxx需求.Req',
-        isEditing: false
-      }
-    ],
-    outputs: [
-      {
-        name: '体系模型',
-        taskId: 'task2',
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'dodaf',
-        isEditing: false
-      }
-    ],
+         inputs: [
+       {
+         id: '',
+         name: '体系需求Req',
+         taskId: 'task2',
+         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+         securityLevelName: '内部',
+         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+         dataTypeValue: 'xxx需求.Req',
+         isEditing: false
+       }
+     ],
+     outputs: [
+       {
+         id: '',
+         name: '体系模型',
+         taskId: 'task2',
+         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+         securityLevelName: '内部',
+         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+         dataTypeValue: 'dodaf',
+         isEditing: false
+       }
+     ],
     // 体系需求满足度评估系统特有字段
     satisfactionTaskType: '',
     satisfactionTaskCategory: '',
@@ -828,28 +832,30 @@ const taskList = ref<any>([
     x: 220,
     y: 320,
     expanded: false,
-    inputs: [
-      {
-        name: '体系模型',
-        taskId: 'task3',
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'dodaf',
-        isEditing: false
-      }
-    ],
-    outputs: [
-      {
-        name: '体系需求满足度评估报告',
-        taskId: 'task3',
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: '评估报告',
-        isEditing: false
-      }
-    ],
+         inputs: [
+       {
+         id: '',
+         name: '体系模型',
+         taskId: 'task3',
+         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+         securityLevelName: '内部',
+         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+         dataTypeValue: 'dodaf',
+         isEditing: false
+       }
+     ],
+     outputs: [
+       {
+         id: '',
+         name: '体系需求满足度评估报告',
+         taskId: 'task3',
+         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+         securityLevelName: '内部',
+         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+         dataTypeValue: '评估报告',
+         isEditing: false
+       }
+     ],
     // 体系需求满足度评估系统特有字段
     satisfactionTaskType: '',
     satisfactionTaskCategory: '',
@@ -880,28 +886,30 @@ const taskList = ref<any>([
     x: 590,
     y: 320,
     expanded: false,
-    inputs: [
+         inputs: [
+        {
+         id: '',
+         name: '想定文件',
+         taskId: 'task4',
+         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+         securityLevelName: '内部',
+         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+         dataTypeValue: '想定文件',
+         isEditing: false
+       }
+     ],
+     outputs: [
        {
-        name: '想定文件',
-        taskId: 'task4',
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: '想定文件',
-        isEditing: false
-      }
-    ],
-    outputs: [
-      {
-        name: '仿真场景截图',
-        taskId: 'task4',
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: '仿真场景截图',
-        isEditing: false
-      }
-    ],
+         id: '',
+         name: '仿真场景截图',
+         taskId: 'task4',
+         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+         securityLevelName: '内部',
+         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+         dataTypeValue: '仿真场景截图',
+         isEditing: false
+       }
+     ],
     // 体系需求满足度评估系统特有字段
     satisfactionTaskType: '',
     satisfactionTaskCategory: '',
@@ -932,28 +940,30 @@ const taskList = ref<any>([
     x: 590,
     y: 450,
     expanded: false,
-    inputs: [
-      {
-        name: '体系模型',
-        taskId: 'task5',
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'dodaf',
-        isEditing: false
-      }
-    ],
-    outputs: [
-      {
-        name: '效能评估报告',
-        taskId: 'task5',
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: '效能评估报告',
-        isEditing: false
-      }
-    ],
+         inputs: [
+       {
+         id: '',
+         name: '体系模型',
+         taskId: 'task5',
+         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+         securityLevelName: '内部',
+         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+         dataTypeValue: 'dodaf',
+         isEditing: false
+       }
+     ],
+     outputs: [
+       {
+         id: '',
+         name: '效能评估报告',
+         taskId: 'task5',
+         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+         securityLevelName: '内部',
+         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+         dataTypeValue: '效能评估报告',
+         isEditing: false
+       }
+     ],
     // 体系需求满足度评估系统特有字段
     satisfactionTaskType: '',
     satisfactionTaskCategory: '',
@@ -2249,15 +2259,16 @@ const addInput = () => {
     selectedTask.value.inputs = []
   }
   
-  selectedTask.value.inputs.push({
-    name: '',
-    taskId: selectedTask.value.id,
-    securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-    securityLevelName: '内部',
-    dataTypeCode: '文件',
-    dataTypeValue: null,
-    isEditing: true
-  })
+   selectedTask.value.inputs.push({
+     id: '',
+     name: '',
+     taskId: selectedTask.value.id,
+     securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+     securityLevelName: '内部',
+     dataTypeCode: '文件',
+     dataTypeValue: null,
+     isEditing: true
+   })
   
   // 自动更新taskStats
   selectedTask.value.taskStats.up = selectedTask.value.inputs.length
@@ -2332,15 +2343,16 @@ const addOutput = () => {
     selectedTask.value.outputs = []
   }
   
-  selectedTask.value.outputs.push({
-    name: '',
-    taskId: selectedTask.value.id,
-    securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-    securityLevelName: '内部',
-    dataTypeCode: '文件',
-    dataTypeValue: null,
-    isEditing: true
-  })
+   selectedTask.value.outputs.push({
+     id: '',
+     name: '',
+     taskId: selectedTask.value.id,
+     securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+     securityLevelName: '内部',
+     dataTypeCode: '文件',
+     dataTypeValue: null,
+     isEditing: true
+   })
   
   // 自动更新taskStats
   selectedTask.value.taskStats.down = selectedTask.value.outputs.length

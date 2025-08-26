@@ -718,7 +718,112 @@ const templateList = ref([
     creator: '全慧宇',
     adoptCount: 200,
     status: 'published', // published | unpublished
-    createTime: '2024-01-01'
+    createTime: '2024-01-01',
+    // 模板节点数据 - 与taskList结构一致
+    taskList: [
+      {
+        id: 'start',
+        name: '开始',
+        type: 'start',
+        nodeType: 'start',
+        x: 50,
+        y: 150,
+        shape: 'circle'
+      },
+      {
+        id: 'template1-task1',
+        name: '需求分析任务',
+        type: 'analysis',
+        nodeType: 'task',
+        assignee: [],
+        taskStats: { up: 0, down: 0 },
+        dateRange: null,
+        executionDays: null,
+        toolAssociation: '',
+        x: 200,
+        y: 80,
+        expanded: false,
+        inputs: [],
+        outputs: [],
+        satisfactionTaskType: '',
+        satisfactionTaskCategory: '',
+        satisfactionDirection: '',
+        satisfactionScenario: '',
+        satisfactionSource: '',
+        satisfactionRequirement: '',
+        satisfactionDescription: '',
+        efficiencyEvalTime: null,
+        efficiencyEvaluator: [],
+        efficiencyCondition: '',
+        efficiencyType: '',
+        efficiencyTarget: '',
+        efficiencyObject: '',
+        efficiencyScope: ''
+      },
+      {
+        id: 'template1-task2',
+        name: '架构设计任务',
+        type: 'design',
+        nodeType: 'task',
+        assignee: [],
+        taskStats: { up: 0, down: 0 },
+        dateRange: null,
+        executionDays: null,
+        toolAssociation: '',
+        x: 400,
+        y: 80,
+        expanded: false,
+        inputs: [],
+        outputs: [],
+        satisfactionTaskType: '',
+        satisfactionTaskCategory: '',
+        satisfactionDirection: '',
+        satisfactionScenario: '',
+        satisfactionSource: '',
+        satisfactionRequirement: '',
+        satisfactionDescription: '',
+        efficiencyEvalTime: null,
+        efficiencyEvaluator: [],
+        efficiencyCondition: '',
+        efficiencyType: '',
+        efficiencyTarget: '',
+        efficiencyObject: '',
+        efficiencyScope: ''
+      },
+      {
+        id: 'end',
+        name: '结束',
+        type: 'end',
+        nodeType: 'end',
+        x: 600,
+        y: 150,
+        shape: 'circle'
+      }
+    ],
+    // 模板连线数据 - 与taskConnections结构一致
+    taskConnections: [
+      {
+        id: 'start-to-template1-task1',
+        source: 'start',
+        target: 'template1-task1',
+        sourceAnchor: 'bottom',
+        targetAnchor: 'top'
+      },
+      {
+        id: 'template1-task1-to-template1-task2',
+        source: 'template1-task1',
+        target: 'template1-task2',
+        sourceAnchor: 'bottom',
+        targetAnchor: 'top'
+      },
+      {
+        id: 'template1-task2-to-end',
+        source: 'template1-task2',
+        target: 'end',
+        sourceAnchor: 'bottom',
+        targetAnchor: 'top'
+      }
+    ]
   },
   {
     id: 'template2', 
@@ -2497,12 +2602,26 @@ const addTask = (taskType: string) => {
 // 新建任务模板
 const createTemplate = () => {
   console.log('创建新模板')
-  ElMessage.success('创建模板功能待实现')
+  
+  // 清空当前画布
+  clearCanvas()
+  
+  // 添加开始节点和结束节点
+  addStartAndEndNodes()
+  
+  ElMessage.success('新建模板成功，已添加开始和结束节点')
 }
 
 // 复制模板
 const copyTemplate = (template: any) => {
   console.log('复制模板:', template.name)
+  
+  // 清空当前画布
+  clearCanvas()
+  
+  // 加载模板的节点和连线
+  loadTemplateToCanvas(template)
+  
   ElMessage.success(`模板 "${template.name}" 复制成功`)
 }
 
@@ -2523,7 +2642,143 @@ const toggleTemplateStatus = (template: any) => {
   ElMessage.success(`模板 "${template.name}" 状态已更新为${statusText}`)
 }
 
+// 清空画布
+const clearCanvas = () => {
+  if (!graph.value) return
+  
+  // 清空任务列表
+  taskList.value = []
+  
+  // 清空连线数据
+  taskConnections.value = []
+  
+  // 清空选中的任务
+  selectedTask.value = null
+  
+  // 清空画布中的所有节点和连线
+  graph.value.clearCells()
+}
 
+// 添加开始节点和结束节点
+const addStartAndEndNodes = () => {
+  if (!graph.value) return
+  
+  // 添加开始节点 - 与taskList结构一致
+  const startNode = {
+    id: 'start',
+    name: '开始',
+    type: 'start',
+    nodeType: 'start',
+    x: 50,
+    y: 150,
+    shape: 'circle'
+  }
+  
+  // 添加结束节点 - 与taskList结构一致
+  const endNode = {
+    id: 'end', 
+    name: '结束',
+    type: 'end',
+    nodeType: 'end',
+    x: 400,
+    y: 150,
+    shape: 'circle'
+  }
+  
+  // 使用createTaskNode创建开始节点
+  createTaskNode(startNode)
+  
+  // 使用createTaskNode创建结束节点
+  createTaskNode(endNode)
+  
+  // 更新taskList
+  taskList.value = [startNode, endNode]
+}
+
+// 加载模板到画布
+const loadTemplateToCanvas = (template: any) => {
+  if (!graph.value) return
+  
+  // 使用模板的taskList数据，如果没有则使用默认数据
+  const templateTaskList = template.taskList || [
+    {
+      id: 'start',
+      name: '开始',
+      type: 'start',
+      nodeType: 'start',
+      x: 50,
+      y: 150,
+      shape: 'circle'
+    },
+    {
+      id: `template-task-${Date.now()}`,
+      name: `${template.name}-任务1`,
+      type: 'analysis',
+      nodeType: 'task',
+      assignee: [],
+      taskStats: { up: 0, down: 0 },
+      dateRange: null,
+      executionDays: null,
+      toolAssociation: '',
+      x: 200,
+      y: 80,
+      expanded: false,
+      inputs: [],
+      outputs: [],
+      satisfactionTaskType: '',
+      satisfactionTaskCategory: '',
+      satisfactionDirection: '',
+      satisfactionScenario: '',
+      satisfactionSource: '',
+      satisfactionRequirement: '',
+      satisfactionDescription: '',
+      efficiencyEvalTime: null,
+      efficiencyEvaluator: [],
+      efficiencyCondition: '',
+      efficiencyType: '',
+      efficiencyTarget: '',
+      efficiencyObject: '',
+      efficiencyScope: ''
+    },
+    {
+      id: 'end',
+      name: '结束',
+      type: 'end',
+      nodeType: 'end',
+      x: 400,
+      y: 150,
+      shape: 'circle'
+    }
+  ]
+  
+  // 为任务节点生成唯一ID，避免冲突
+  const processedTaskList = templateTaskList.map(node => {
+    if (node.nodeType === 'task') {
+      return {
+        ...node,
+        id: `${node.id.replace(/^template\d+-/, '')}-${Date.now()}` // 确保ID唯一
+      }
+    }
+    return { ...node }
+  })
+  
+  // 更新任务列表 - 包含所有节点（开始、任务、结束）
+  taskList.value = [...processedTaskList]
+  
+  // 使用createTaskNode创建所有节点
+  processedTaskList.forEach(node => {
+    createTaskNode(node)
+  })
+  
+  // 直接将模板连线数据赋值给taskConnections
+  const templateConnections = template.taskConnections || []
+  taskConnections.value = [...templateConnections]
+  
+  // 调用addTaskConnections来添加任务连线
+  setTimeout(() => {
+    addTaskConnections()
+  }, 100)
+}
 
 // 更新任务
 const updateTask = () => {

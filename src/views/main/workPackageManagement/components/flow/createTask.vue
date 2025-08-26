@@ -87,7 +87,7 @@
          <h2>任务流程设计</h2>
          <div class="toolbar">
                        <div class="flow-toggle">
-              <div class="toggle-buttons">
+              <!-- <div class="toggle-buttons">
                <el-button 
                  :type="isTaskFlow ? 'primary' : 'default'"
                  size="small"
@@ -104,12 +104,28 @@
                >
                  参数流
                </el-button>
-             </div>
+             </div> -->
            </div>
-           <el-button size="small" @click="addTask">
-             <el-icon><Plus /></el-icon>
-             添加任务
-           </el-button>
+                       <el-button size="small" @click="addTask('analysis')">
+              <el-icon><Plus /></el-icon>
+              需求分析
+            </el-button>
+            <el-button size="small" @click="addTask('design')">
+              <el-icon><Plus /></el-icon>
+              架构设计
+            </el-button>
+            <el-button size="small" @click="addTask('evaluation')">
+              <el-icon><Plus /></el-icon>
+              需求评估
+            </el-button>
+            <el-button size="small" @click="addTask('simulation')">
+              <el-icon><Plus /></el-icon>
+              仿真验证
+            </el-button>
+            <el-button size="small" @click="addTask('performance')">
+              <el-icon><Plus /></el-icon>
+              效能评估
+            </el-button>
            <el-button size="small" @click="saveFlow">
              <el-icon><Document /></el-icon>
              保存流程
@@ -565,14 +581,20 @@ const projectId =  route?.query?.projectId as string
 
 // 系统类型识别
 const systemType = computed(() => {
-  // 根据业务代码或其他标识来判断系统类型
-  if (projectInfo.businessCode === "BUSINESS_CODE_TXZJXT") {
+  // 根据选中任务的type来判断系统类型
+  if (!selectedTask.value) {
+    return "requirement" // 默认返回需求管理系统
+  }
+  
+  const taskType = selectedTask.value.type
+  if (['analysis', 'design', 'evaluation'].includes(taskType)) {
     return "requirement" // 体系需求管理系统
-  } else if (projectInfo.businessCode === "BUSINESS_CODE_SATISFACTION") {
-    return "satisfaction" // 体系需求满足度评估系统  
-  } else if (projectInfo.businessCode === "BUSINESS_CODE_EFFICIENCY") {
+  } else if (taskType === 'simulation') {
+    return "satisfaction" // 体系需求满足度评估系统
+  } else if (taskType === 'performance') {
     return "efficiency" // 体系效能评估系统
   }
+  
   return "requirement" // 默认为需求管理系统
 })
 
@@ -2188,12 +2210,25 @@ const createAttributeRelation = (relation: any) => {
 
 
 // 添加任务
-const addTask = () => {
+const addTask = (taskType: string) => {
   const newTaskId = uuid(32, 62)
+  
+  // 根据任务类型设置默认名称
+  const getTaskName = (type: string) => {
+    const nameMap: Record<string, string> = {
+      'analysis': '需求分析任务',
+      'design': '架构设计任务',
+      'evaluation': '需求评估任务',
+      'simulation': '仿真验证任务',
+      'performance': '效能评估任务'
+    }
+    return nameMap[type] || '新任务'
+  }
+  
   const newTask = {
     id: newTaskId,
-    name: '新任务',
-    type: 'development',
+    name: getTaskName(taskType),
+    type: taskType,
     nodeType: 'task',
     assignee: '',
     taskStats: { up: 0, down: 0 },

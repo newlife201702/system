@@ -3,7 +3,16 @@
     <!-- 左侧项目基础信息抽屉 -->
     <div class="left-drawer" :class="{ collapsed: leftDrawerCollapsed }">
       <div class="drawer-header">
-        <span class="drawer-title">项目基础信息</span>
+        <span class="drawer-title">{{ isTemplateMode ? '任务模板库' : '项目基础信息' }}</span>
+        <el-button 
+          v-if="isTemplateMode"
+          type="primary" 
+          size="small"
+          @click="createTemplate"
+          class="create-template-btn"
+        >
+          <el-icon><Plus /></el-icon>
+        </el-button>
         <el-button 
           type="text" 
           @click="toggleLeftDrawer"
@@ -17,7 +26,110 @@
       </div>
       
       <div class="drawer-content" v-show="!leftDrawerCollapsed">
-        <div class="project-info">
+        <!-- 任务模板库内容 -->
+        <div v-if="isTemplateMode" class="template-content">
+          <!-- 搜索区域 -->
+          <div class="template-search">
+            <el-input
+              v-model="templateSearchForm.keyword"
+              placeholder="搜索"
+              size="small"
+              clearable
+            >
+              <template #suffix>
+                <el-icon><Search /></el-icon>
+              </template>
+            </el-input>
+          </div>
+          
+          <!-- 筛选区域 -->
+          <div class="template-filters">
+            <div class="filter-item">
+              <label>创建人:</label>
+              <el-select
+                v-model="templateSearchForm.creator"
+                size="small"
+              >
+                <el-option
+                  v-for="option in creatorOptions"
+                  :key="option.value"
+                  :label="option.label"
+                  :value="option.value"
+                />
+              </el-select>
+            </div>
+            
+            <div class="filter-item">
+              <label>状态:</label>
+              <el-select
+                v-model="templateSearchForm.status"
+                size="small"
+              >
+                <el-option
+                  v-for="option in statusOptions"
+                  :key="option.value"
+                  :label="option.label"
+                  :value="option.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          
+          <!-- 模板列表 -->
+          <div class="template-list">
+            <div
+              v-for="template in filteredTemplateList"
+              :key="template.id"
+              class="template-card"
+            >
+              <div class="template-header">
+                <h4 class="template-name">{{ template.name }}</h4>
+                <span class="template-version">版本: {{ template.version }}</span>
+              </div>
+              
+              <div class="template-details">
+                <div class="detail-row">
+                  <span class="label">{{ template.taskCount }}个任务</span>
+                  <span class="creator">{{ template.creator }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="adopt-count">被采用{{ template.adoptCount }}次</span>
+                </div>
+              </div>
+              
+              <div class="template-footer">
+                <div class="template-status">
+                  <el-switch
+                    v-model="template.status"
+                    active-value="published"
+                    inactive-value="unpublished"
+                    @change="toggleTemplateStatus(template)"
+                  />
+                </div>
+                <div class="template-version-manage">版本管理</div>
+                <div class="template-actions">
+                  <el-button
+                    type="text"
+                    size="small"
+                    @click="copyTemplate(template)"
+                  >
+                    <el-icon><CopyDocument /></el-icon>
+                  </el-button>
+                  <el-button
+                    type="text"
+                    size="small"
+                    @click="deleteTemplate(template)"
+                  >
+                    <el-icon><Delete /></el-icon>
+                  </el-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 项目基础信息内容 -->
+        <div v-else class="project-info">
           <div class="info-item">
             <label>项目名称：</label>
             <span>{{ projectInfo.name || '-' }}</span>
@@ -543,7 +655,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted, nextTick, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router'
 import * as api from '@/api'
 import fileUploadDialog from '@/components/fileUploadDialog.vue'
 import { Graph, Node, Edge, Shape } from '@antv/x6'
@@ -552,17 +664,28 @@ import {
   ArrowLeft, 
   ArrowRight, 
   Plus, 
-  Document
+  Document,
+  Search,
+  CopyDocument,
+  Delete
 } from '@element-plus/icons-vue'
 import { number } from 'echarts'
 import { uuid } from '@/libs/utils'
-const route = useRoute()
 
 // 定义组件的 props
 const props = defineProps<{
   projectId?: string
-  //projectData?: any
+  projectData?: any
+  isTemplateMode?: boolean
 }>()
+
+// 路由相关
+const route = useRoute()
+
+// 判断是否为模板管理模式
+const isTemplateMode = computed(() => {
+  return props.isTemplateMode || route.name === 'taskTemplate'
+})
 
 // 响应式数据
 const leftDrawerCollapsed = ref(false)
@@ -578,6 +701,108 @@ const userListOption = ref<any>()
 const toolListOption =  ref<any>()
 // 项目信息
 const projectId =  route?.query?.projectId as string
+
+// 任务模板相关数据
+const templateSearchForm = reactive({
+  keyword: '',
+  creator: 'all',
+  status: 'all'
+})
+
+const templateList = ref([
+  {
+    id: 'template1',
+    name: 'XXX-001体系研发任务',
+    version: 'v1.0',
+    taskCount: 2,
+    creator: '全慧宇',
+    adoptCount: 200,
+    status: 'published', // published | unpublished
+    createTime: '2024-01-01'
+  },
+  {
+    id: 'template2', 
+    name: 'XXX-002体系研发任务',
+    version: 'v1.0',
+    taskCount: 25,
+    creator: '章宇',
+    adoptCount: 10,
+    status: 'published',
+    createTime: '2024-01-02'
+  },
+  {
+    id: 'template3',
+    name: 'XXX-003体系研发任务', 
+    version: 'v1.0',
+    taskCount: 25,
+    creator: '胡林杰',
+    adoptCount: 10,
+    status: 'published',
+    createTime: '2024-01-03'
+  },
+  {
+    id: 'template4',
+    name: 'XXX-004体系研发任务',
+    version: 'v1.0', 
+    taskCount: 25,
+    creator: '章宇',
+    adoptCount: 10,
+    status: 'published',
+    createTime: '2024-01-04'
+  },
+  {
+    id: 'template5',
+    name: 'XXX-005体系研发任务',
+    version: 'v1.0',
+    taskCount: 25,
+    creator: '章宇', 
+    adoptCount: 10,
+    status: 'unpublished',
+    createTime: '2024-01-05'
+  },
+  {
+    id: 'template6',
+    name: 'XXX-006体系研发任务',
+    version: 'v2.0',
+    taskCount: 20,
+    creator: '章宇',
+    adoptCount: 10, 
+    status: 'unpublished',
+    createTime: '2024-01-06'
+  }
+])
+
+// 创建人选项
+const creatorOptions = [
+  { label: '全部', value: 'all' },
+  { label: '自己', value: 'self' }
+]
+
+// 状态选项 
+const statusOptions = [
+  { label: '全部', value: 'all' },
+  { label: '未发布', value: 'unpublished' },
+  { label: '已发布', value: 'published' }
+]
+
+// 过滤后的模板列表
+const filteredTemplateList = computed(() => {
+  return templateList.value.filter(template => {
+    // 关键字搜索
+    const keywordMatch = !templateSearchForm.keyword || 
+      template.name.toLowerCase().includes(templateSearchForm.keyword.toLowerCase())
+    
+    // 创建人搜索
+    const creatorMatch = templateSearchForm.creator === 'all' || 
+      (templateSearchForm.creator === 'self' && template.creator === '自己') // 这里应该与当前用户匹配
+    
+    // 状态搜索
+    const statusMatch = templateSearchForm.status === 'all' || 
+      template.status === templateSearchForm.status
+    
+    return keywordMatch && creatorMatch && statusMatch
+  })
+})
 
 // 系统类型识别
 const systemType = computed(() => {
@@ -2268,6 +2493,38 @@ const addTask = (taskType: string) => {
   ElMessage.success('任务添加成功')
 }
 
+// 模板相关方法
+// 新建任务模板
+const createTemplate = () => {
+  console.log('创建新模板')
+  ElMessage.success('创建模板功能待实现')
+}
+
+// 复制模板
+const copyTemplate = (template: any) => {
+  console.log('复制模板:', template.name)
+  ElMessage.success(`模板 "${template.name}" 复制成功`)
+}
+
+// 删除模板
+const deleteTemplate = (template: any) => {
+  console.log('删除模板:', template.name)
+  const index = templateList.value.findIndex(t => t.id === template.id)
+  if (index !== -1) {
+    templateList.value.splice(index, 1)
+    ElMessage.success(`模板 "${template.name}" 删除成功`)
+  }
+}
+
+// 切换模板状态
+const toggleTemplateStatus = (template: any) => {
+  template.status = template.status === 'published' ? 'unpublished' : 'published'
+  const statusText = template.status === 'published' ? '已发布' : '未发布'
+  ElMessage.success(`模板 "${template.name}" 状态已更新为${statusText}`)
+}
+
+
+
 // 更新任务
 const updateTask = () => {
   if (!selectedTask.value) return
@@ -2604,7 +2861,7 @@ function uploada(index: number){
 
   // 左侧项目信息抽屉
   .left-drawer {
-    width: 300px;
+    width: 500px;
     background: #fff;
     border-right: 1px solid #e8e8e8;
     transition: all 0.3s ease;
@@ -3117,6 +3374,160 @@ function uploada(index: number){
       &.collapsed {
         width: 48px;
       }
+    }
+  }
+}
+
+// 任务模板相关样式
+.template-content {
+  padding: 16px;
+  
+  .template-search {
+    margin-bottom: 16px;
+    
+    .el-input {
+      width: 100%;
+    }
+  }
+  
+  .template-filters {
+    margin-bottom: 16px;
+    
+    .filter-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      
+      label {
+        width: 50px;
+        font-size: 12px;
+        color: #666;
+        margin-right: 8px;
+      }
+      
+      .el-select {
+        flex: 1;
+      }
+    }
+  }
+  
+  .template-list {
+    .template-card {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        border-color: #1890ff;
+        box-shadow: 0 2px 8px rgba(24, 144, 255, 0.1);
+      }
+      
+      .template-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+        
+        .template-name {
+          font-size: 14px;
+          font-weight: 600;
+          color: #262626;
+          margin: 0;
+          line-height: 1.4;
+          flex: 1;
+          margin-right: 8px;
+        }
+        
+        .template-version {
+          font-size: 12px;
+          color: #666;
+          white-space: nowrap;
+        }
+      }
+      
+      .template-details {
+        margin-bottom: 12px;
+        
+        .detail-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 4px;
+          font-size: 12px;
+          
+          .label {
+            color: #1890ff;
+            font-weight: 500;
+          }
+          
+          .creator {
+            color: #666;
+          }
+          
+          .adopt-count {
+            color: #666;
+          }
+        }
+      }
+      
+      .template-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        .template-status {
+          flex-shrink: 0;
+        }
+        
+        .template-version-manage {
+          font-size: 12px;
+          color: #1890ff;
+          cursor: pointer;
+          flex: 1;
+          text-align: center;
+          margin: 0 8px;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+        
+        .template-actions {
+          display: flex;
+          gap: 4px;
+          flex-shrink: 0;
+          
+          .el-button {
+            padding: 4px;
+            width: 24px;
+            height: 24px;
+            
+            .el-icon {
+              font-size: 12px;
+            }
+            
+            &:hover {
+              background-color: #f5f5f5;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// 头部样式调整
+.drawer-header {
+  .create-template-btn {
+    margin-right: 8px;
+    padding: 4px 8px;
+    height: 24px;
+    
+    .el-icon {
+      font-size: 12px;
     }
   }
 }

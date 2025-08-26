@@ -235,6 +235,18 @@ const routes: Array<RouteRecordRaw> = [
                 })
               },
               {
+                path: 'taskTemplate',
+                name: 'taskTemplate',
+                component: () => import(/* webpackChunkName: "createTask" */ '../views/main/workPackageManagement/components/flow/createTask.vue'),
+                meta: {
+                  title: '任务模板管理',
+                  keepAlive: false
+                },
+                props: {
+                  isTemplateMode: true
+                }
+              },
+              {
                  path: 'demo1',
                 name: 'demo1',
                 component: () => import(/* webpackChunkName: "demo1" */ '../views/demo/demo1.vue'),

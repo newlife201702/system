@@ -97,7 +97,7 @@
           <!-- 项目列表 -->
           <div class="project-list">
             <div 
-              v-for="project in taskProjectsList" 
+              v-for="project in filteredProjectsList" 
               :key="project.id" 
               class="project-item"
             >
@@ -235,7 +235,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { 
   Folder, Download, Loading, User, WarningFilled, Flag, List, Grid, 
   ArrowRight, Calendar, Bell
@@ -280,6 +280,15 @@ const {
     changePageSize
 } = dataList({ moduleName: 'planTask', immediate: false })
 const taskProjectsList = ref(list)
+
+// 过滤只显示有任务列表的项目
+const filteredProjectsList = computed(() => {
+  return taskProjectsList.value.filter(project => {
+    // 检查项目是否有任务列表且不为空
+    const taskList = project.tasks
+    return taskList && Array.isArray(taskList) && taskList.length > 0
+  })
+})
 
 
 // 体系研发任务项目数据
@@ -499,7 +508,7 @@ const getFilteredTasks = (tasks: any[]) => {
 }
 
 const toggleProject = (projectId: string) => {
-  const project = taskProjectsList.value.find(p => p.id === projectId)
+  const project = filteredProjectsList.value.find(p => p.id === projectId)
   if (project) {
     project.expanded = !project.expanded
   }

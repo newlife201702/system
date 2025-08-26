@@ -217,9 +217,9 @@
                  参数流
                </el-button>
              </div> -->
-           </div>
+             </div>
                        <el-button size="small" @click="addTask('analysis')">
-              <el-icon><Plus /></el-icon>
+             <el-icon><Plus /></el-icon>
               需求分析
             </el-button>
             <el-button size="small" @click="addTask('design')">
@@ -237,7 +237,7 @@
             <el-button size="small" @click="addTask('performance')">
               <el-icon><Plus /></el-icon>
               效能评估
-            </el-button>
+           </el-button>
            <el-button size="small" @click="saveFlow">
              <el-icon><Document /></el-icon>
              保存流程
@@ -313,7 +313,7 @@
                 placeholder="天数"
               />
             </el-form-item>
-
+                        
             <!-- 体系需求满足度评估系统特有字段 -->
             <template v-if="systemType === 'satisfaction'">
               <el-form-item label="任务类型">
@@ -527,17 +527,17 @@
                                <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
                              </span>
                            </template>
-                                                     <!-- 非编辑态 -->
-                          <template v-else>
+                           <!-- 非编辑态 -->
+                           <template v-else>
                             <span :title="input.name">{{ input.name }}</span>
                             <span :title="input.securityLevelName">{{ input.securityLevelName }}</span>
                             <span :title="input.dataTypeCode">{{ input.dataTypeCode }}</span>
                             <span :title="input.dataTypeValue ? input.dataTypeValue.name : '无'">{{ input.dataTypeValue ? input.dataTypeValue.name : '无' }}</span>
-                            <span>
-                              <el-button size="small" text type="primary" @click="editInput(index)">编辑</el-button>
-                              <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
-                            </span>
-                          </template>
+                             <span>
+                               <el-button size="small" text type="primary" @click="editInput(index)">编辑</el-button>
+                               <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
+                             </span>
+                           </template>
                          </div>
                          <div class="table-row" v-if="!selectedTask.inputs || selectedTask.inputs.length === 0">
                            <span colspan="5" style="text-align: center; color: #999;">暂无数据</span>
@@ -618,17 +618,17 @@
                                <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
                              </span>
                            </template>
-                                                     <!-- 非编辑态 -->
-                          <template v-else>
+                           <!-- 非编辑态 -->
+                           <template v-else>
                             <span :title="output.name">{{ output.name }}</span>
                             <span :title="output.securityLevelName">{{ output.securityLevelName }}</span>
                             <span :title="output.dataTypeCode">{{ output.dataTypeCode }}</span>
                             <span :title="output.dataTypeValue ? output.dataTypeValue.name : '无'">{{ output.dataTypeValue ? output.dataTypeValue.name : '无' }}</span>
-                            <span>
-                              <el-button size="small" text type="primary" @click="editOutput(index)">编辑</el-button>
-                              <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
-                            </span>
-                          </template>
+                             <span>
+                               <el-button size="small" text type="primary" @click="editOutput(index)">编辑</el-button>
+                               <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
+                             </span>
+                           </template>
                          </div>
                          <div class="table-row" v-if="!selectedTask.outputs || selectedTask.outputs.length === 0">
                            <span colspan="5" style="text-align: center; color: #999;">暂无数据</span>
@@ -971,29 +971,29 @@ const taskList = ref<any>([
     y: 80,
     expanded: false,
     // 输入输出数据
-         inputs: [
-       {
+    inputs: [
+      {
          id: '',
-         name: '体系需求',
+        name: '体系需求',
          taskId: 'task1',
-         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-         securityLevelName: '内部',
-         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-         dataTypeValue: 'xxx需求.Req',
-         isEditing: false
-       }
-     ],
-     outputs: [
-       {
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'xxx需求.Req',
+        isEditing: false
+      }
+    ],
+    outputs: [
+      {
          id: '',
-         name: '体系需求Req',
+        name: '体系需求Req',
          taskId: 'task1',
-         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-         securityLevelName: '内部',
-         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-         dataTypeValue: 'xxx需求.Req',
-         isEditing: false
-       }
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'xxx需求.Req',
+        isEditing: false
+      }
      ],
     // 体系需求满足度评估系统特有字段
     satisfactionTaskType: '',
@@ -1025,29 +1025,29 @@ const taskList = ref<any>([
     x: 420,
     y: 180,
     expanded: false,
-         inputs: [
-       {
+    inputs: [
+      {
          id: '',
-         name: '体系需求Req',
+        name: '体系需求Req',
          taskId: 'task2',
-         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-         securityLevelName: '内部',
-         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-         dataTypeValue: 'xxx需求.Req',
-         isEditing: false
-       }
-     ],
-     outputs: [
-       {
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'xxx需求.Req',
+        isEditing: false
+      }
+    ],
+    outputs: [
+      {
          id: '',
-         name: '体系模型',
+        name: '体系模型',
          taskId: 'task2',
-         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-         securityLevelName: '内部',
-         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-         dataTypeValue: 'dodaf',
-         isEditing: false
-       }
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'dodaf',
+        isEditing: false
+      }
      ],
     // 体系需求满足度评估系统特有字段
     satisfactionTaskType: '',
@@ -1079,29 +1079,29 @@ const taskList = ref<any>([
     x: 220,
     y: 320,
     expanded: false,
-         inputs: [
-       {
+    inputs: [
+      {
          id: '',
-         name: '体系模型',
+        name: '体系模型',
          taskId: 'task3',
-         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-         securityLevelName: '内部',
-         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-         dataTypeValue: 'dodaf',
-         isEditing: false
-       }
-     ],
-     outputs: [
-       {
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'dodaf',
+        isEditing: false
+      }
+    ],
+    outputs: [
+      {
          id: '',
-         name: '体系需求满足度评估报告',
+        name: '体系需求满足度评估报告',
          taskId: 'task3',
-         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-         securityLevelName: '内部',
-         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-         dataTypeValue: '评估报告',
-         isEditing: false
-       }
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: '评估报告',
+        isEditing: false
+      }
      ],
     // 体系需求满足度评估系统特有字段
     satisfactionTaskType: '',
@@ -1133,29 +1133,29 @@ const taskList = ref<any>([
     x: 590,
     y: 320,
     expanded: false,
-         inputs: [
-        {
-         id: '',
-         name: '想定文件',
-         taskId: 'task4',
-         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-         securityLevelName: '内部',
-         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-         dataTypeValue: '想定文件',
-         isEditing: false
-       }
-     ],
-     outputs: [
+    inputs: [
        {
          id: '',
-         name: '仿真场景截图',
+        name: '想定文件',
          taskId: 'task4',
-         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-         securityLevelName: '内部',
-         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-         dataTypeValue: '仿真场景截图',
-         isEditing: false
-       }
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: '想定文件',
+        isEditing: false
+      }
+    ],
+    outputs: [
+      {
+         id: '',
+        name: '仿真场景截图',
+         taskId: 'task4',
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: '仿真场景截图',
+        isEditing: false
+      }
      ],
     // 体系需求满足度评估系统特有字段
     satisfactionTaskType: '',
@@ -1187,29 +1187,29 @@ const taskList = ref<any>([
     x: 590,
     y: 450,
     expanded: false,
-         inputs: [
-       {
+    inputs: [
+      {
          id: '',
-         name: '体系模型',
+        name: '体系模型',
          taskId: 'task5',
-         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-         securityLevelName: '内部',
-         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-         dataTypeValue: 'dodaf',
-         isEditing: false
-       }
-     ],
-     outputs: [
-       {
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: 'dodaf',
+        isEditing: false
+      }
+    ],
+    outputs: [
+      {
          id: '',
-         name: '效能评估报告',
+        name: '效能评估报告',
          taskId: 'task5',
-         securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-         securityLevelName: '内部',
-         dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-         dataTypeValue: '效能评估报告',
-         isEditing: false
-       }
+        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+        securityLevelName: '内部',
+        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+        dataTypeValue: '效能评估报告',
+        isEditing: false
+      }
      ],
     // 体系需求满足度评估系统特有字段
     satisfactionTaskType: '',
@@ -2551,16 +2551,16 @@ const addInput = () => {
     selectedTask.value.inputs = []
   }
   
-   selectedTask.value.inputs.push({
+  selectedTask.value.inputs.push({
      id: '',
-     name: '',
+    name: '',
      taskId: selectedTask.value.id,
-     securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-     securityLevelName: '内部',
-     dataTypeCode: '文件',
-     dataTypeValue: null,
-     isEditing: true
-   })
+    securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+    securityLevelName: '内部',
+    dataTypeCode: '文件',
+    dataTypeValue: null,
+    isEditing: true
+  })
   
   // 自动更新taskStats
   selectedTask.value.taskStats.up = selectedTask.value.inputs.length
@@ -2635,16 +2635,16 @@ const addOutput = () => {
     selectedTask.value.outputs = []
   }
   
-   selectedTask.value.outputs.push({
+  selectedTask.value.outputs.push({
      id: '',
-     name: '',
+    name: '',
      taskId: selectedTask.value.id,
-     securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-     securityLevelName: '内部',
-     dataTypeCode: '文件',
-     dataTypeValue: null,
-     isEditing: true
-   })
+    securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+    securityLevelName: '内部',
+    dataTypeCode: '文件',
+    dataTypeValue: null,
+    isEditing: true
+  })
   
   // 自动更新taskStats
   selectedTask.value.taskStats.down = selectedTask.value.outputs.length
@@ -2862,6 +2862,7 @@ function uploada(index: number){
   // 左侧项目信息抽屉
   .left-drawer {
     width: 500px;
+    height: 100vh;
     background: #fff;
     border-right: 1px solid #e8e8e8;
     transition: all 0.3s ease;
@@ -2901,6 +2902,7 @@ function uploada(index: number){
       flex: 1;
       padding: 16px;
       overflow-y: auto;
+      height: 0; // 确保flex子元素正确计算高度
 
       .project-info {
         .info-item {
@@ -3178,79 +3180,79 @@ function uploada(index: number){
                      background: #f5f5f5;
                    }
 
-                                     // 每个单元格样式
-                  span {
-                    display: flex;
-                    align-items: center;
-                    min-height: 32px;
+                   // 每个单元格样式
+                   span {
+                     display: flex;
+                     align-items: center;
+                     min-height: 32px;
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     padding: 0 4px;
-                    
-                    .el-input, .el-select {
-                      width: 100%;
-                      
-                      :deep(.el-input__wrapper) {
-                        padding: 4px 8px;
-                      }
-                      
-                      :deep(.el-select__wrapper) {
-                        padding: 4px 8px;
-                      }
-                    }
-                                         
-                    .file-upload-wrapper {
-                      width: 100%;
+                     
+                     .el-input, .el-select {
+                       width: 100%;
+                       
+                       :deep(.el-input__wrapper) {
+                         padding: 4px 8px;
+                       }
+                       
+                       :deep(.el-select__wrapper) {
+                         padding: 4px 8px;
+                       }
+                     }
+                     
+                     .file-upload-wrapper {
+                       width: 100%;
                       overflow: hidden;
-                      
-                      .file-info {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        margin-top: 4px;
-                        padding: 4px 8px;
-                        background: #f5f5f5;
-                        border-radius: 4px;
-                        font-size: 11px;
+                       
+                       .file-info {
+                         display: flex;
+                         align-items: center;
+                         justify-content: space-between;
+                         margin-top: 4px;
+                         padding: 4px 8px;
+                         background: #f5f5f5;
+                         border-radius: 4px;
+                         font-size: 11px;
                         overflow: hidden;
-                        
-                        .file-name {
-                          flex: 1;
-                          color: #262626;
-                          white-space: nowrap;
-                          overflow: hidden;
-                          text-overflow: ellipsis;
-                          margin-right: 8px;
-                        }
-                      }
-                      
-                      .no-file {
-                        color: #8c8c8c;
-                        font-size: 11px;
+                         
+                         .file-name {
+                           flex: 1;
+                           color: #262626;
+                           white-space: nowrap;
+                           overflow: hidden;
+                           text-overflow: ellipsis;
+                           margin-right: 8px;
+                         }
+                       }
+                       
+                       .no-file {
+                         color: #8c8c8c;
+                         font-size: 11px;
                         white-space: nowrap;
                         overflow: hidden;
                         text-overflow: ellipsis;
-                      }
-                    }
+                       }
+                     }
                    }
 
-                                     // 操作列样式
-                  span:last-child {
-                    display: flex;
-                    gap: 4px;
-                    justify-content: center;
-                    align-items: center;
+                   // 操作列样式
+                   span:last-child {
+                     display: flex;
+                     gap: 4px;
+                     justify-content: center;
+                     align-items: center;
                     white-space: nowrap;
                     overflow: visible;
 
-                    .el-button {
-                      padding: 2px 6px;
-                      font-size: 11px;
-                      min-height: auto;
-                      line-height: 1.2;
-                    }
-                  }
+                     .el-button {
+                       padding: 2px 6px;
+                       font-size: 11px;
+                       min-height: auto;
+                       line-height: 1.2;
+                     }
+                   }
                  }
           }
         }
@@ -3380,10 +3382,14 @@ function uploada(index: number){
 
 // 任务模板相关样式
 .template-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding: 16px;
   
   .template-search {
     margin-bottom: 16px;
+    flex-shrink: 0;
     
     .el-input {
       width: 100%;
@@ -3392,6 +3398,7 @@ function uploada(index: number){
   
   .template-filters {
     margin-bottom: 16px;
+    flex-shrink: 0;
     
     .filter-item {
       display: flex;
@@ -3412,6 +3419,28 @@ function uploada(index: number){
   }
   
   .template-list {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+      
+      &:hover {
+        background: #a8a8a8;
+      }
+    }
+    
     .template-card {
       background: #fff;
       border: 1px solid #e8e8e8;
@@ -3419,6 +3448,10 @@ function uploada(index: number){
       padding: 12px;
       margin-bottom: 12px;
       transition: all 0.3s ease;
+      
+      &:last-child {
+        margin-bottom: 20px; // 确保最后一个卡片底部有足够空间
+      }
       
       &:hover {
         border-color: #1890ff;

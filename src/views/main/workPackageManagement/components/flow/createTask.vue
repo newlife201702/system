@@ -194,7 +194,10 @@
     </div>
 
     <!-- 中间流程图区域 -->
-    <div class="center-flowchart" :class="{ 'full-width': leftDrawerCollapsed && rightDrawerCollapsed }">
+    <div class="center-flowchart" :class="{ 
+      'full-width': leftDrawerCollapsed && rightDrawerCollapsed,
+      'split-view': isTaskDetailMode
+    }">
              <div class="flowchart-header">
          <h2>任务流程设计</h2>
          <div class="toolbar">
@@ -262,12 +265,208 @@
          </div>
        </div>
       
-      <div v-show="isTaskFlow" class="flowchart-canvas" ref="canvasRef"></div>
-      <div v-show="!isTaskFlow" class="er-canvas" ref="erCanvasRef"></div>
+      <div v-show="isTaskFlow" class="flowchart-canvas" ref="canvasRef" :class="{ 'half-height': isTaskDetailMode }"></div>
+      <div v-show="!isTaskFlow" class="er-canvas" ref="erCanvasRef" :class="{ 'half-height': isTaskDetailMode }"></div>
+      
+      <!-- 任务详细信息区域 -->
+      <div v-if="isTaskDetailMode && selectedTask" class="task-detail-section">
+        <div class="task-detail-header">
+          <h3>{{ selectedTask.name }}任务详细信息</h3>
+          <div class="task-detail-info">
+            <div class="info-row">
+              <div class="info-item">
+                <el-icon><User /></el-icon>
+                <span class="label">负责人：</span>
+                <span class="value">{{ getAssigneeName(selectedTask.assignee) }}</span>
+              </div>
+              <div class="info-item">
+                <el-icon><Setting /></el-icon>
+                <span class="label">截止日期：</span>
+                <span class="value">{{ getEndDate(selectedTask.dateRange) }}</span>
+                <span class="remaining-days" :class="getRemainingDaysClass(selectedTask.dateRange)">
+                  {{ getRemainingDays(selectedTask.dateRange) }}
+                </span>
+              </div>
+              <div class="info-item">
+                <el-icon><Flag /></el-icon>
+                <span class="label">创建人：</span>
+                <span class="value">王治军</span>
+              </div>
+              <div class="info-item">
+                <el-icon><Calendar /></el-icon>
+                <span class="label">发布时间：</span>
+                <span class="value">2025-06-26</span>
+              </div>
+            </div>
+            <div class="action-buttons">
+              <el-button type="primary" size="small">上传电磁大数据</el-button>
+              <el-button type="primary" size="small">从基于模型的设计与管理系统下载</el-button>
+              <el-button type="primary" size="small">从模型库下载模型</el-button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="task-detail-content">
+          <!-- 输入区域 -->
+          <div class="input-section">
+            <div class="section-title">
+              <span>输入 {{ selectedTask.inputs ? selectedTask.inputs.length : 0 }}项</span>
+            </div>
+            <div class="section-actions">
+              <el-button type="primary" size="small">获取体系需求</el-button>
+            </div>
+            
+            <div class="data-table">
+              <div class="table-header">
+                <span>名称</span>
+                <span>密级</span>
+                <span>类型</span>
+                <span>附件</span>
+                <span>版本</span>
+                <span>更新时间</span>
+                <span>操作</span>
+              </div>
+              
+              <div class="table-row input-row" v-for="(input, index) in selectedTask.inputs" :key="index">
+                <!-- 任务详细信息模式下输入始终不可编辑 -->
+                <span :title="input.name">{{ input.name }}</span>
+                <span :title="input.securityLevelName">{{ input.securityLevelName }}</span>
+                <span :title="input.dataTypeCode">{{ input.dataTypeCode }}</span>
+                <span :title="input.dataTypeValue ? input.dataTypeValue.name : '无'">{{ input.dataTypeValue ? input.dataTypeValue.name : '无' }}</span>
+                <span>1.0</span>
+                <span>2025-06-25</span>
+                <span>
+                  <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 输出区域 -->
+          <div class="output-section">
+            <div class="section-title">
+              <span>输出 {{ selectedTask.outputs ? selectedTask.outputs.length : 0 }}项</span>
+            </div>
+            <div class="section-actions">
+              <el-button type="success" size="small">获取体系模型</el-button>
+              <el-button type="primary" size="small">提交审批</el-button>
+            </div>
+            
+            <div class="data-table">
+              <div class="table-header">
+                <span>选择</span>
+                <span>名称</span>
+                <span>密级</span>
+                <span>类型</span>
+                <span>附件</span>
+                <span>状态</span>
+                <span>版本</span>
+                <span>更新时间</span>
+                <span>操作</span>
+              </div>
+              
+              <div class="table-row output-row" v-for="(output, index) in selectedTask.outputs" :key="index">
+                <!-- 编辑态 -->
+                <template v-if="output.isEditing">
+                  <span>
+                    <el-checkbox />
+                  </span>
+                  <span>
+                    <el-input v-model="output.name" size="small" placeholder="请输入名称" />
+                  </span>
+                  <span>
+                    <el-select v-model="output.securityLevelCode" size="small" @change="updateOutputSecurityLevelName(output)">
+                      <el-option label="公开" value="SECRET_LEVEL_OPEN" />
+                      <el-option label="内部" value="SECRET_LEVEL_INTERNAL" />
+                      <el-option label="普通商密" value="SECRET_LEVEL_NORMAL_COMMERCIAL" />
+                      <el-option label="秘密" value="SECRET_LEVEL_SECRET" />
+                      <el-option label="机密" value="SECRET_LEVEL_CONFIDENTIALITY" />
+                      <el-option label="核心商密" value="SECRET_LEVEL_CORE_COMMERCIAL" />
+                    </el-select>
+                  </span>
+                  <span>
+                    <el-select v-model="output.dataTypeCode" size="small">
+                      <el-option label="文件" value="文件" />
+                      <el-option label="模型" value="模型" />
+                      <el-option label="数据" value="数据" />
+                    </el-select>
+                  </span>
+                  <span>
+                    <div class="file-upload-wrapper">
+                      <span @click="uploada(index)">
+                        上传
+                      </span>
+                      <div v-if="output.dataTypeValue" class="file-info">
+                        <span class="file-name">{{ output.dataTypeValue.name }}</span>
+                        <el-button size="small" type="danger" text @click="handleOutputFileRemove(index)">
+                          删除
+                        </el-button>
+                      </div>
+                      <span v-else class="no-file">无文件</span>
+                    </div>
+                  </span>
+                  <span>
+                    <el-tag :type="getStatusType(output.status || 'draft')" size="small">
+                      {{ getStatusText(output.status || 'draft') }}
+                    </el-tag>
+                  </span>
+                  <span>{{ output.version || '1.0' }}</span>
+                  <span>{{ output.updateTime || '2025-06-26' }}</span>
+                  <span>
+                    <el-button size="small" text type="primary" @click="confirmOutputEdit(index)">确定</el-button>
+                    <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
+                  </span>
+                </template>
+                <!-- 非编辑态 -->
+                <template v-else>
+                  <span>
+                    <el-checkbox />
+                  </span>
+                  <span :title="output.name">{{ output.name }}</span>
+                  <span :title="output.securityLevelName">{{ output.securityLevelName }}</span>
+                  <span :title="output.dataTypeCode">{{ output.dataTypeCode }}</span>
+                  <span :title="output.dataTypeValue ? output.dataTypeValue.name : '无'">{{ output.dataTypeValue ? output.dataTypeValue.name : '无' }}</span>
+                  <span>
+                    <el-tag :type="getStatusType(output.status || 'published')" size="small">
+                      {{ getStatusText(output.status || 'published') }}
+                    </el-tag>
+                  </span>
+                  <span>{{ output.version || '1.0' }}</span>
+                  <span>{{ output.updateTime || '2025-06-26' }}</span>
+                  <span>
+                    <!-- 已发布状态不显示编辑按钮 -->
+                    <el-button 
+                      v-if="output.status !== 'published'" 
+                      size="small" 
+                      text 
+                      type="primary" 
+                      @click="editOutput(index)"
+                    >
+                      编辑
+                    </el-button>
+                    <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
+                  </span>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 底部操作按钮 -->
+        <div class="task-detail-footer">
+          <el-button>任务接收</el-button>
+          <el-button>拒绝接收任务</el-button>
+          <el-button type="success">任务提交</el-button>
+          <el-button>变更申请</el-button>
+          <el-button>更新进度</el-button>
+          <el-button type="warning">启动工具</el-button>
+          <el-button type="primary">提交任务</el-button>
+        </div>
+      </div>
     </div>
 
     <!-- 右侧任务基础信息抽屉 -->
-    <div class="right-drawer" :class="{ collapsed: rightDrawerCollapsed }">
+    <div v-if="!isTaskDetailMode" class="right-drawer" :class="{ collapsed: rightDrawerCollapsed }">
       <div class="drawer-header">
         <el-button 
           type="text" 
@@ -667,7 +866,11 @@ import {
   Document,
   Search,
   CopyDocument,
-  Delete
+  Delete,
+  User,
+  Setting,
+  Flag,
+  Calendar
 } from '@element-plus/icons-vue'
 import { number } from 'echarts'
 import { uuid } from '@/libs/utils'
@@ -675,8 +878,10 @@ import { uuid } from '@/libs/utils'
 // 定义组件的 props
 const props = defineProps<{
   projectId?: string
+  taskId?: string
   projectData?: any
   isTemplateMode?: boolean
+  isTaskDetailMode?: boolean
 }>()
 
 // 路由相关
@@ -685,6 +890,11 @@ const route = useRoute()
 // 判断是否为模板管理模式
 const isTemplateMode = computed(() => {
   return props.isTemplateMode || route.name === 'taskTemplate'
+})
+
+// 判断是否为任务详细信息模式
+const isTaskDetailMode = computed(() => {
+  return props.isTaskDetailMode || route.name === 'taskDetail'
 })
 
 // 响应式数据
@@ -2642,6 +2852,76 @@ const toggleTemplateStatus = (template: any) => {
   ElMessage.success(`模板 "${template.name}" 状态已更新为${statusText}`)
 }
 
+// 任务详细信息相关方法
+const getAssigneeName = (assignee: any) => {
+  if (!assignee) return '未分配'
+  if (Array.isArray(assignee)) {
+    return assignee.length > 0 ? assignee.join(',') : '未分配'
+  }
+  return '未分配'
+}
+
+const getEndDate = (dateRange: any) => {
+  if (!dateRange || !Array.isArray(dateRange) || dateRange.length < 2) {
+    return '未设置'
+  }
+  return dateRange[1] || '未设置'
+}
+
+const getRemainingDays = (dateRange: any) => {
+  if (!dateRange || !Array.isArray(dateRange) || dateRange.length < 2) {
+    return ''
+  }
+  const endDate = new Date(dateRange[1])
+  const currentDate = new Date()
+  const diffTime = endDate.getTime() - currentDate.getTime()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  
+  if (diffDays > 0) {
+    return `剩${diffDays}天`
+  } else if (diffDays === 0) {
+    return '今天截止'
+  } else {
+    return `超期${Math.abs(diffDays)}天`
+  }
+}
+
+const getRemainingDaysClass = (dateRange: any) => {
+  if (!dateRange || !Array.isArray(dateRange) || dateRange.length < 2) {
+    return ''
+  }
+  const endDate = new Date(dateRange[1])
+  const currentDate = new Date()
+  const diffTime = endDate.getTime() - currentDate.getTime()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  
+  if (diffDays > 7) {
+    return 'normal'
+  } else if (diffDays > 0) {
+    return 'warning'
+  } else {
+    return 'danger'
+  }
+}
+
+const getStatusText = (status: string) => {
+  const statusMap: Record<string, string> = {
+    'published': '已发布',
+    'draft': '编辑中',
+    'pending': '待审核'
+  }
+  return statusMap[status] || '已发布'
+}
+
+const getStatusType = (status: string) => {
+  const typeMap: Record<string, string> = {
+    'published': 'success',
+    'draft': 'warning',
+    'pending': 'info'
+  }
+  return typeMap[status] || 'success'
+}
+
 // 清空画布
 const clearCanvas = () => {
   if (!graph.value) return
@@ -2911,6 +3191,10 @@ const confirmOutputEdit = (index: number) => {
   output.isEditing = false
   updateTask()
 }
+
+
+
+
 
 // 删除输出项
 const deleteOutput = (index: number) => {
@@ -3806,6 +4090,248 @@ function uploada(index: number){
     .el-icon {
       font-size: 12px;
     }
+  }
+}
+
+// 任务详细信息样式
+.center-flowchart {
+  &.split-view {
+    display: flex;
+    flex-direction: column;
+    
+    .flowchart-canvas,
+    .er-canvas {
+      &.half-height {
+        height: 50% !important;
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+.task-detail-section {
+  flex: 1;
+  background: #fff;
+  border-top: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  
+  .task-detail-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+    
+    h3 {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #262626;
+    }
+    
+    .task-detail-info {
+      .info-row {
+        display: flex;
+        gap: 24px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+        
+        .info-item {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 14px;
+          
+          .el-icon {
+            font-size: 14px;
+            color: #666;
+          }
+          
+          .label {
+            color: #666;
+            font-weight: 500;
+          }
+          
+          .value {
+            color: #262626;
+          }
+          
+          .remaining-days {
+            margin-left: 8px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            
+            &.normal {
+              background: #f6ffed;
+              color: #52c41a;
+            }
+            
+            &.warning {
+              background: #fff7e6;
+              color: #fa8c16;
+            }
+            
+            &.danger {
+              background: #fff2f0;
+              color: #ff4d4f;
+            }
+          }
+        }
+      }
+      
+      .action-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+    }
+  }
+  
+  .task-detail-content {
+    flex: 1;
+    padding: 16px 20px;
+    overflow-y: auto;
+    
+    // 复用原始的输入输出样式
+    .input-section, .output-section {
+      margin-bottom: 24px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      overflow: hidden;
+
+      .section-title {
+        padding: 8px 12px;
+        background: #f5f5f5;
+        border-bottom: 1px solid #d9d9d9;
+        font-weight: 500;
+        color: #262626;
+      }
+      
+      .section-actions {
+        padding: 8px 12px;
+        background: #fafafa;
+        border-bottom: 1px solid #d9d9d9;
+        display: flex;
+        gap: 8px;
+        justify-content: flex-start;
+
+        .el-button {
+          padding: 0;
+          font-size: 12px;
+          color: #1890ff;
+        }
+      }
+
+      .data-table {
+        .table-header {
+          display: grid;
+          padding: 8px 12px;
+          background: #fafafa;
+          border-bottom: 1px solid #d9d9d9;
+          font-size: 12px;
+          font-weight: 500;
+          color: #595959;
+        }
+
+        .table-row {
+          display: grid;
+          padding: 8px 12px;
+          border-bottom: 1px solid #f0f0f0;
+          font-size: 12px;
+          color: #262626;
+          align-items: center;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &:hover {
+            background: #f5f5f5;
+          }
+
+          // 输入表格列配置（没有状态列）
+          &.input-row {
+            grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1fr 1fr 1.5fr;
+          }
+
+          // 输出表格列配置（有状态列）
+          &.output-row {
+            grid-template-columns: 1fr 2fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1.5fr;
+          }
+
+          // 每个单元格样式
+          span {
+            display: flex;
+            align-items: center;
+            min-height: 32px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            padding: 0 4px;
+            
+            .el-input, .el-select {
+              width: 100%;
+            }
+            
+            .el-button {
+              margin: 0 2px;
+              padding: 2px 4px;
+              
+              .el-icon {
+                font-size: 12px;
+              }
+            }
+          }
+
+          // 操作列样式
+          span:last-child {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+            overflow: visible;
+          }
+        }
+      }
+    }
+
+    // 输入表格特殊样式
+    .input-section .data-table {
+      .table-header {
+        grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1fr 1fr 1.5fr;
+      }
+    }
+
+    // 输出表格特殊样式
+    .output-section .data-table {
+      .table-header {
+        grid-template-columns: 1fr 2fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1.5fr;
+      }
+    }
+  }
+  
+  .task-detail-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #e8e8e8;
+    background: #fafafa;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+}
+
+// 输出表格样式调整
+.input-output-section:last-child .data-table {
+  .table-header {
+    grid-template-columns: 60px 1fr 80px 120px 80px 80px 80px 100px 100px;
+  }
+  
+  .table-row {
+    grid-template-columns: 60px 1fr 80px 120px 80px 80px 80px 100px 100px;
   }
 }
 </style>

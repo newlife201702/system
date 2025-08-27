@@ -226,13 +226,13 @@
               <el-icon><Plus /></el-icon>
               架构设计
             </el-button>
-            <el-button size="small" @click="addTask('evaluation')">
-              <el-icon><Plus /></el-icon>
-              需求评估
-            </el-button>
             <el-button size="small" @click="addTask('simulation')">
               <el-icon><Plus /></el-icon>
               仿真验证
+            </el-button>
+            <el-button size="small" @click="addTask('evaluation')">
+              <el-icon><Plus /></el-icon>
+              需求评估
             </el-button>
             <el-button size="small" @click="addTask('performance')">
               <el-icon><Plus /></el-icon>
@@ -917,9 +917,9 @@ const systemType = computed(() => {
   }
   
   const taskType = selectedTask.value.type
-  if (['analysis', 'design', 'evaluation'].includes(taskType)) {
+  if (['analysis', 'design', 'simulation'].includes(taskType)) {
     return "requirement" // 体系需求管理系统
-  } else if (taskType === 'simulation') {
+  } else if (taskType === 'evaluation') {
     return "satisfaction" // 体系需求满足度评估系统
   } else if (taskType === 'performance') {
     return "efficiency" // 体系效能评估系统

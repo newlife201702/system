@@ -307,146 +307,152 @@
         </div>
         
         <div class="task-detail-content">
-          <!-- 输入区域 -->
-          <div class="input-section">
-            <div class="section-title">
-              <span>输入 {{ selectedTask.inputs ? selectedTask.inputs.length : 0 }}项</span>
-            </div>
-            <div class="section-actions">
-              <el-button type="primary" size="small">获取体系需求</el-button>
-            </div>
-            
-            <div class="data-table">
-              <div class="table-header">
-                <span>名称</span>
-                <span>密级</span>
-                <span>类型</span>
-                <span>附件</span>
-                <span>版本</span>
-                <span>更新时间</span>
-                <span>操作</span>
+          <div class="input-output-container">
+            <!-- 输入区域 -->
+            <div class="input-section">
+              <div class="section-title">
+                <span>输入 {{ selectedTask.inputs ? selectedTask.inputs.length : 0 }}项</span>
+              </div>
+              <div class="section-actions">
+                <el-button type="primary" size="small">获取体系需求</el-button>
               </div>
               
-              <div class="table-row input-row" v-for="(input, index) in selectedTask.inputs" :key="index">
-                <!-- 任务详细信息模式下输入始终不可编辑 -->
-                <span :title="input.name">{{ input.name }}</span>
-                <span :title="input.securityLevelName">{{ input.securityLevelName }}</span>
-                <span :title="input.dataTypeCode">{{ input.dataTypeCode }}</span>
-                <span :title="input.dataTypeValue ? input.dataTypeValue.name : '无'">{{ input.dataTypeValue ? input.dataTypeValue.name : '无' }}</span>
-                <span>1.0</span>
-                <span>2025-06-25</span>
-                <span>
-                  <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
-                </span>
+              <div class="data-table">
+                <div class="table-header">
+                  <span>名称</span>
+                  <span>密级</span>
+                  <span>类型</span>
+                  <span>附件</span>
+                  <span>版本</span>
+                  <span>更新时间</span>
+                  <span>操作</span>
+                </div>
+                
+                <div class="table-body">
+                  <div class="table-row input-row" v-for="(input, index) in selectedTask.inputs" :key="index">
+                    <!-- 任务详细信息模式下输入始终不可编辑 -->
+                    <span :title="input.name">{{ input.name }}</span>
+                    <span :title="input.securityLevelName">{{ input.securityLevelName }}</span>
+                    <span :title="input.dataTypeCode">{{ input.dataTypeCode }}</span>
+                    <span :title="input.dataTypeValue ? input.dataTypeValue.name : '无'">{{ input.dataTypeValue ? input.dataTypeValue.name : '无' }}</span>
+                    <span>1.0</span>
+                    <span>2025-06-25</span>
+                    <span>
+                      <el-button size="small" text type="danger" @click="deleteInput(index)">删除</el-button>
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          
-          <!-- 输出区域 -->
-          <div class="output-section">
-            <div class="section-title">
-              <span>输出 {{ selectedTask.outputs ? selectedTask.outputs.length : 0 }}项</span>
-            </div>
-            <div class="section-actions">
-              <el-button type="success" size="small">获取体系模型</el-button>
-              <el-button type="primary" size="small">提交审批</el-button>
             </div>
             
-            <div class="data-table">
-              <div class="table-header">
-                <span>选择</span>
-                <span>名称</span>
-                <span>密级</span>
-                <span>类型</span>
-                <span>附件</span>
-                <span>状态</span>
-                <span>版本</span>
-                <span>更新时间</span>
-                <span>操作</span>
+            <!-- 输出区域 -->
+            <div class="output-section">
+              <div class="section-title">
+                <span>输出 {{ selectedTask.outputs ? selectedTask.outputs.length : 0 }}项</span>
+              </div>
+              <div class="section-actions">
+                <el-button type="success" size="small">获取体系模型</el-button>
+                <el-button type="primary" size="small">提交审批</el-button>
               </div>
               
-              <div class="table-row output-row" v-for="(output, index) in selectedTask.outputs" :key="index">
-                <!-- 编辑态 -->
-                <template v-if="output.isEditing">
-                  <span>
-                    <el-checkbox />
-                  </span>
-                  <span>
-                    <el-input v-model="output.name" size="small" placeholder="请输入名称" />
-                  </span>
-                  <span>
-                    <el-select v-model="output.securityLevelCode" size="small" @change="updateOutputSecurityLevelName(output)">
-                      <el-option label="公开" value="SECRET_LEVEL_OPEN" />
-                      <el-option label="内部" value="SECRET_LEVEL_INTERNAL" />
-                      <el-option label="普通商密" value="SECRET_LEVEL_NORMAL_COMMERCIAL" />
-                      <el-option label="秘密" value="SECRET_LEVEL_SECRET" />
-                      <el-option label="机密" value="SECRET_LEVEL_CONFIDENTIALITY" />
-                      <el-option label="核心商密" value="SECRET_LEVEL_CORE_COMMERCIAL" />
-                    </el-select>
-                  </span>
-                  <span>
-                    <el-select v-model="output.dataTypeCode" size="small">
-                      <el-option label="文件" value="文件" />
-                      <el-option label="模型" value="模型" />
-                      <el-option label="数据" value="数据" />
-                    </el-select>
-                  </span>
-                  <span>
-                    <div class="file-upload-wrapper">
-                      <span @click="uploada(index)">
-                        上传
+              <div class="data-table">
+                <div class="table-header">
+                  <span>选择</span>
+                  <span>名称</span>
+                  <span>密级</span>
+                  <span>类型</span>
+                  <span>附件</span>
+                  <span>状态</span>
+                  <span>版本</span>
+                  <span>更新时间</span>
+                  <span>操作</span>
+                </div>
+                
+                <div class="table-body">
+                  <div class="table-row output-row" v-for="(output, index) in selectedTask.outputs" :key="index">
+                    <!-- 编辑态 -->
+                    <template v-if="output.isEditing">
+                      <span>
+                        <el-checkbox />
                       </span>
-                      <div v-if="output.dataTypeValue" class="file-info">
-                        <span class="file-name">{{ output.dataTypeValue.name }}</span>
-                        <el-button size="small" type="danger" text @click="handleOutputFileRemove(index)">
-                          删除
+                      <span>
+                        <el-input v-model="output.name" size="small" placeholder="请输入名称" />
+                      </span>
+                      <span>
+                        <el-select v-model="output.securityLevelCode" size="small" @change="updateOutputSecurityLevelName(output)">
+                          <el-option label="公开" value="SECRET_LEVEL_OPEN" />
+                          <el-option label="内部" value="SECRET_LEVEL_INTERNAL" />
+                          <el-option label="普通商密" value="SECRET_LEVEL_NORMAL_COMMERCIAL" />
+                          <el-option label="秘密" value="SECRET_LEVEL_SECRET" />
+                          <el-option label="机密" value="SECRET_LEVEL_CONFIDENTIALITY" />
+                          <el-option label="核心商密" value="SECRET_LEVEL_CORE_COMMERCIAL" />
+                        </el-select>
+                      </span>
+                      <span>
+                        <el-select v-model="output.dataTypeCode" size="small">
+                          <el-option label="文件" value="文件" />
+                          <el-option label="模型" value="模型" />
+                          <el-option label="数据" value="数据" />
+                        </el-select>
+                      </span>
+                      <span>
+                        <div class="file-upload-wrapper">
+                          <span @click="uploada(index)">
+                            上传
+                          </span>
+                          <div v-if="output.dataTypeValue" class="file-info">
+                            <span class="file-name">{{ output.dataTypeValue.name }}</span>
+                            <el-button size="small" type="danger" text @click="handleOutputFileRemove(index)">
+                              删除
+                            </el-button>
+                          </div>
+                          <span v-else class="no-file">无文件</span>
+                        </div>
+                      </span>
+                      <span>
+                        <el-tag :type="getStatusType(output.status || 'draft')" size="small">
+                          {{ getStatusText(output.status || 'draft') }}
+                        </el-tag>
+                      </span>
+                      <span>{{ output.version || '1.0' }}</span>
+                      <span>{{ output.updateTime || '2025-06-26' }}</span>
+                      <span>
+                        <el-button size="small" text type="primary" @click="confirmOutputEdit(index)">确定</el-button>
+                        <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
+                      </span>
+                    </template>
+                    <!-- 非编辑态 -->
+                    <template v-else>
+                      <span>
+                        <el-checkbox />
+                      </span>
+                      <span :title="output.name">{{ output.name }}</span>
+                      <span :title="output.securityLevelName">{{ output.securityLevelName }}</span>
+                      <span :title="output.dataTypeCode">{{ output.dataTypeCode }}</span>
+                      <span :title="output.dataTypeValue ? output.dataTypeValue.name : '无'">{{ output.dataTypeValue ? output.dataTypeValue.name : '无' }}</span>
+                      <span>
+                        <el-tag :type="getStatusType(output.status || 'published')" size="small">
+                          {{ getStatusText(output.status || 'published') }}
+                        </el-tag>
+                      </span>
+                      <span>{{ output.version || '1.0' }}</span>
+                      <span>{{ output.updateTime || '2025-06-26' }}</span>
+                      <span>
+                        <!-- 已发布状态不显示编辑按钮 -->
+                        <el-button 
+                          v-if="output.status !== 'published'" 
+                          size="small" 
+                          text 
+                          type="primary" 
+                          @click="editOutput(index)"
+                        >
+                          编辑
                         </el-button>
-                      </div>
-                      <span v-else class="no-file">无文件</span>
-                    </div>
-                  </span>
-                  <span>
-                    <el-tag :type="getStatusType(output.status || 'draft')" size="small">
-                      {{ getStatusText(output.status || 'draft') }}
-                    </el-tag>
-                  </span>
-                  <span>{{ output.version || '1.0' }}</span>
-                  <span>{{ output.updateTime || '2025-06-26' }}</span>
-                  <span>
-                    <el-button size="small" text type="primary" @click="confirmOutputEdit(index)">确定</el-button>
-                    <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
-                  </span>
-                </template>
-                <!-- 非编辑态 -->
-                <template v-else>
-                  <span>
-                    <el-checkbox />
-                  </span>
-                  <span :title="output.name">{{ output.name }}</span>
-                  <span :title="output.securityLevelName">{{ output.securityLevelName }}</span>
-                  <span :title="output.dataTypeCode">{{ output.dataTypeCode }}</span>
-                  <span :title="output.dataTypeValue ? output.dataTypeValue.name : '无'">{{ output.dataTypeValue ? output.dataTypeValue.name : '无' }}</span>
-                  <span>
-                    <el-tag :type="getStatusType(output.status || 'published')" size="small">
-                      {{ getStatusText(output.status || 'published') }}
-                    </el-tag>
-                  </span>
-                  <span>{{ output.version || '1.0' }}</span>
-                  <span>{{ output.updateTime || '2025-06-26' }}</span>
-                  <span>
-                    <!-- 已发布状态不显示编辑按钮 -->
-                    <el-button 
-                      v-if="output.status !== 'published'" 
-                      size="small" 
-                      text 
-                      type="primary" 
-                      @click="editOutput(index)"
-                    >
-                      编辑
-                    </el-button>
-                    <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
-                  </span>
-                </template>
+                        <el-button size="small" text type="danger" @click="deleteOutput(index)">删除</el-button>
+                      </span>
+                    </template>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -4110,7 +4116,7 @@ function uploada(index: number){
 }
 
 .task-detail-section {
-  flex: 1;
+  flex: 2;
   background: #fff;
   border-top: 1px solid #e8e8e8;
   display: flex;
@@ -4192,14 +4198,30 @@ function uploada(index: number){
   .task-detail-content {
     flex: 1;
     padding: 16px 20px;
-    overflow-y: auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    
+    .input-output-container {
+      display: flex;
+      gap: 20px;
+      flex: 1;
+      min-height: 0;
+      
+      .input-section, .output-section {
+        flex: 1;
+        min-width: 0; // 防止内容溢出
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+    }
     
     // 复用原始的输入输出样式
     .input-section, .output-section {
-      margin-bottom: 24px;
+      margin-bottom: 0; // 左右布局时不需要下边距
       border: 1px solid #d9d9d9;
       border-radius: 6px;
-      overflow: hidden;
 
       .section-title {
         padding: 8px 12px;
@@ -4207,6 +4229,7 @@ function uploada(index: number){
         border-bottom: 1px solid #d9d9d9;
         font-weight: 500;
         color: #262626;
+        flex-shrink: 0;
       }
       
       .section-actions {
@@ -4216,6 +4239,7 @@ function uploada(index: number){
         display: flex;
         gap: 8px;
         justify-content: flex-start;
+        flex-shrink: 0;
 
         .el-button {
           padding: 0;
@@ -4225,6 +4249,11 @@ function uploada(index: number){
       }
 
       .data-table {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        
         .table-header {
           display: grid;
           padding: 8px 12px;
@@ -4233,6 +4262,32 @@ function uploada(index: number){
           font-size: 12px;
           font-weight: 500;
           color: #595959;
+          flex-shrink: 0;
+        }
+
+        .table-body {
+          flex: 1;
+          overflow-y: auto;
+          padding-right: 4px;
+          
+          // 自定义滚动条样式
+          &::-webkit-scrollbar {
+            width: 6px;
+          }
+          
+          &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+          }
+          
+          &::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+            
+            &:hover {
+              background: #a8a8a8;
+            }
+          }
         }
 
         .table-row {
@@ -4253,12 +4308,12 @@ function uploada(index: number){
 
           // 输入表格列配置（没有状态列）
           &.input-row {
-            grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1fr 1fr 1.5fr;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr 0.8fr 0.8fr 1fr;
           }
 
           // 输出表格列配置（有状态列）
           &.output-row {
-            grid-template-columns: 1fr 2fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1.5fr;
+            grid-template-columns: 0.8fr 2fr 1fr 1fr 1.5fr 1fr 0.8fr 0.8fr 1fr;
           }
 
           // 每个单元格样式
@@ -4298,17 +4353,17 @@ function uploada(index: number){
       }
     }
 
-    // 输入表格特殊样式
+    // 输入表格特殊样式（左右布局优化）
     .input-section .data-table {
       .table-header {
-        grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1fr 1fr 1.5fr;
+        grid-template-columns: 2fr 1fr 1fr 1.5fr 0.8fr 0.8fr 1fr;
       }
     }
 
-    // 输出表格特殊样式
+    // 输出表格特殊样式（左右布局优化）
     .output-section .data-table {
       .table-header {
-        grid-template-columns: 1fr 2fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1.5fr;
+        grid-template-columns: 0.8fr 2fr 1fr 1fr 1.5fr 1fr 0.8fr 0.8fr 1fr;
       }
     }
   }

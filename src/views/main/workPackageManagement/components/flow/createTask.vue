@@ -90,7 +90,7 @@
               <div class="template-details">
                 <div class="detail-row">
                   <span class="label">{{ template.taskCount }}个任务</span>
-                  <span class="creator">{{ template.creator }}</span>
+                  <span class="creator">由 {{ template.creator }} 创建</span>
                 </div>
                 <div class="detail-row">
                   <span class="adopt-count">被采用{{ template.adoptCount }}次</span>
@@ -2637,7 +2637,7 @@ const deleteTemplate = (template: any) => {
 
 // 切换模板状态
 const toggleTemplateStatus = (template: any) => {
-  template.status = template.status === 'published' ? 'unpublished' : 'published'
+  // v-model已经自动更新了template.status，这里只需要显示消息
   const statusText = template.status === 'published' ? '已发布' : '未发布'
   ElMessage.success(`模板 "${template.name}" 状态已更新为${statusText}`)
 }

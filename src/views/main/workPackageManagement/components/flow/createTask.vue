@@ -2751,22 +2751,11 @@ const loadTemplateToCanvas = (template: any) => {
     }
   ]
   
-  // 为任务节点生成唯一ID，避免冲突
-  const processedTaskList = templateTaskList.map(node => {
-    if (node.nodeType === 'task') {
-      return {
-        ...node,
-        id: `${node.id.replace(/^template\d+-/, '')}-${Date.now()}` // 确保ID唯一
-      }
-    }
-    return { ...node }
-  })
-  
   // 更新任务列表 - 包含所有节点（开始、任务、结束）
-  taskList.value = [...processedTaskList]
+  taskList.value = [...templateTaskList]
   
   // 使用createTaskNode创建所有节点
-  processedTaskList.forEach(node => {
+  templateTaskList.forEach(node => {
     createTaskNode(node)
   })
   

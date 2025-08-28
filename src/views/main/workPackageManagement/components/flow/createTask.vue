@@ -245,6 +245,10 @@
              <el-icon><Document /></el-icon>
              保存流程
            </el-button>
+           <el-button size="small" @click="batchPublish">
+             <el-icon><Upload /></el-icon>
+             批量发布
+           </el-button>
            <el-popover 
              placement="bottom" 
              width="300" 
@@ -876,7 +880,8 @@ import {
   User,
   Setting,
   Flag,
-  Calendar
+  Calendar,
+  Upload
 } from '@element-plus/icons-vue'
 import { number } from 'echarts'
 import { uuid } from '@/libs/utils'
@@ -3302,6 +3307,10 @@ const saveFlow  =  () => {
     
   console.log('保存流程数据:', taskForm)
   ElMessage.success('流程保存成功')
+}
+
+// 批量发布
+const batchPublish = () => {
 }
 
 // 组件挂载

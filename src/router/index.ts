@@ -249,7 +249,7 @@ const routes: Array<RouteRecordRaw> = [
               {
                 path: 'taskDetail/:projectId?/:taskId?',
                 name: 'taskDetail',
-                component: () => import(/* webpackChunkName: "createTask" */ '../views/main/workPackageManagement/components/flow/createTask.vue'),
+                component: () => import(/* webpackChunkName: "taskDetail" */ '../views/main/workPackageManagement/components/flow/taskDetail.vue'),
                 meta: {
                   title: '任务详细信息',
                   keepAlive: false

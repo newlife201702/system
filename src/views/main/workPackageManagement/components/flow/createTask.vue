@@ -1289,6 +1289,7 @@ const taskList = ref<any>([
     type: 'analysis',
     nodeType: 'task',
     assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+    assigneeName: ['张三'],
     taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
@@ -1346,6 +1347,7 @@ const taskList = ref<any>([
     type: 'design',
     nodeType: 'task',
     assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+    assigneeName: ['张三'],
     taskStats: { up: 0, down: 0 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
@@ -1402,6 +1404,7 @@ const taskList = ref<any>([
     type: 'evaluation',
     nodeType: 'task',
     assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+    assigneeName: ['张三'],
     taskStats: { up: 1, down: 2 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
@@ -1458,6 +1461,7 @@ const taskList = ref<any>([
     type: 'simulation',
     nodeType: 'task',
     assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+    assigneeName: ['张三'],
     taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
@@ -1514,6 +1518,7 @@ const taskList = ref<any>([
     type: 'performance',
     nodeType: 'task',
     assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+    assigneeName: ['张三'],
     taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
@@ -1982,7 +1987,7 @@ const createNormalTaskNode = (task: any) => {
       },
       // 负责人姓名
       assignee: {
-        text: task.expanded ? (task.assignee ? `参与者：${task.assignee}` : '参与者：未分配') : '',
+        text: task.expanded ? (task.assigneeName ? `参与者：${task.assigneeName}` : '参与者：未分配') : '',
         x: 28,
         y: 54,
         fontSize: 11,
@@ -2154,7 +2159,7 @@ const updateTaskNode = (task: any) => {
     // 根据展开状态显示或隐藏内容
     if (task.expanded) {
       // 展开状态：显示所有内容
-      node.attr('assignee/text', task.assignee ? `参与者：${task.assignee}` : '参与者：未分配')
+      node.attr('assignee/text', task.assigneeName ? `参与者：${task.assigneeName}` : '参与者：未分配')
       node.attr('task-days/text', taskPeriod)
       node.attr('stats-up/text', inputCount > 0 ? `▲ ${inputCount}` : '')
       node.attr('stats-down/text', outputCount > 0 ? `▼ ${outputCount}` : '')
@@ -2791,7 +2796,8 @@ const addTask = (taskType: string) => {
     name: getTaskName(taskType),
     type: taskType,
     nodeType: 'task',
-    assignee: '',
+    assignee: [],
+    assigneeName: [],
     taskStats: { up: 0, down: 0 },
     dateRange: null,
     executionDays: null,

@@ -2306,6 +2306,12 @@ const initFlowChart = () => {
     }
     
     const taskData = node.getData()
+    // 开始/结束节点选中时不显示右侧“任务基础信息”
+    if (taskData?.nodeType === 'start' || taskData?.nodeType === 'end') {
+      selectedTask.value = null
+      rightDrawerCollapsed.value = true
+      return
+    }
     selectedTask.value = { ...taskData }
     rightDrawerCollapsed.value = false
   })

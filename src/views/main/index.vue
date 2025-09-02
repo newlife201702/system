@@ -31,20 +31,23 @@ const nav1 = [
         ]
     },
     {
-        title: "项目", ico: "TrendCharts", key: "/main/myWorkPackage/list2",
+        title: "个人中心", ico: "Histogram", key: "/main/persondata",
     },
     {
-        title: "个人中心", ico: "Histogram", key: "/main/persondata",
+        title: "项目", ico: "TrendCharts", key: "/main/project",
+    },
+    {
+        title:"模板",ico:"HomeFilled",key:"/main/taskTemplate",
     },
     {
         title: "数据",ico: "HomeFilled", key: "/main/data",
     }
     ,
     {
-        title: "配置中心",ico: "HomeFilled", key: "/main/config",
+        title: "配置",ico: "HomeFilled", key: "/main/myWorkPackage/taskTemplate",
     },
     {
-        title:"ADD MARK",ico:"HomeFilled",key:"/main/mark",
+        title: "模型管理",ico: "HomeFilled", key: "/main/myWorkPackage/taskTemplate",
     },
 
 ]

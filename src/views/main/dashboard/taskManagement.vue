@@ -286,7 +286,7 @@ const filteredProjectsList = computed(() => {
   return taskProjectsList.value.filter(project => {
     // 检查项目是否有任务列表且不为空
     const taskList = project.tasks
-    return taskList && Array.isArray(taskList) && taskList.length > 0
+    return taskList && Array.isArray(taskList) && getFilteredTasks(taskList).length > 0
   })
 })
 

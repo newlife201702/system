@@ -281,7 +281,7 @@
               <div class="info-item">
                 <el-icon><User /></el-icon>
                 <span class="label">负责人：</span>
-                <span class="value">{{ getAssigneeName(selectedTask.assignee) }}</span>
+                <span class="value">{{ getAssigneeName(selectedTask.assigneeName) }}</span>
               </div>
               <div class="info-item">
                 <el-icon><Setting /></el-icon>
@@ -2864,10 +2864,10 @@ const toggleTemplateStatus = (template: any) => {
 }
 
 // 任务详细信息相关方法
-const getAssigneeName = (assignee: any) => {
-  if (!assignee) return '未分配'
-  if (Array.isArray(assignee)) {
-    return assignee.length > 0 ? assignee.join(',') : '未分配'
+const getAssigneeName = (assigneeName: any) => {
+  if (!assigneeName) return '未分配'
+  if (Array.isArray(assigneeName)) {
+    return assigneeName.length > 0 ? assigneeName.join(',') : '未分配'
   }
   return '未分配'
 }

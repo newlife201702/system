@@ -31,10 +31,15 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "login" */ '../views/main/x6//index.vue')
   },
   {
+     path: '/systemOverview',
+     name:  'systemOverview',
+     component: () => import(/* webpackChunkName: "dashboardIndex" */ '../views/main/dashboard/systemOverview.vue'),
+  },
+  {
     path: '/main',
     name: 'main',
     component: () => import(/* webpackChunkName: "about" */ '../views/main/index.vue'),
-    redirect: "/main/systemOverview",
+    redirect: "/main/dashboard",
     meta:{
       title:"主页"
     },
@@ -42,29 +47,32 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'dashboard',
         name: 'dashboard',
-        component: () => import(/* webpackChunkName: "dashboardIndex" */ '../views/main/dashboard/index.vue'),
-        meta: {
-          title: '门户',
-          keepAlive: false
-        },
-      },
-      {
-        path: 'systemOverview',
-        name: 'systemOverview',
-        component: () => import(/* webpackChunkName: "dashboardIndex" */ '../views/main/dashboard/systemOverview.vue'),
-        meta: {
-          title: '门户',
-          keepAlive: false
-        },
-      },
-      {
-        path: 'taskManagement',
-        name: 'taskManagement',
         component: () => import(/* webpackChunkName: "dashboardIndex" */ '../views/main/dashboard/taskManagement.vue'),
         meta: {
           title: '任务列表',
           keepAlive: false
         },
+      },
+      {
+        path: 'project',
+        name: 'project',
+        component: () => import(/* webpackChunkName: "workPackageManagementlist" */ '../views/main/workPackageManagement/projectList.vue'),
+        meta: {
+          title: '项目',
+          keepAlive: false
+        },
+      },
+      {
+          path: 'taskTemplate',
+          name: 'taskTemplate',
+          component: () => import(/* webpackChunkName: "createTask" */ '../views/main/workPackageManagement/components/flow/createTask.vue'),
+          meta: {
+              title: '任务模板管理',
+                  keepAlive: false
+          },
+          props: {
+                  isTemplateMode: true
+          }
       },
       {
         path: 'dashboard1',
@@ -76,15 +84,6 @@ const routes: Array<RouteRecordRaw> = [
         },
       }
       ,
-      {
-        path: 'project',
-        name: 'project',
-        component: () => import(/* webpackChunkName: "workPackageManagementlist" */ '../views/main/workPackageManagement/list.vue'),
-        meta: {
-          title: '项目',
-          keepAlive: false
-        },
-      },
       {
         path: 'persondata',
         name: 'persondata',
@@ -230,21 +229,9 @@ const routes: Array<RouteRecordRaw> = [
                   keepAlive: false
                 },
                 props: route => ({
-                  projectId: route.params.projectId,
-                  projectData: route.query.projectData ? JSON.parse(route.query.projectData as string) : null
+                  projectId: route.params.projectId
+                  //projectData: route.query.projectData ? JSON.parse(route.query.projectData as string) : null
                 })
-              },
-              {
-                path: 'taskTemplate',
-                name: 'taskTemplate',
-                component: () => import(/* webpackChunkName: "createTask" */ '../views/main/workPackageManagement/components/flow/createTask.vue'),
-                meta: {
-                  title: '任务模板管理',
-                  keepAlive: false
-                },
-                props: {
-                  isTemplateMode: true
-                }
               },
               {
                 path: 'taskDetail/:projectId?/:taskId?',

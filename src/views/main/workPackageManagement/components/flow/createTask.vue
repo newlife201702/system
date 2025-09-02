@@ -2100,6 +2100,7 @@ const addTaskConnections = () => {
   // 遍历连线数据并添加连线
   taskConnections.value.forEach(connection => {
     try {
+      const labelText = getSourceOutputsLabel(connection.source)
       graph.value!.addEdge({
         id: connection.id,
         source: { 
@@ -2120,12 +2121,46 @@ const addTaskConnections = () => {
             }
           }
         },
+        labels: labelText
+          ? [
+              {
+                position: 0.5,
+                attrs: {
+                  label: {
+                    text: labelText,
+                    fill: '#333',
+                    fontSize: 12,
+                    textAnchor: 'middle',
+                    textVerticalAnchor: 'middle'
+                  },
+                  body: {
+                    fill: '#fff',
+                    stroke: '#d9d9d9',
+                    strokeWidth: 1,
+                    rx: 2,
+                    ry: 2
+                  }
+                }
+              }
+            ]
+          : [],
         ...edgeStyle
       })
     } catch (error) {
       console.warn(`Failed to add connection: ${connection.id}`, error)
     }
   })
+}
+
+// 获取来源节点的所有输出名称，拼接为标签文本
+const getSourceOutputsLabel = (sourceId: string): string => {
+  const task = taskList.value.find((t: any) => t.id === sourceId)
+  if (!task) return ''
+  const outputs = Array.isArray(task.outputs) ? task.outputs : []
+  const names = outputs
+    .map((o: any) => (typeof o?.name === 'string' ? o.name : ''))
+    .filter((n: string) => n && n.trim().length > 0)
+  return names.length ? names.join('、') : ''
 }
 
 
@@ -2356,7 +2391,33 @@ const initFlowChart = () => {
 
   // 监听连接事件
   graph.value.on('edge:connected', ({ edge }) => {
-    console.log('连接创建:', edge.getSourceCellId(), '->', edge.getTargetCellId())
+    const sourceId = edge.getSourceCellId()
+    const labelText = getSourceOutputsLabel(sourceId || '')
+    if (labelText) {
+      edge.setLabels([
+        {
+          position: 0.5,
+          attrs: {
+            label: {
+              text: labelText,
+              fill: '#333',
+              fontSize: 12,
+              textAnchor: 'middle',
+              textVerticalAnchor: 'middle'
+            },
+            body: {
+              fill: '#fff',
+              stroke: '#d9d9d9',
+              strokeWidth: 1,
+              rx: 2,
+              ry: 2
+            }
+          }
+        }
+      ])
+    } else {
+      edge.removeLabelAt(0)
+    }
   })
 
   // 监听连接断开事件

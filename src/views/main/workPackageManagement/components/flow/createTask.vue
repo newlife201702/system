@@ -665,10 +665,10 @@
               
             </el-form-item>
             
-            <el-form-item label="▲">
+            <el-form-item label-width="40px">
               <div class="input-section">
                 <div class="section-title">
-                  <span>输入 {{ selectedTask.inputs ? selectedTask.inputs.length : 0 }}项</span>
+                  <span>任务输入 {{ selectedTask.inputs ? selectedTask.inputs.length : 0 }}项</span>
                 </div>
                 <div class="section-actions">
                   <el-button size="small" text @click="addInput">新增</el-button>
@@ -755,10 +755,10 @@
               </div>
             </el-form-item>
             
-            <el-form-item label="▼">
+            <el-form-item label-width="40px">
               <div class="output-section">
                 <div class="section-title">
-                  <span>输出 {{ selectedTask.outputs ? selectedTask.outputs.length : 0 }}项</span>
+                  <span>任务输出 {{ selectedTask.outputs ? selectedTask.outputs.length : 0 }}项</span>
                 </div>
                 <div class="section-actions">
                   <el-button size="small" text @click="addOutput">新增</el-button>
@@ -847,8 +847,9 @@
             </el-form-item>
                         
             <div class="form-actions">
-              <el-button type="primary" @click="updateTask">更新任务</el-button>
-              <el-button @click="deleteTask" type="danger">删除任务</el-button>
+              <el-button type="primary" @click="updateTask">保存</el-button>
+              <!-- <el-button @click="deleteTask" type="danger">删除任务</el-button> -->
+              <el-button @click="onCancelEdit">取消</el-button>
             </div>
           </el-form>
         </div>
@@ -3278,7 +3279,7 @@ const updateOutputSecurityLevelName = (output: any) => {
 // 删除任务
 const deleteTask = () => {
   if (!selectedTask.value) return
-  
+
   const taskIndex = taskList.value.findIndex(t => t.id === selectedTask.value.id)
   if (taskIndex !== -1) {
     taskList.value.splice(taskIndex, 1)
@@ -3286,6 +3287,12 @@ const deleteTask = () => {
     selectedTask.value = null
     ElMessage.success('任务删除成功')
   }
+}
+
+// 取消编辑，关闭右侧抽屉并清除选择
+const onCancelEdit = () => {
+  selectedTask.value = null
+  rightDrawerCollapsed.value = true
 }
 
 

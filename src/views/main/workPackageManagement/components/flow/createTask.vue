@@ -1692,6 +1692,7 @@ const registerCustomNode = () => {
     markup: [
       { tagName: 'rect', selector: 'body' },
       { tagName: 'rect', selector: 'header' },
+      { tagName: 'rect', selector: 'type-icon-bg' },
       { tagName: 'text', selector: 'type-icon' },
       { tagName: 'text', selector: 'title' },
       { tagName: 'circle', selector: 'avatar' },
@@ -1973,14 +1974,27 @@ const createNormalTaskNode = (task: any) => {
         stroke: '#d9d9d9',
         strokeWidth: 1
       },
+      // 任务类型图标背景
+      'type-icon-bg': {
+        x: 8,
+        y: 4,
+        width: 24,
+        height: 24,
+        rx: 6,
+        ry: 6,
+        fill: getTypeColor(task.type),
+        stroke: 'none'
+      },
       // 任务类型图标
       'type-icon': {
         text: getTypeIcon(task.type),
-        x: 12,
-        y: 20,
+        x: 20,
+        y: 16,
         fontSize: 12,
-        fill: '#000',
-        fontWeight: 'bold'
+        fill: '#fff',
+        fontWeight: 'bold',
+        textAnchor: 'middle',
+        textVerticalAnchor: 'middle'
       },
       // 任务标题
       title: {

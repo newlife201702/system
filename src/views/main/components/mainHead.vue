@@ -1,7 +1,7 @@
 <template>
   <el-header>
     <b>
-      <img :src="'./images/logo.png'" alt=""> 体系与系统整机协同服务 </b>
+      <img :src="'./images/logo.png'" alt=""><span class="logo-divider"></span> 体系与系统整机协同服务 </b>
     <ul>
       <li :class="index === currentActive ? 'active' : ''" v-for="(item, index) in menuList" :key="'menuList' + index"
         @click="goUrl(item)"><el-icon>
@@ -236,6 +236,19 @@ const logout = () => {
     .el-dropdown-link{
         outline:none;
         
+}
+    b{
+        .logo-divider{
+            display:inline-block;
+            width:1px;
+            height:24px;
+            background: rgba(255,255,255,.6);
+            margin: 0 12px;
+            vertical-align: middle;
+        }
+        img{
+            vertical-align: middle;
+        }
 }
 }
 

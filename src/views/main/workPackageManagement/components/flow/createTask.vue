@@ -325,7 +325,7 @@
                 <div class="table-header">
                   <span>名称</span>
                   <span>密级</span>
-                  <span>类型</span>
+                  <!-- <span>类型</span> -->
                   <span>附件</span>
                   <span>版本</span>
                   <span>更新时间</span>
@@ -337,7 +337,7 @@
                     <!-- 任务详细信息模式下输入始终不可编辑 -->
                     <span :title="input.name">{{ input.name }}</span>
                     <span :title="input.securityLevelName">{{ input.securityLevelName }}</span>
-                    <span :title="input.dataTypeCode">{{ input.dataTypeCode }}</span>
+                    <!-- <span :title="input.dataTypeCode">{{ input.dataTypeCode }}</span> -->
                     <span :title="input.dataTypeValue ? input.dataTypeValue.name : '无'">{{ input.dataTypeValue ? input.dataTypeValue.name : '无' }}</span>
                     <span>1.0</span>
                     <span>2025-06-25</span>
@@ -364,7 +364,7 @@
                   <span>选择</span>
                   <span>名称</span>
                   <span>密级</span>
-                  <span>类型</span>
+                  <!-- <span>类型</span> -->
                   <span>附件</span>
                   <span>状态</span>
                   <span>版本</span>
@@ -432,7 +432,7 @@
                       </span>
                       <span :title="output.name">{{ output.name }}</span>
                       <span :title="output.securityLevelName">{{ output.securityLevelName }}</span>
-                      <span :title="output.dataTypeCode">{{ output.dataTypeCode }}</span>
+                      <!-- <span :title="output.dataTypeCode">{{ output.dataTypeCode }}</span> -->
                       <span :title="output.dataTypeValue ? output.dataTypeValue.name : '无'">{{ output.dataTypeValue ? output.dataTypeValue.name : '无' }}</span>
                       <span>
                         <el-tag :type="getStatusType(output.status || 'published')" size="small">
@@ -678,7 +678,7 @@
                          <div class="table-header">
                            <span>名称</span>
                            <span>密级</span>
-                           <span>类型</span>
+                           <!-- <span>类型</span> -->
                            <span>附件</span>
                            <span>操作</span>
                          </div>
@@ -740,7 +740,7 @@
                            <template v-else>
                             <span :title="input.name">{{ input.name }}</span>
                             <span :title="input.securityLevelName">{{ input.securityLevelName }}</span>
-                            <span :title="input.dataTypeCode">{{ input.dataTypeCode }}</span>
+                            <!-- <span :title="input.dataTypeCode">{{ input.dataTypeCode }}</span> -->
                             <span :title="input.dataTypeValue ? input.dataTypeValue.name : '无'">{{ input.dataTypeValue ? input.dataTypeValue.name : '无' }}</span>
                              <span>
                                <el-button size="small" text type="primary" @click="editInput(index)">编辑</el-button>
@@ -769,7 +769,7 @@
                          <div class="table-header">
                            <span>名称</span>
                            <span>密级</span>
-                           <span>类型</span>
+                           <!-- <span>类型</span> -->
                            <span>附件</span>
                            <span>操作</span>
                          </div>
@@ -831,7 +831,7 @@
                            <template v-else>
                             <span :title="output.name">{{ output.name }}</span>
                             <span :title="output.securityLevelName">{{ output.securityLevelName }}</span>
-                            <span :title="output.dataTypeCode">{{ output.dataTypeCode }}</span>
+                            <!-- <span :title="output.dataTypeCode">{{ output.dataTypeCode }}</span> -->
                             <span :title="output.dataTypeValue ? output.dataTypeValue.name : '无'">{{ output.dataTypeValue ? output.dataTypeValue.name : '无' }}</span>
                              <span>
                                <el-button size="small" text type="primary" @click="editOutput(index)">编辑</el-button>

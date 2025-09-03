@@ -3366,6 +3366,7 @@ const taskForm =  reactive<planFormAdd>({
   workItemParams: [],
   connections:[],
   x6NodeJson: "",
+  x6NodeRelationJson: "",
   cells: []
 })
 
@@ -3393,6 +3394,7 @@ const saveFlow  =  () => {
   //   source: conn.source,
   //   target: conn.target
   // }));
+  taskForm.connections =  '';
   taskForm.cells = graph.value!.toJSON()
   taskForm.x6NodeJson =  JSON.stringify(taskForm.cells)  
   api.planTask.addTask(taskForm)
@@ -3402,7 +3404,19 @@ const saveFlow  =  () => {
 }
 
 // 批量发布
-const batchPublish = () => {
+const batchPublish = async () => {
+   const result = await api.planTask.publishAllTask({id:projectId})
+ if (result.resultCode === 0 && result.returnCode === 0) {
+        ElMessage({
+            message: "任务发布成功",
+            type: 'success',
+        })
+  }else{
+        ElMessage({
+            message: result.resultMessage,
+            type: 'fail',
+        })
+  }
 }
 
 // 组件挂载
@@ -3423,6 +3437,15 @@ onMounted(async() => {
 
     const projectreslt = await await api.packageManage.getInfo({ id: projectId })
     Object.assign(projectInfo, projectreslt.data)
+
+    //项目图ID，查询最新JSON流数据和关系到前端
+    if(projectInfo.graphId !== null){
+        const jsonResult = await api.planTask.gengerTaskRelation({id:projectId});
+        const flowJsonStr = jsonResult.data.flowJsonStr;
+        const flowConnStr =  jsonResult.data.flowRelaJsonStr;
+        Object.assign(flowJsonStr,taskList);
+        Object.assign(flowConnStr,taskConnections);
+    }
 
 })
 

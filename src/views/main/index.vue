@@ -24,11 +24,11 @@ import type { Ref } from 'vue'
 const nav1 = [
     {
         title: "门户", ico: "HomeFilled", key: "/main/dashboard",
-        children: [
-            {  title:"门户配置",ico:"HomeFilled",key:"/main/mainconfig" },
-            {  title:"门户设置",ico:"Historgram",key:"/main/mainset" },
-            {  title:'态势',icon:"Historgram",key:"/main/taishi"}
-        ]
+        // children: [
+        //     {  title:"门户配置",ico:"HomeFilled",key:"/main/mainconfig" },
+        //     {  title:"门户设置",ico:"Historgram",key:"/main/mainset" },
+        //     {  title:'态势',icon:"Historgram",key:"/main/taishi"}
+        // ]
     },
     {
         title: "个人中心", ico: "Histogram", key: "/main/persondata",
@@ -44,10 +44,10 @@ const nav1 = [
     }
     ,
     {
-        title: "配置",ico: "HomeFilled", key: "/main/myWorkPackage/taskTemplate",
+        title: "配置",ico: "HomeFilled", key: "/main/user",
     },
     {
-        title: "模型管理",ico: "HomeFilled", key: "/main/myWorkPackage/taskTemplate",
+        title: "模型管理",ico: "HomeFilled", key: "/main/manage",
     },
 
 ]

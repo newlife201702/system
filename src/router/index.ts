@@ -102,6 +102,25 @@ const routes: Array<RouteRecordRaw> = [
           keepAlive: false
         },
       },
+      {
+        path: 'user',
+        name: 'user',
+        component: () => import(/* webpackChunkName: "datatree" */ '../views/main/user/index.vue'),
+        meta: {
+          title: '数据',
+          keepAlive: false
+        },
+      },
+      {
+        path: 'manage',
+        name: 'manage',
+        component: () => import(/* webpackChunkName: "datatree" */ '../views/main/modelmanager/index.vue'),
+        meta: {
+          title: '数据',
+          keepAlive: false
+        },
+      },
+
     {
         path: 'config',
         name: 'config',
@@ -110,7 +129,7 @@ const routes: Array<RouteRecordRaw> = [
           title: '配置中心',
           keepAlive: false
         },
-      },
+    },
     {
         path: 'mainconfig',
         name: 'mainconfig',

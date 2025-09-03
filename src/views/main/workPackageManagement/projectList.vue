@@ -27,7 +27,7 @@
         <div class="toolbar-right">
           <div class="filter-section">
             <span>责任人：</span>
-            <el-select v-model="selectedResponsible" placeholder="全部" class="filter-select">
+            <el-select v-model="selectedResponsible" placeholder="全部" class="filter-select" filterable>
               <el-option label="全部" value="" @click="userFilter('')" ></el-option>
               <el-option v-for="(item, index) in userListOption" :key="'person' + index" :label="item.name"
                         :value="item.id" @click="userFilter(item.id)" />

@@ -46,9 +46,9 @@
             <el-button type="success" class="create-btn">
               同步至基于模型的设计与管理系统
             </el-button>
-            <el-button type="primary" class="create-project-btn" @click="">
+            <!-- <el-button type="primary" class="create-project-btn" @click="">
               完成项目
-            </el-button>
+            </el-button> -->
             <el-button type="primary" class="create-project-btn" @click="openCreateDrawer">
               创建项目
             </el-button>
@@ -164,21 +164,29 @@
           <el-table-column label="操作" width="200" align="center" fixed="right">
             <template #default="{ row }">
               <div class="action-buttons-cell">
-                <el-button size="small" type="text" @click="editProject(row)">
-                  <el-icon><Edit /></el-icon>
-                </el-button>
-                <el-button size="small" type="text" @click="copyProject(row)">
-                  <el-icon><CopyDocument /></el-icon>
-                </el-button>
-                <el-button size="small" type="text" @click="viewProject(row)">
-                  <el-icon><View /></el-icon>
-                </el-button>
-                <el-button size="small" type="text" @click="deleteProject(row)" class="delete-btn">
-                  <el-icon><Delete /></el-icon>
-                </el-button>
-                <el-button size="small" type="text" @click="shareProject(row)">
+                <el-tooltip content="编辑" placement="top">
+                  <el-button size="small" type="text" @click="editProject(row)">
+                    <el-icon><Edit /></el-icon>
+                  </el-button>
+                </el-tooltip>
+                <el-tooltip content="完成任务" placement="top">
+                  <el-button size="small" type="text" @click="finallProject(row)">
+                    <el-icon><CircleCheck /></el-icon>
+                  </el-button>
+                </el-tooltip>
+                <el-tooltip content="查看" placement="top">
+                  <el-button size="small" type="text" @click="viewProject(row)">
+                    <el-icon><View /></el-icon>
+                  </el-button>
+                </el-tooltip>
+                <el-tooltip content="删除" placement="top">
+                  <el-button size="small" type="text" @click="deleteProject(row)" class="delete-btn">
+                    <el-icon><Delete /></el-icon>
+                  </el-button>
+                </el-tooltip>
+                <!-- <el-button size="small" type="text" @click="shareProject(row)">
                   <el-icon><Share /></el-icon>
-                </el-button>
+                </el-button> -->
               </div>
             </template>
           </el-table-column>
@@ -207,7 +215,7 @@ import {
   Menu, 
   Grid,
   Edit,
-  CopyDocument,
+  CircleCheck,
   View,
   Delete,
   Share
@@ -362,7 +370,7 @@ const shareProject = (row: any) => {
   console.log('分享项目', row)
 }
 
-const finallProject = async (id: string) => {
+const finallProject = async (row: any) => {
   console.log('完成项目', )
 }
 

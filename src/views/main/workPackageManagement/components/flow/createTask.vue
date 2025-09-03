@@ -1304,7 +1304,8 @@ const taskList = ref<any>([
     taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
-    toolAssociation:"1",
+    toolAssociation:"体系需求满足度评估系统",
+    toolAssociationUrl:"http://www.baidu.com",
     x: 200,
     y: 80,
     expanded: false,
@@ -1363,6 +1364,7 @@ const taskList = ref<any>([
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
     toolAssociation:"2",
+    toolAssociationUrl:"http://www.baidu.com",
     x: 420,
     y: 180,
     expanded: false,
@@ -1420,6 +1422,7 @@ const taskList = ref<any>([
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
     toolAssociation: "3",
+    toolAssociationUrl:"http://www.baidu.com",
     x: 220,
     y: 320,
     expanded: false,
@@ -1477,6 +1480,7 @@ const taskList = ref<any>([
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
     toolAssociation: "4",
+    toolAssociationUrl:"http://www.baidu.com",
     x: 590,
     y: 320,
     expanded: false,
@@ -1534,6 +1538,7 @@ const taskList = ref<any>([
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
     toolAssociation: "5",
+    toolAssociationUrl:"http://www.baidu.com",
     x: 590,
     y: 450,
     expanded: false,
@@ -1694,7 +1699,7 @@ const registerCustomNode = () => {
       { tagName: 'text', selector: 'task-days' },
       { tagName: 'text', selector: 'stats-up' },
       { tagName: 'text', selector: 'stats-down' },
-      { tagName: 'text', selector: 'toolAssociation' },
+      { tagName: 'a', selector: 'toolLink', children: [ { tagName: 'text', selector: 'toolAssociation' } ] },
       { tagName: 'text', selector: 'expand-indicator' }
     ],
     ports: {
@@ -2047,6 +2052,14 @@ const createNormalTaskNode = (task: any) => {
          fill: '#ff4d4f'
        },
       // 工具关联信息
+      toolLink: {
+        x: 12,
+        y: 88,
+        'xlink:href': task.expanded ? (task.toolAssociationUrl || '') : '',
+        href: task.expanded ? (task.toolAssociationUrl || '') : '',
+        target: '_blank',
+        cursor: task.expanded && task.toolAssociationUrl ? 'pointer' : 'default'
+      },
       toolAssociation: {
         text: task.expanded ? (task.toolAssociation || '') : '',
         x: 12,
@@ -2210,6 +2223,10 @@ const updateTaskNode = (task: any) => {
       node.attr('stats-up/text', inputCount > 0 ? `▲ ${inputCount}` : '')
       node.attr('stats-down/text', outputCount > 0 ? `▼ ${outputCount}` : '')
       node.attr('toolAssociation/text', task.toolAssociation || '')
+      node.attr('toolLink/href', task.toolAssociationUrl || '')
+      node.attr('toolLink/xlink:href', task.toolAssociationUrl || '')
+      node.attr('toolLink/target', '_blank')
+      node.attr('toolLink/cursor', task.toolAssociationUrl ? 'pointer' : 'default')
       // 显示头像
       node.attr('avatar/display', 'block')
     } else {
@@ -2219,6 +2236,10 @@ const updateTaskNode = (task: any) => {
       node.attr('stats-up/text', '')
       node.attr('stats-down/text', '')
       node.attr('toolAssociation/text', '')
+      node.attr('toolLink/href', '')
+      node.attr('toolLink/xlink:href', '')
+      node.attr('toolLink/target', '')
+      node.attr('toolLink/cursor', 'default')
       // 隐藏头像
       node.attr('avatar/display', 'none')
     }
@@ -2352,7 +2373,7 @@ const initFlowChart = () => {
     }
     
     const taskData = node.getData()
-    // 开始/结束节点选中时不显示右侧“任务基础信息”
+    // 开始/结束节点选中时不显示右侧"任务基础信息"
     if (taskData?.nodeType === 'start' || taskData?.nodeType === 'end') {
       selectedTask.value = null
       rightDrawerCollapsed.value = true

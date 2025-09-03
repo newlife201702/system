@@ -2,11 +2,6 @@
   <el-header>
     <b>
       <img :src="'./images/logo.png'" alt=""> 体系与系统整机协同服务 </b>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <el-icon @click="emit('changeSwitch')">
-      <Fold v-if="!props.isCollapse" />
-      <Expand v-if="props.isCollapse" />
-    </el-icon>
     <ul>
       <li :class="index === currentActive ? 'active' : ''" v-for="(item, index) in menuList" :key="'menuList' + index"
         @click="goUrl(item)"><el-icon>

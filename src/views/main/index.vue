@@ -3,7 +3,7 @@
         <main-head :isCollapse="isCollapse" @changeSwitch="changeSwitch" @changeMenu="changeMenu"></main-head>
         <el-container style="background-color: #fffbfb;">
             <el-aside :width="!isCollapse ? '200px' : '66px'">
-                <main-side :isCollapse="isCollapse" :menuList="menuList"></main-side>
+                <main-side :isCollapse="isCollapse" :menuList="menuList" @changeSwitch="changeSwitch"></main-side>
             </el-aside>
             <wap-side :menuList="menuList"></wap-side>
             
@@ -125,6 +125,7 @@ const changeSwitch = () => {
         &>img {
             width: 28px;
             margin-top: -2px;
+            margin-right: 24px;
         }
 
         line-height: 30px;

@@ -683,6 +683,7 @@
                            <span>名称</span>
                            <span>密级</span>
                            <!-- <span>类型</span> -->
+                           <span>版本</span>
                            <span>附件</span>
                            <span>操作</span>
                          </div>
@@ -702,13 +703,14 @@
                                  <el-option label="核心商密" value="SECRET_LEVEL_CORE_COMMERCIAL" />
                                </el-select>
                              </span>
-                             <span>
+                             <!-- <span>
                                <el-select v-model="input.dataTypeCode" size="small" placeholder="请选择类型">
                                   <el-option label="文件" value="TASK_INOUTPUT_DATA_TYPE_CODE_FILE" />
                                  <el-option label="数据" value="TASK_INOUTPUT_DATA_TYPE_CODE_DATA" />
                                  <el-option label="文本" value="TASK_INOUTPUT_DATA_TYPE_CODE_TEXT" />
                                </el-select>
-                             </span>
+                             </span> -->
+                             <span><el-input v-model="input.version" size="small" placeholder="请输入版本" /></span>
                              <span>
                                <div class="file-upload-wrapper">
                                  <!-- <el-upload
@@ -745,6 +747,7 @@
                             <span :title="input.name">{{ input.name }}</span>
                             <span :title="input.securityLevelName">{{ input.securityLevelName }}</span>
                             <!-- <span :title="input.dataTypeCode">{{ input.dataTypeCode }}</span> -->
+                             <span>{{ input.version }}</span>
                             <span :title="input.dataTypeValue ? input.dataTypeValue.name : '无'">{{ input.dataTypeValue ? input.dataTypeValue.name : '无' }}</span>
                              <span>
                                <el-button size="small" text type="primary" @click="editInput(index)">编辑</el-button>
@@ -774,6 +777,7 @@
                            <span>名称</span>
                            <span>密级</span>
                            <!-- <span>类型</span> -->
+                           <span>版本</span>
                            <span>附件</span>
                            <span>操作</span>
                          </div>
@@ -793,13 +797,14 @@
                                  <el-option label="核心商密" value="SECRET_LEVEL_CORE_COMMERCIAL" />
                                </el-select>
                              </span>
-                             <span>
+                             <!-- <span>
                                <el-select v-model="output.dataTypeCode" size="small" placeholder="请选择类型">
                                  <el-option label="文件" value="TASK_INOUTPUT_DATA_TYPE_CODE_FILE" />
                                  <el-option label="数据" value="TASK_INOUTPUT_DATA_TYPE_CODE_DATA" />
                                  <el-option label="文本" value="TASK_INOUTPUT_DATA_TYPE_CODE_TEXT" />
                                </el-select>
-                             </span>
+                             </span> -->
+                             <span><el-input v-model="output.version" size="small" placeholder="请输入版本" /></span>
                              <span>
                                <div class="file-upload-wrapper">
                                  <!-- <el-upload
@@ -836,6 +841,7 @@
                             <span :title="output.name">{{ output.name }}</span>
                             <span :title="output.securityLevelName">{{ output.securityLevelName }}</span>
                             <!-- <span :title="output.dataTypeCode">{{ output.dataTypeCode }}</span> -->
+                             <span>{{ output.version }}</span>
                             <span :title="output.dataTypeValue ? output.dataTypeValue.name : '无'">{{ output.dataTypeValue ? output.dataTypeValue.name : '无' }}</span>
                              <span>
                                <el-button size="small" text type="primary" @click="editOutput(index)">编辑</el-button>

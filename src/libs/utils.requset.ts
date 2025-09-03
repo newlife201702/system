@@ -75,9 +75,9 @@ const service = axios.create({
 
 service.interceptors.request.use((config) => {
   startLoading()
-   config.headers["token"] = "11111";
+  // config.headers["token"] = "11111";
 //   console.log(config.data, "++++=====")
-  //config.data.ticketProxy = localStorage.getItem("ticketProxy")
+  config.data.ticketProxy = localStorage.getItem("ticketProxy")
   // config.headers["Cookie"]="ticket-erm=" + localStorage.getItem("ticketProxy")
   if (config.headers["Content-Type"] === "application/x-www-form-urlencoded;charset=UTF-8") {
     config.transformRequest = [

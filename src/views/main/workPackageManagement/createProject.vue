@@ -15,7 +15,6 @@
           <el-step title="任务流程" />
         </el-steps>
       </div>
-
       <!-- 表单内容 -->
       <div class="form-container">
         <el-form
@@ -38,29 +37,23 @@
                 />
               </el-form-item>
 
-              <!-- 作战方向 -->
-              <el-form-item label="作战方向" prop="direction" required>
-                <el-input
-                  v-model="projectForm.direction"
-                  placeholder="请输入作战方向"
-                  class="form-input"
-                />
-              </el-form-item>
+          <el-form-item label="作战方向" prop="direction" required>
+                <el-select v-model="projectForm.direction"  placeholder="请选择" class="form-select">
+                    <el-option v-for="(item, index) in directionTypeList " :key="'direction' + index" :label="item.name"
+                        :value="item.code" >
+                        </el-option>
+                </el-select>
+            </el-form-item>    
 
-                             <!-- 任务类型 -->
+
+               <!-- 任务类型 -->
                <el-form-item label="任务类型" prop="taskType" required>
-                 <el-select
-                   v-model="projectForm.taskType"
-                   multiple
-                   placeholder="请选择任务类型"
-                   class="form-select"
-                 >
-                   <el-option label="侦察" value="侦察" />
-                   <el-option label="进攻" value="进攻" />
-                   <el-option label="防御" value="防御" />
-                   <el-option label="信息系统" value="信息系统" />
-                 </el-select>
-               </el-form-item>
+                <el-select v-model="projectForm.taskType" multiple placeholder="请选择" class="form-select">
+                    <el-option v-for="(item, index) in taskTypeList" :key="'task' + index" :label="item.name"
+                        :value="item.code" />
+                </el-select>
+               </el-form-item>   
+
 
               <!-- 起止时间 -->
               <el-form-item label="起止时间" prop="timeRange" required>
@@ -77,59 +70,49 @@
                 <span class="time-duration">{{ timeDuration }}</span>
               </el-form-item>
 
-                             <!-- 团队成员 -->
-               <el-form-item label="团队成员" prop="teamMembers" required>
-                 <el-select
-                   v-model="projectForm.teamMembers"
-                   multiple
-                   placeholder="请选择成员"
-                   class="form-select"
-                 >
-                   <el-option label="翟四" value="翟四" />
-                   <el-option label="王强" value="王强" />
-                   <el-option label="孔梦之" value="孔梦之" />
-                   <el-option label="李晓彤" value="李晓彤" />
-                 </el-select>
-               </el-form-item>
+              <!-- 团队成员 -->
+           <el-form-item label="团队成员" prop="personRelaIds" required>
+                <el-select v-model="projectForm.personRelaIds" multiple placeholder="请选择" class="form-select">
+                    <el-option v-for="(item, index) in userListOption" :key="'person' + index" :label="item.name"
+                        :value="item.id" />
+                </el-select>
+            </el-form-item>
 
+           <el-form-item label="密级" prop="securityLevelCode">
+                <el-radio-group v-model="projectForm.securityLevelCode">
+                    <el-radio :label="item.code" v-for="(item, index) in secretLevelList" :key="'security' + index">
+                        <img :src="getIcoByName(item.name)" alt="">
+                   </el-radio>
+                </el-radio-group>
+            </el-form-item>
                <!-- 来源 -->
-               <el-form-item label="来源" prop="source">
+            <el-form-item label="来源" prop="region">
                  <el-input
-                   v-model="projectForm.source"
+                   v-model="projectForm.region"
                    placeholder="请输入来源"
                    class="form-input"
                  />
-               </el-form-item>
+            </el-form-item>
 
-                             <!-- 项目负责人 -->
-               <el-form-item label="项目负责人" prop="projectManager" required>
-                 <el-select
-                   v-model="projectForm.projectManager"
-                   multiple
-                   placeholder="请选择负责人"
-                   class="form-select"
-                 >
-                   <el-option label="李晓彤" value="李晓彤" />
-                   <el-option label="海军" value="海军" />
-                   <el-option label="陆军" value="陆军" />
-                 </el-select>
-               </el-form-item>
+               <!-- 军兵种 -->
+            <el-form-item label="军兵种" prop="troops" required>
+                    <el-select v-model="projectForm.troops"  multiple  filterable class="form-select">
+                            <el-option v-for="(item, index) in toorsTypeList " :key="'t' + index" :label="item.name"
+                                        :value="item.code" />
+                    </el-select>
+            </el-form-item>
 
-                             <!-- 军兵种 -->
-               <el-form-item label="军兵种" prop="militaryBranch" required>
-                 <el-select
-                   v-model="projectForm.militaryBranch"
-                   multiple
-                   placeholder="请选择军兵种"
-                   class="form-select"
-                 >
-                   <el-option label="海军" value="海军" />
-                   <el-option label="陆军" value="陆军" />
-                   <el-option label="空军" value="空军" />
-                 </el-select>
-               </el-form-item>
 
-                             <!-- 场景描述 -->
+             <!-- 项目模板 -->
+              <el-form-item label="项目模板" prop="temProjectId">
+                    <el-select v-model="projectForm.temProjectId" placeholder="请选择"  class="form-select">
+                            <el-option v-for="(item, index) in templateProjectOption " :key="'t' + index" :label="item.projectName"
+                                        :value="item.projectId" />
+                    </el-select>
+              </el-form-item>
+
+
+               <!-- 场景描述 -->
                <el-form-item label="场景描述" prop="description">
                  <el-input
                    v-model="projectForm.description"
@@ -143,9 +126,9 @@
                <!-- 活动要求和附件 -->
                <div class="row-form-items">
                  <!-- 活动要求 -->
-                 <el-form-item label="活动要求" prop="activityRequirement" class="half-width">
+                 <el-form-item label="活动要求" prop="requirement" class="half-width">
                    <el-input
-                     v-model="projectForm.activityRequirement"
+                     v-model="projectForm.requirement"
                      type="textarea"
                      :rows="4"
                      placeholder="请输入活动要求"
@@ -224,6 +207,8 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import * as api from '@/api'
+import { getIcoByName } from '@/libs/utils'
 import type { FormInstance, FormRules } from 'element-plus'
 import { 
   Plus, 
@@ -234,6 +219,16 @@ import {
   Close 
 } from '@element-plus/icons-vue'
 import type { UploadFile, UploadFiles } from 'element-plus'
+import dicOptions from '@/libs/common/dicOptions'
+const id = ref<string>()
+const pageType = ref<string>('listWorkPackageManagement')
+const actionType = ref<string>('add')
+const { secretLevelList } = dicOptions([{ code: 'SECRET_LEVEL', businessCode: 'BUSINESS_CODE_COMMON' }])
+const userListOption = ref<any>()
+const { directionTypeList } = dicOptions([{ code: 'DIRECTION_TYPE', businessCode: 'BUSINESS_CODE_TXZJXT' }])
+const { taskTypeList } = dicOptions([{ code: 'TASK_TYPE', businessCode: 'BUSINESS_CODE_TXZJXT' }])
+const { toorsTypeList } = dicOptions([{ code: 'TOOPRS_TYPE', businessCode: 'BUSINESS_CODE_TXZJXT' }])
+const templateProjectOption = ref<any>()
 
 // 定义组件的 props 和 emits
 const props = defineProps<{
@@ -265,18 +260,41 @@ const uploadRef = ref()
 const fileList = ref<UploadFile[]>([])
 
  // 项目表单数据
- const projectForm = reactive({
-   name: '',
-   direction: '',
-   taskType: [] as string[],
-   timeRange: [] as string[],
-   teamMembers: [] as string[],
-   source: '',
-   projectManager: [] as string[],
-   militaryBranch: [] as string[],
-   description: '',
-   activityRequirement: '',
-   attachments: ''
+ const projectForm = reactive<ReqMyPackageAddFormData>({
+    id: "",
+    flowId: "",
+    about: "",
+    code: "",
+    departmentRelaName: '研究所',
+    departmentRelaIds: ['CA37C82FC62649A7A9D407072C6B9321'],
+    departmentTypeCode: "PROJECT_DEPT_TYPE_RESPONSIBLE",
+    levelCode: "",
+    levelName: "",
+    memo: "",
+    name: "",
+    personTypeCode: "PROJECT_PERSON_TYPE_RESPONSIBLE",
+    personRelaIds: [],
+    personRelaList: [],
+    extendProjectParam: [],
+    region: "",
+    direction : "",
+    taskType: [],
+    troops: [],
+    securityLevelCode: "",
+    planBeginDate: "",
+    planEndDate: "",
+    description:"",
+    attachments:"",
+    timeRange:[],
+    requirement:"",
+    temProjectId:"",
+    userListName:"",
+    troopsName:"",
+    taskTypeName:"",
+    directionName:"",
+    projLeader:"",
+    graphId:"",
+    businessCode: "BUSINESS_CODE_TXZJXT",
  })
 
  // 表单验证规则
@@ -293,13 +311,10 @@ const formRules = reactive<FormRules>({
   timeRange: [
     { required: true, message: '请选择起止时间', trigger: 'change' }
   ],
-  teamMembers: [
+  personRelaIds: [
     { required: true, message: '请选择团队成员', trigger: 'change' }
   ],
-  projectManager: [
-    { required: true, message: '请选择项目负责人', trigger: 'change' }
-  ],
-  militaryBranch: [
+  troops: [
     { required: true, message: '请选择军兵种', trigger: 'change' }
   ]
 })
@@ -336,7 +351,8 @@ const nextStep = async () => {
         projectId: projectId
       },
       query: {
-        projectData: JSON.stringify(projectData)
+        //projectData: JSON.stringify(projectData)
+        projectId:projectData.id
       }
     })
   }
@@ -388,8 +404,6 @@ const removeFile = (file: UploadFile) => {
   }
 }
 
-
-
 // 关闭抽屉
 const handleClose = () => {
   // 重置表单
@@ -400,19 +414,27 @@ const handleClose = () => {
   // 清空文件列表
   fileList.value = []
   drawerVisible.value = false
+
+   sessionStorage.removeItem("manprojflag");
+   sessionStorage.removeItem('projectId');
+
 }
 
 // 保存项目
 const handleSave = async () => {
   if (!projectFormRef.value) return
-  
   try {
     const isValid = await projectFormRef.value.validate()
     if (isValid) {
       // 这里可以调用API保存项目
       console.log('保存项目数据:', projectForm)
       
-      ElMessage.success('项目创建成功！')
+      if(actionType.value ===  'add'){
+          add()
+      }else{
+          edit()
+      } 
+
       emit('project-created', { ...projectForm })
       handleClose()
     }
@@ -420,6 +442,72 @@ const handleSave = async () => {
     console.error('表单验证失败:', error)
   }
 }
+
+
+const add = async () => {
+    const result = await api.packageManage.add({ ...projectForm, personRelaList: getPersonRelaList(),
+        extendProjectParam:getextendProjectParam()})
+    if (result.resultCode === 0 && result.returnCode === 0) {
+        ElMessage({
+            message: "添加成功",
+            type: 'success',
+        })
+
+        //ElMessage.success('项目创建成功！')
+        sessionStorage.removeItem("manprojflag");
+        sessionStorage.removeItem('projectId');
+
+    }else{
+            ElMessage.success('项目创建失败！')
+    }
+}
+
+const getPersonRelaList = () => {
+
+    let arr: any[] = []
+    userListOption.value.map((item: Record<string, unknown>) => {
+        projectForm.personRelaIds.map((items:any)=>{
+            if(items === item.id){
+                arr.push({ personId: item.id, personTypeCode: 'PROJECT_PERSON_TYPE_RESPONSIBLE' })
+            }
+        })
+    })
+    return arr
+}
+
+const getextendProjectParam = () =>{
+    console.log("getextendProjectParam" + projectForm.temProjectId)
+    let arr: any[] = []
+    arr.push({ propertyField: 'direction' , propertyValue: projectForm.direction})
+    arr.push({ propertyField: 'type' , propertyValue: projectForm.taskType.join(',')})
+    arr.push({ propertyField: 'region' , propertyValue: projectForm.region})
+    arr.push({ propertyField: 'troops' , propertyValue: projectForm.troops.join(',')})
+    arr.push({ propertyField: 'description' , propertyValue: projectForm.description})
+    arr.push({ propertyField: 'requirement' , propertyValue: projectForm.requirement})
+    arr.push({ propertyField: 'attachment' , propertyValue: projectForm.attachments})
+    arr.push({ propertyField: 'temProjectId' , propertyValue: projectForm.temProjectId})
+    return arr;
+}
+
+
+const edit = async () => {
+    sessionStorage.removeItem("manprojflag");
+    sessionStorage.removeItem('projectId');
+    const result = await api.packageManage.edit(
+        {
+            model: { ...projectForm, personRelaList: getPersonRelaList(),extendProjectParam:getextendProjectParam() },
+            id: projectForm.id as string
+        }
+    )
+    if (result.resultCode === 0 && result.returnCode === 0) {
+        ElMessage({
+            message: "修改成功",
+            type: 'success',
+        })
+    }
+}
+
+
 
 // 监听抽屉显示状态，重置表单
 watch(drawerVisible, (newVal) => {
@@ -430,7 +518,46 @@ watch(drawerVisible, (newVal) => {
     }
     fileList.value = []
   }
+
+   getDictionaryList()
+   initdata() 
+
+   sessionStorage.removeItem("manprojflag");
+   sessionStorage.removeItem('projectId');
 })
+
+
+const initdata = async () => {
+
+  if(sessionStorage.getItem("manprojflag") === 'update'){
+      actionType.value = 'update';
+      const projectId = sessionStorage.getItem("projectId");
+      const result = await api.packageManage.getInfo({ id: projectId })
+            const resultData = result.data
+            const editFromData = {
+                ...(resultData as Record<string, unknown>),
+            }
+
+        Object.assign(projectForm,editFromData)
+   }else{
+      actionType.value = 'add';
+   }
+}
+
+
+const getDictionaryList = async () => {
+    
+    const userresult = await api.commonUser.list({ businessCode : "BUSINESS_CODE_WORKFLOW"})
+    userListOption.value = userresult.data
+    
+    const templateProjecetResult =  await api.planTask.getTemplateProjectList({ alias: "architecture"});
+    templateProjectOption.value =  templateProjecetResult.data;
+
+    console.log("getDictionaryList" +  templateProjecetResult)
+
+}
+
+
 </script>
 
 <style lang="less" scoped>

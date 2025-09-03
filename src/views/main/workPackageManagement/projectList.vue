@@ -10,7 +10,7 @@
             <span>项目列表</span>
           </div>
           <div class="search-section">
-            <span>搜索</span>
+            <span @click="searchFilter()">搜索</span>
             <el-input 
               v-model="searchKeyword" 
               placeholder="" 
@@ -28,18 +28,17 @@
           <div class="filter-section">
             <span>责任人：</span>
             <el-select v-model="selectedResponsible" placeholder="全部" class="filter-select">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="王敏" value="王敏"></el-option>
-              <el-option label="张三" value="张三"></el-option>
-              <el-option label="刘强" value="刘强"></el-option>
+              <el-option label="全部" value="" @click="userFilter('')" ></el-option>
+              <el-option v-for="(item, index) in userListOption" :key="'person' + index" :label="item.name"
+                        :value="item.id" @click="userFilter(item.id)" />
+
             </el-select>
             
             <span>状态：</span>
             <el-select v-model="selectedStatus" placeholder="全部" class="filter-select">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="待派发" value="待派发"></el-option>
-              <el-option label="进行中" value="进行中"></el-option>
-              <el-option label="已完成" value="已完成"></el-option>
+              <el-option label="全部" value="" @click="statusFilter('')"></el-option>
+                  <el-option v-for="(item, index) in projectStatusList" :key="'task' + index" :label="item.name"
+                        :value="item.code"  @click="statusFilter(item.code)" />
             </el-select>
           </div>
           
@@ -47,7 +46,7 @@
             <el-button type="success" class="create-btn">
               同步至基于模型的设计与管理系统
             </el-button>
-            <el-button type="primary" class="create-project-btn">
+            <el-button type="primary" class="create-project-btn" @click="">
               完成项目
             </el-button>
             <el-button type="primary" class="create-project-btn" @click="openCreateDrawer">
@@ -65,86 +64,87 @@
       <!-- 项目列表表格 -->
       <div class="table-container">
         <el-table 
-          :data="projectList" 
+          :data="list" 
           style="width: 100%"
           class="project-table"
           :header-cell-style="{ background: '#f8f9fa', color: '#606266' }"
         >
+        {{ list }}
           <el-table-column prop="name" label="项目名称" min-width="200">
             <template #default="{ row }">
-              <div class="project-name">{{ row.name }}</div>
+              <div class="project-name" @click="openTaskEdit(row.id)">{{ row.name }}</div>
             </template>
           </el-table-column>
           
-          <el-table-column prop="status" label="状态" width="100" align="center">
+          <el-table-column prop="statusName" label="状态" width="100" align="center">
             <template #default="{ row }">
               <el-tag 
-                :type="getStatusType(row.status)" 
+                :type="row.statusName" 
                 size="small"
                 class="status-tag"
               >
-                {{ row.status }}
+                {{ row.statusName }}
               </el-tag>
             </template>
           </el-table-column>
           
-          <el-table-column prop="taskCount" label="任务数量" width="100" align="center">
+          <el-table-column prop="taskNum" label="任务数量" width="100" align="center">
             <template #default="{ row }">
-              <span>{{ row.taskCount }}</span>
+              <span>{{ row.taskNum }}</span>
             </template>
           </el-table-column>
           
-          <el-table-column prop="progress" label="进度" width="120" align="center">
+          <el-table-column prop="taskFinishPer" label="进度" width="120" align="center">
             <template #default="{ row }">
               <div class="progress-container">
                 <el-progress 
-                  :percentage="row.progress" 
-                  :color="getProgressColor(row.progress)"
+                  :percentage="row.taskFinishPer" 
+                  :color="getProgressColor(row.taskFinishPer)"
                   :stroke-width="6"
                   :show-text="false"
                 />
-                <span class="progress-text">{{ row.progress }}%</span>
+                <span class="progress-text">{{ row.taskFinishPer }}%</span>
               </div>
             </template>
           </el-table-column>
           
-          <el-table-column prop="responsible" label="负责人" width="100" align="center">
+          <el-table-column prop="createUserName" label="负责人" width="100" align="center">
             <template #default="{ row }">
-              <span>{{ row.responsible }}</span>
+              <span>{{ row.physical.createUserName }}</span>
             </template>
           </el-table-column>
           
-          <el-table-column prop="department" label="作战方向" width="120" align="center">
+          <el-table-column prop="direction" label="作战方向" width="120" align="center">
             <template #default="{ row }">
-              <span>{{ row.department }}</span>
+              <span>{{ row.direction }}</span>
             </template>
           </el-table-column>
           
-          <el-table-column prop="specialty" label="任务类型" width="200">
+          <el-table-column prop="type" label="任务类型" width="200">
             <template #default="{ row }">
-              <span>{{ row.specialty }}</span>
+              <span>{{ row.type }}</span>
             </template>
           </el-table-column>
           
-          <el-table-column prop="source" label="来源" width="80" align="center">
+          <el-table-column prop="region" label="来源" width="80" align="center">
             <template #default="{ row }">
-              <span>{{ row.source }}</span>
+              <span>{{ row.region }}</span>
             </template>
           </el-table-column>
           
-          <el-table-column prop="level" label="密级" width="80" align="center">
+          <el-table-column prop="securityLevelName" label="密级" width="80" align="center">
             <template #default="{ row }">
-              <span>{{ row.level }}</span>
+              <span>{{ row.securityLevelName }}</span>
             </template>
           </el-table-column>
           
           <el-table-column prop="period" label="项目周期" width="180" align="center">
             <template #default="{ row }">
               <div class="period-info">
-                <div>{{ row.period.start }} - {{ row.period.end }}</div>
-                <div v-if="row.period.actual" class="actual-period">
+                <div>{{ row.startTime }} - {{ row.endTime }}</div>
+                <!-- <div v-if="row.period.actual" class="actual-period">
                   实际 {{ row.period.actual.start }} - {{ row.period.actual.end }}
-                </div>
+                </div> -->
               </div>
             </template>
           </el-table-column>
@@ -196,6 +196,8 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import * as api from '@/api'
+import dataList from '@/libs/common/dataList'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import CreateProject from './createProject.vue'
@@ -211,6 +213,23 @@ import {
   Share
 } from '@element-plus/icons-vue'
 
+const {
+    sortField,
+    sortType,
+    query, // 用于绑定查询表单
+    page, // 用于绑定当前页
+    limit, // 用于绑定查询条数
+    total, // 记录列表总数
+    list, // 当前列表
+    loadList, // 获取列表数据
+    search, // 用于搜索，更新列表数据
+    changePageSize
+} = dataList({ moduleName: 'packageManage', immediate: false })
+
+
+import { loginAPI } from '@/api/modules/auth'
+import { Row } from 'element-plus/es/components/table-v2/src/components'
+import dicOptions from '@/libs/common/dicOptions'
 // 路由
 const router = useRouter()
 
@@ -222,7 +241,11 @@ const selectedStatus = ref('')
 // 创建项目抽屉
 const createDrawerVisible = ref(false)
 
+const { projectStatusList } = dicOptions([{ code: 'PROJECT_STATUS_FLOW', businessCode: 'BUSINESS_CODE_WORKFLOW' }])
+
 // 项目列表数据
+const userListOption = ref<any>()
+
 const projectList = ref([
   {
     id: 1,
@@ -284,6 +307,9 @@ const projectList = ref([
   }
 ])
 
+
+
+
 // 获取状态标签类型
 const getStatusType = (status: string) => {
   switch (status) {
@@ -309,6 +335,9 @@ const getProgressColor = (progress: number) => {
 // 操作方法
 const editProject = (row: any) => {
   console.log('编辑项目', row)
+  createDrawerVisible.value = true
+  sessionStorage.setItem("manprojflag","update")
+  sessionStorage.setItem("projectId",row.id)
 }
 
 const copyProject = (row: any) => {
@@ -319,7 +348,13 @@ const viewProject = (row: any) => {
   console.log('查看项目', row)
 }
 
-const deleteProject = (row: any) => {
+const deleteProject = async (row: any) => {
+  const id = row.id;
+  const result = await api.packageManage.del({ id: id })
+  if (result.returnCode === 0 && result.resultCode === 0) {
+        ElMessage({ message: '删除成功', type: 'success' })
+        loadList()
+    }
   console.log('删除项目', row)
 }
 
@@ -327,14 +362,31 @@ const shareProject = (row: any) => {
   console.log('分享项目', row)
 }
 
-// 页面跳转函数
-const goUrl = (urlName: string) => {
-  router.push({ name: urlName })
+const finallProject = async (id: string) => {
+  console.log('完成项目', )
 }
+
+const statusFilter =  async (code: string) =>{
+   query.value.statusCode = code;
+       loadList()
+}
+
+const userFilter = async (id: string) =>{
+    query.value.personId = id;
+    loadList()
+}
+
+const searchFilter = async() => {
+   query.value.name = searchKeyword;
+   loadList()
+}
+
+
 
 // 打开创建项目抽屉
 const openCreateDrawer = () => {
   createDrawerVisible.value = true
+  sessionStorage.setItem("manprojflag","add")
 }
 
 // 处理项目创建完成
@@ -363,9 +415,28 @@ const handleProjectCreated = (project: any) => {
   ElMessage.success('项目创建成功！')
 }
 
-onMounted(() => {
+ onMounted( async ()  => {
   // 初始化数据
+      query.value.businessCode='BUSINESS_CODE_TXZJXT'
+    loadList()
+
+    const userresult = await api.commonUser.list({ businessCode : "BUSINESS_CODE_WORKFLOW"})
+     userListOption.value = userresult.data
 })
+
+const openTaskEdit = (id:string) => {    
+    router.push({
+      name: 'createTask',
+      params: {
+        projectId: id
+      },
+      query: {
+        projectId:id
+      }
+    })
+}
+
+
 </script>
 
 <style lang="less" scoped>

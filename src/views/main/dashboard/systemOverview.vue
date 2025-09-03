@@ -120,7 +120,7 @@ const router = useRouter()
 // 进入体系规划论证系统
 const enterPlanningSystem = () => {
   // 这里可以根据实际需求跳转到对应的页面
-  router.push('/main/workPackageManagement')
+  router.push('/main/dashboard')
 }
 </script>
 

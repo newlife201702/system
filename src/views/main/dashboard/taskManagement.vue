@@ -496,10 +496,15 @@ const getFilteredTasks = (tasks: any[]) => {
   }
   
   const statusMap: Record<string, string[]> = {
-    submitTaskNum: ['TASK_RUN_STATUS_SUBMIT'],
-    ongoingTaskNum: ['TASK_RUN_STATUS_SEND'],
-    auditTaskNum: ['TASK_RUN_STATUS_ONGOING'],
+    // submitTaskNum: ['TASK_RUN_STATUS_SUBMIT'],
+    // ongoingTaskNum: ['TASK_RUN_STATUS_SEND'],
+    // auditTaskNum: ['TASK_RUN_STATUS_ONGOING'],
+    // delayTaskNum: ['TASK_RUN_STATUS_DELAY']
+    submitTaskNum: ['TASK_RUN_STATUS_SEND'],
+    ongoingTaskNum: ['TASK_RUN_STATUS_ONGOING'],
+    auditTaskNum: ['TASK_RUN_STATUS_PEN_APPROVA'],
     delayTaskNum: ['TASK_RUN_STATUS_DELAY']
+
   }
   
   const allowedStatuses = statusMap[selectedTaskType.value] || []

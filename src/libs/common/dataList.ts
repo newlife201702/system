@@ -28,6 +28,7 @@ export default function dataList({ moduleName, immediate = true }: { moduleName:
   immediate && loadList()
 
   async function loadList() {
+    
     const result = await (api[moduleName as keyof typeof api] as any).getList(payload.value)
     list.value = result?.items as any
     total.value = result?.total as number || 0

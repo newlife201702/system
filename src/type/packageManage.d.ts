@@ -31,8 +31,19 @@ interface ReqMyPackageAddFormData {
     planEndDate: string,
     region: string,
     direction:string,
-    taskType:string,
-    troops:string,
+    taskType:string[],
+    troops:string[],
+    description:string,
+    attachments:string,
+    timeRange:string[],
+    userListName:string,
+    troopsName:string,
+    taskTypeName:string,
+    directionName:string,
+    projLeader:string,
+    requirement:string,
+    temProjectId:string,
+    graphId:string,
     id?:string
 }
 

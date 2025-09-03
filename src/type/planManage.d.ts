@@ -26,6 +26,23 @@ interface ReqPlanManageAddFormData {
     feFlowRelationResultList: []
 }
 
+interface planFormAdd{
+  projectId: "",
+  flowId: "",
+  businessCode: "",
+  autoNodeSortNo: any,
+  generBackLine: any,
+  workItemParams: [],
+  connections:[],
+  x6NodeJson: any,
+  x6NodeRelationJson: any,
+  cells: Properties[]
+}
+
+
+
+
+
 interface ResPlanManageRowData { 
     about: string, //说明
     code: string, //编号

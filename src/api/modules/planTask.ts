@@ -11,6 +11,17 @@ export const add = (data:ReqPlanManageAddFormData): Res<Record<string, unknown>>
     });
   }
 
+
+
+export const addTask = (data:planFormAdd): Res<Record<string, unknown>> => {
+    return request({
+      url: "/plan/web/task/batchAdd.do",
+      method: "post",
+      data: {data:data}
+    });
+  }
+
+
     // 修改任务
 export const update = (data:{model:ReqPlanManageAddFormData,id:string}): Res<Record<string, unknown>> => {
     return request({
@@ -55,3 +66,85 @@ export const getOutputData = (data:{id:string}): Res<Record<string, unknown>> =>
       data: {data:data}
     });
 }
+
+
+export const getTemplateProjectList = (data:{alias:string}): Res<Record<string, unknown>> => {
+    return request({
+      url: "/plan/web/task/getTempProjList.do",
+      method: "post",
+      data: {data:data}
+    });
+}
+
+export const taskExecute = (data:{taskId:string}): Res<Record<string, unknown>> => {
+    return request({
+      url: "/plan/web/task/taskExecute.do",
+      method: "post",
+      data: {data:data}
+    });
+}
+
+export const getModelData  = (data:{taskId:string,projectId:string}): Res<Record<string, unknown>> => {
+    return request({
+      url: "/plan/web/task/getModelTreeData.do",
+      method: "post",
+      data: {data:data}
+    });
+}
+
+  export const getList = (data:ReqPlanSearchData): Res<Record<string, unknown>> => {
+    return request({
+      url: "/plan/web/task/taskPlanPage.do",
+      method: "post",
+      data: data
+    });
+  }
+
+  export const totalTaskNum = (data:ReqPlanSearchData): Res<Record<string, unknown>> => {
+    return request({
+      url: "/plan/web/task/totalTaskNum.do",
+      method: "post",
+      data:data
+    });
+  }
+
+
+export const commitTask = (data:{id:string}): Res<Record<string, unknown>> => {
+    return request({
+      url: "/plan/web/task/commitTask.do",
+      method: "post",
+      data:{data:data}
+    });
+  }
+
+export const getToolList = (data:{isSys:string}): Res<Record<string, unknown>> => {
+    return request({
+      url: "/plan/web/task/getToolList.do",
+      method: "post",
+      data:{data:data}
+    });
+  }
+
+
+  export const gengerTaskRelation  = (data:{id:string}):Res<Record<string, unknown>> => {
+    return request({
+      url: "/plan/web/task/gengerTaskRelation.do",
+      method: "post",
+      data:{data:data}
+    });
+  }
+
+  export const publishAllTask = (data:{id:string}):Res<Record<string, unknown>> => {
+    return request({
+      url: "/plan/web/task/publishAllTask.do",
+      method: "post",
+      data:{data:data}
+    });
+  }
+
+
+
+
+
+
+

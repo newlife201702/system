@@ -9,7 +9,7 @@ export default function dicOptions(arr: {code:string,businessCode:string}[]) {
   const directionTypeList  = ref<ReqDicFormData[]>([]) // 作战方向
   const taskTypeList   = ref<ReqDicFormData[]>([]) // 任务类型
   const toorsTypeList = ref<ReqDicFormData[]>([]) // 军兵种
-  
+  const projectStatusList = ref<ReqDicFormData[]>([]) //  项目状态
 
 
 
@@ -42,7 +42,9 @@ export default function dicOptions(arr: {code:string,businessCode:string}[]) {
         case "TOOPRS_TYPE":
           toorsTypeList.value = await getOptionList(item)  
           break;
-
+        case  "PROJECT_STATUS_FLOW":
+          projectStatusList.value =  await getOptionList(item)
+          break;
           
 
         // case "dataSecurityLevelCodeList":
@@ -77,6 +79,8 @@ export default function dicOptions(arr: {code:string,businessCode:string}[]) {
     toolTypeList,
     directionTypeList,
     taskTypeList,
-    toorsTypeList
+    toorsTypeList,
+    projectStatusList
+
   }
 }

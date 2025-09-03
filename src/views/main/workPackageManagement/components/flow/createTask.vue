@@ -2131,7 +2131,9 @@ const addTaskConnections = () => {
         strokeWidth: 2,
         targetMarker: 'classic'
       }
-    }
+    },
+    router: { name: 'orth' },
+    connector: { name: 'normal' }
   }
   
   // 遍历连线数据并添加连线

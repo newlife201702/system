@@ -221,26 +221,6 @@
                </el-button>
              </div> -->
              </div>
-                       <el-button size="small" @click="addTask('analysis')">
-             <el-icon><Plus /></el-icon>
-              需求分析
-            </el-button>
-            <el-button size="small" @click="addTask('design')">
-              <el-icon><Plus /></el-icon>
-              架构设计
-            </el-button>
-            <el-button size="small" @click="addTask('simulation')">
-              <el-icon><Plus /></el-icon>
-              仿真验证
-            </el-button>
-            <el-button size="small" @click="addTask('evaluation')">
-              <el-icon><Plus /></el-icon>
-              需求评估
-            </el-button>
-            <el-button size="small" @click="addTask('performance')">
-              <el-icon><Plus /></el-icon>
-              效能评估
-           </el-button>
            <el-button size="small" @click="saveFlow">
              <el-icon><Document /></el-icon>
              保存流程
@@ -269,7 +249,31 @@
          </div>
        </div>
       
-      <div v-show="isTaskFlow" class="flowchart-canvas" ref="canvasRef" :class="{ 'half-height': isTaskDetailMode }"></div>
+      <div v-show="isTaskFlow" class="flowchart-canvas" ref="canvasRef" :class="{ 'half-height': isTaskDetailMode }">
+        <!-- 任务创建按钮组 - 左下角 -->
+        <div class="task-creation-buttons">
+          <el-button size="small" @click="addTask('analysis')" class="task-btn">
+            <el-icon><Plus /></el-icon>
+            需求分析
+          </el-button>
+          <el-button size="small" @click="addTask('design')" class="task-btn">
+            <el-icon><Plus /></el-icon>
+            架构设计
+          </el-button>
+          <el-button size="small" @click="addTask('simulation')" class="task-btn">
+            <el-icon><Plus /></el-icon>
+            仿真验证
+          </el-button>
+          <el-button size="small" @click="addTask('evaluation')" class="task-btn">
+            <el-icon><Plus /></el-icon>
+            需求评估
+          </el-button>
+          <el-button size="small" @click="addTask('performance')" class="task-btn">
+            <el-icon><Plus /></el-icon>
+            效能评估
+          </el-button>
+        </div>
+      </div>
       <div v-show="!isTaskFlow" class="er-canvas" ref="erCanvasRef" :class="{ 'half-height': isTaskDetailMode }"></div>
       
       <!-- 任务详细信息区域 -->
@@ -3701,6 +3705,31 @@ function uploada(index: number){
     .flowchart-canvas, .er-canvas {
       flex: 1;
       position: relative;
+    }
+
+    // 任务创建按钮组样式
+    .task-creation-buttons {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .task-btn {
+        width: 100px;
+        justify-content: flex-start;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #d9d9d9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-left: 0;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 1);
+          border-color: #409EFF;
+        }
+      }
     }
   }
 

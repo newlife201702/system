@@ -3718,7 +3718,6 @@ function uploada(index: number){
       gap: 8px;
 
       .task-btn {
-        width: 100px;
         justify-content: flex-start;
         background: rgba(255, 255, 255, 0.9);
         border: 1px solid #d9d9d9;

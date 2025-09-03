@@ -254,23 +254,23 @@
         <div class="task-creation-buttons">
           <el-button size="small" @click="addTask('analysis')" class="task-btn">
             <el-icon><Plus /></el-icon>
-            需求分析
+            体系需求分析任务
           </el-button>
           <el-button size="small" @click="addTask('design')" class="task-btn">
             <el-icon><Plus /></el-icon>
-            架构设计
-          </el-button>
-          <el-button size="small" @click="addTask('simulation')" class="task-btn">
-            <el-icon><Plus /></el-icon>
-            仿真验证
+            体系模型构建任务
           </el-button>
           <el-button size="small" @click="addTask('evaluation')" class="task-btn">
             <el-icon><Plus /></el-icon>
-            需求评估
+            需求满足度评估任务
+          </el-button>
+          <el-button size="small" @click="addTask('simulation')" class="task-btn">
+            <el-icon><Plus /></el-icon>
+            体系对抗仿真任务
           </el-button>
           <el-button size="small" @click="addTask('performance')" class="task-btn">
             <el-icon><Plus /></el-icon>
-            效能评估
+            体系效能评估任务
           </el-button>
         </div>
       </div>
@@ -1924,11 +1924,11 @@ const createNormalTaskNode = (task: any) => {
   // 获取任务类型图标
   const getTypeIcon = (type: string) => {
     const iconMap: Record<string, string> = {
-      'analysis': '需要',
-      'design': '设计', 
-      'evaluation': '任务',
-      'simulation': '仿真',
-      'performance': '性能'
+      'analysis': '1',
+      'design': '2', 
+      'evaluation': '3',
+      'simulation': '4',
+      'performance': '5'
     }
     return iconMap[type] || '任务'
   }
@@ -1968,7 +1968,7 @@ const createNormalTaskNode = (task: any) => {
         x: 12,
         y: 20,
         fontSize: 12,
-        fill: '#fff',
+        fill: '#000',
         fontWeight: 'bold'
       },
       // 任务标题

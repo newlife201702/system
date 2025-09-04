@@ -2351,16 +2351,16 @@ const initFlowChart = () => {
         }
       },
       anchor: {
-        name: 'rect',
-        args: {
-          padding: 10
-        }
+        name: 'center',
+        // args: {
+        //   padding: 10
+        // }
       },
       connectionPoint: {
-        name: 'rect',
-        args: {
-          offset: 10
-        }
+        name: 'boundary',
+        // args: {
+        //   offset: 10
+        // }
       },
       allowBlank: false,
       snap: {

@@ -2019,7 +2019,7 @@ const createNormalTaskNode = (task: any) => {
       // },
       // 负责人姓名图标
       'assignee-icon': {
-        text: '🗓️',
+        text: '👤',
         x: 12,
         y: 54,
         fontSize: 10,

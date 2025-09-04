@@ -3596,7 +3596,7 @@ function uploada(index: number){
     left: 0;
     top: 0;
     z-index: 100;
-    width: 500px;
+    width: 25vw;
     height: 100vh;
     background: #fff;
     border-right: 1px solid #e8e8e8;
@@ -3895,6 +3895,7 @@ function uploada(index: number){
         }
 
         .input-section, .output-section {
+          width: 100%;
           border: 1px solid #d9d9d9;
           border-radius: 6px;
           overflow: hidden;

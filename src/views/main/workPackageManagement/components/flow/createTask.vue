@@ -3560,12 +3560,17 @@ function uploada(index: number){
 
 <style lang="less" scoped>
 .create-task-container {
-  display: flex;
+  position: relative;
+  // display: flex;
   height: 100vh;
   background: #f0f2f5;
 
   // 左侧项目信息抽屉
   .left-drawer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 100;
     width: 500px;
     height: 100vh;
     background: #fff;
@@ -3655,15 +3660,17 @@ function uploada(index: number){
 
   // 中间流程图区域
   .center-flowchart {
-    flex: 1;
+    margin: 0 48px;
+    width: calc(100% - 96px);
+    height: 100vh;
+    // flex: 1;
     display: flex;
     flex-direction: column;
     background: #fff;
-    margin: 0 1px;
     transition: all 0.3s ease;
 
     &.full-width {
-      margin: 0;
+      // margin: 0;
     }
 
     .flowchart-header {
@@ -3777,7 +3784,12 @@ function uploada(index: number){
 
   // 右侧任务信息抽屉
   .right-drawer {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 100;
     width: 700px;
+    height: 100vh;
     background: #fff;
     border-left: 1px solid #e8e8e8;
     transition: all 0.3s ease;

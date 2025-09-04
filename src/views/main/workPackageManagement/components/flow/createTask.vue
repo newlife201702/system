@@ -172,12 +172,12 @@
           
           <div class="info-item">
             <label>场景描述：</label>
-            <div class="description-text">{{ projectInfo.description || '-' }}</div>
+            <span class="description-text">{{ projectInfo.description || '-' }}</span>
           </div>
           
           <div class="info-item">
             <label>活动要求：</label>
-            <div class="description-text">{{ projectInfo.requirement || '-' }}</div>
+            <span class="description-text">{{ projectInfo.requirement || '-' }}</span>
           </div>
           
           <div class="info-item" v-if="projectInfo.attachments">
@@ -3628,13 +3628,18 @@ function uploada(index: number){
           span {
             font-size: 14px;
             color: #262626;
+            background: #f5f5f5;
+            border: 1px solid #909399;
+            border-radius: 6px;
+            padding: 4px 8px;
+            display: inline-block;
+            line-height: 20px;
+            width: 90%;
           }
 
           .description-text {
-            font-size: 14px;
-            color: #262626;
-            line-height: 1.5;
             word-break: break-word;
+            min-height: 50px;
           }
 
           .attachment-list {

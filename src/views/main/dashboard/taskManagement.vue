@@ -495,16 +495,30 @@ const getFilteredTasks = (tasks: any[]) => {
     return tasks
   }
   
+  // 工具：解析 'YYYY.MM.DD' 为 Date 对象
+  const parseDotDate = (val?: string): Date | null => {
+    if (!val) return null
+    const parts = val.split('.')
+    if (parts.length !== 3) return null
+    const y = Number(parts[0])
+    const m = Number(parts[1])
+    const d = Number(parts[2])
+    if (!y || !m || !d) return null
+    return new Date(y, m - 1, d)
+  }
+  
+  if (selectedTaskType.value === 'delayTaskNum') {
+    const now = new Date()
+    return tasks.filter(task => {
+      const end = parseDotDate(task.planEndDate)
+      return !!end && now.getTime() > end.getTime() && task.statusCode !== 'TASK_RUN_STATUS_FINISH'
+    })
+  }
+  
   const statusMap: Record<string, string[]> = {
-    // submitTaskNum: ['TASK_RUN_STATUS_SUBMIT'],
-    // ongoingTaskNum: ['TASK_RUN_STATUS_SEND'],
-    // auditTaskNum: ['TASK_RUN_STATUS_ONGOING'],
-    // delayTaskNum: ['TASK_RUN_STATUS_DELAY']
     submitTaskNum: ['TASK_RUN_STATUS_SUBMIT'],
     ongoingTaskNum: ['TASK_RUN_STATUS_ONGOING'],
-    auditTaskNum: ['TASK_RUN_STATUS_PEN_APPROVA'],
-    delayTaskNum: ['TASK_RUN_STATUS_DELAY']
-
+    auditTaskNum: ['TASK_RUN_STATUS_PEN_APPROVA']
   }
   
   const allowedStatuses = statusMap[selectedTaskType.value] || []

@@ -3,7 +3,7 @@
     <!-- 左侧项目基础信息抽屉 -->
     <div class="left-drawer" :class="{ collapsed: leftDrawerCollapsed }">
       <div class="drawer-header">
-        <span class="drawer-title">{{ isTemplateMode ? '任务模板库' : '项目基础信息' }}</span>
+        <span class="drawer-title" v-show="!leftDrawerCollapsed">{{ isTemplateMode ? '任务模板库' : '项目基础信息' }}</span>
         <el-button 
           v-if="isTemplateMode"
           type="primary" 
@@ -492,7 +492,7 @@
             <ArrowLeft v-if="rightDrawerCollapsed" />
           </el-icon>
         </el-button>
-        <span class="drawer-title">任务基础信息</span>
+        <span class="drawer-title" v-show="!rightDrawerCollapsed">任务基础信息</span>
       </div>
       
       <div class="drawer-content" v-show="!rightDrawerCollapsed">

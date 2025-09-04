@@ -78,7 +78,7 @@
                 </el-select>
             </el-form-item>
 
-           <el-form-item label="密级" prop="securityLevelCode">
+           <el-form-item label="密级" prop="securityLevelCode" required>
                 <el-radio-group v-model="projectForm.securityLevelCode">
                     <el-radio :label="item.code" v-for="(item, index) in secretLevelList" :key="'security' + index">
                         <img :src="getIcoByName(item.name)" alt="">

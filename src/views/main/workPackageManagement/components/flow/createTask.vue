@@ -1692,6 +1692,28 @@ const registerCustomNode = () => {
     markup: [
       { tagName: 'rect', selector: 'body' },
       { tagName: 'rect', selector: 'header' },
+      { tagName: 'defs', selector: 'defs', children: [
+        { tagName: 'linearGradient', selector: 'grad-analysis', attrs: { id: 'grad-analysis', x1: '0%', y1: '0%', x2: '100%', y2: '100%' }, children: [
+          { tagName: 'stop', selector: 'grad-analysis-stop-1', attrs: { offset: '0%', 'stop-color': '#a46bff', 'stop-opacity': 1 } },
+          { tagName: 'stop', selector: 'grad-analysis-stop-2', attrs: { offset: '100%', 'stop-color': '#3a1f8f', 'stop-opacity': 0.6 } }
+        ]},
+        { tagName: 'linearGradient', selector: 'grad-design', attrs: { id: 'grad-design', x1: '0%', y1: '0%', x2: '100%', y2: '100%' }, children: [
+          { tagName: 'stop', selector: 'grad-design-stop-1', attrs: { offset: '0%', 'stop-color': '#40b8ff', 'stop-opacity': 1 } },
+          { tagName: 'stop', selector: 'grad-design-stop-2', attrs: { offset: '100%', 'stop-color': '#0f4bcc', 'stop-opacity': 0.6 } }
+        ]},
+        { tagName: 'linearGradient', selector: 'grad-evaluation', attrs: { id: 'grad-evaluation', x1: '0%', y1: '0%', x2: '100%', y2: '100%' }, children: [
+          { tagName: 'stop', selector: 'grad-evaluation-stop-1', attrs: { offset: '0%', 'stop-color': '#ff6b75', 'stop-opacity': 1 } },
+          { tagName: 'stop', selector: 'grad-evaluation-stop-2', attrs: { offset: '100%', 'stop-color': '#a80f17', 'stop-opacity': 0.6 } }
+        ]},
+        { tagName: 'linearGradient', selector: 'grad-simulation', attrs: { id: 'grad-simulation', x1: '0%', y1: '0%', x2: '100%', y2: '100%' }, children: [
+          { tagName: 'stop', selector: 'grad-simulation-stop-1', attrs: { offset: '0%', 'stop-color': '#ffc56e', 'stop-opacity': 1 } },
+          { tagName: 'stop', selector: 'grad-simulation-stop-2', attrs: { offset: '100%', 'stop-color': '#b56200', 'stop-opacity': 0.6 } }
+        ]},
+        { tagName: 'linearGradient', selector: 'grad-performance', attrs: { id: 'grad-performance', x1: '0%', y1: '0%', x2: '100%', y2: '100%' }, children: [
+          { tagName: 'stop', selector: 'grad-performance-stop-1', attrs: { offset: '0%', 'stop-color': '#67e08b', 'stop-opacity': 1 } },
+          { tagName: 'stop', selector: 'grad-performance-stop-2', attrs: { offset: '100%', 'stop-color': '#1f8a3a', 'stop-opacity': 0.6 } }
+        ]}
+      ] },
       { tagName: 'rect', selector: 'type-icon-bg' },
       { tagName: 'text', selector: 'type-icon' },
       { tagName: 'text', selector: 'title' },
@@ -1949,14 +1971,14 @@ const createNormalTaskNode = (task: any) => {
 
   // 获取任务类型背景色
   const getTypeColor = (type: string) => {
-    const colorMap: Record<string, string> = {
-      'analysis': '#722ed1',
-      'design': '#1890ff',
-      'evaluation': '#f5222d', 
-      'simulation': '#fa8c16',
-      'performance': '#52c41a'
+    const gradientMap: Record<string, string> = {
+      'analysis': 'url(#grad-analysis)',
+      'design': 'url(#grad-design)',
+      'evaluation': 'url(#grad-evaluation)',
+      'simulation': 'url(#grad-simulation)',
+      'performance': 'url(#grad-performance)'
     }
-    return colorMap[type] || '#1890ff'
+    return gradientMap[type] || 'url(#grad-design)'
   }
 
   const node = graph.value!.addNode({
@@ -2229,7 +2251,7 @@ const getSourceOutputsLabel = (sourceId: string): string => {
 const updateTaskNode = (task: any) => {
   const node = graph.value!.getCellById(task.id) as Node
   if (node && task.nodeType === 'task') {
-    const height = task.expanded ? 140 : 32
+    const height = task.expanded ? 110 : 32
     node.resize(220, height)
     
     // 更新展开指示符

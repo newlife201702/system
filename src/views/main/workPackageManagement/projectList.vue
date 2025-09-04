@@ -354,6 +354,16 @@ const copyProject = (row: any) => {
 
 const viewProject = (row: any) => {
   console.log('查看项目', row)
+
+   router.push({
+      name: 'createTask',
+      params: {
+        projectId: row.id
+      },
+      query: {
+        projectId:row.id
+      }
+    })
 }
 
 const deleteProject = async (row: any) => {
@@ -362,7 +372,7 @@ const deleteProject = async (row: any) => {
   if (result.returnCode === 0 && result.resultCode === 0) {
         ElMessage({ message: '删除成功', type: 'success' })
         loadList()
-    }
+  }
   console.log('删除项目', row)
 }
 
@@ -371,6 +381,13 @@ const shareProject = (row: any) => {
 }
 
 const finallProject = async (row: any) => {
+ const result = await api.packageManage.finallyProject({id:row.id});
+  if (result.returnCode === 0 && result.resultCode === 0) {
+        ElMessage({ message: '操作成功', type: 'success' })
+        loadList()
+  }else{
+     alert(result.resultMessage);
+  }
   console.log('完成项目', )
 }
 

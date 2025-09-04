@@ -96,5 +96,13 @@ export const addProjectUserPending = (data: {id: string }): Res<Record<string, u
     });
   }
 
+  export const finallyProject = (data: {id: string }): Res<Record<string, unknown>> => {
+    return request({
+      url: "/pm/web/project/finallyProject.do",
+      method: "post",
+      data: {data:data}
+    });
+  }
+
 
 

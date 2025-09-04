@@ -437,6 +437,7 @@ const handleSave = async () => {
 
       emit('project-created', { ...projectForm })
       handleClose()
+      window.location.reload()
     }
   } catch (error) {
     console.error('表单验证失败:', error)

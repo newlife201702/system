@@ -1363,7 +1363,7 @@ const taskList = ref<any>([
     taskStats: { up: 0, down: 0 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
-    toolAssociation:"2",
+    toolAssociation:"体系架构设计系统",
     toolAssociationUrl:"http://www.baidu.com",
     x: 420,
     y: 180,
@@ -1421,7 +1421,7 @@ const taskList = ref<any>([
     taskStats: { up: 1, down: 2 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
-    toolAssociation: "3",
+    toolAssociation: "体系需求满足度评估系统",
     toolAssociationUrl:"http://www.baidu.com",
     x: 220,
     y: 320,
@@ -1479,7 +1479,7 @@ const taskList = ref<any>([
     taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
-    toolAssociation: "4",
+    toolAssociation: "体系对抗仿真系统",
     toolAssociationUrl:"http://www.baidu.com",
     x: 590,
     y: 320,
@@ -1537,7 +1537,7 @@ const taskList = ref<any>([
     taskStats: { up: 1, down: 1 },
     dateRange: ['2024-01-06', '2024-01-16'],
     executionDays: 10,
-    toolAssociation: "5",
+    toolAssociation: "体系效能评估系统",
     toolAssociationUrl:"http://www.baidu.com",
     x: 590,
     y: 450,
@@ -3482,7 +3482,7 @@ const saveFlow  =  () => {
 
   taskForm.projectId = projectId;
 //taskForm.flowId = projectInfo.flowId;
-  taskForm.businessCode = "";
+  taskForm.businessCode = "BUSINESS_CODE_TXZJXT";
   taskForm.workItemParams = taskList.value;
   // taskForm.connections = taskConnections.value.map(conn => ({
   //   source: conn.source,

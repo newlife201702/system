@@ -10,15 +10,15 @@
             <span>项目列表</span>
           </div>
           <div class="search-section">
-            <span @click="searchFilter()">搜索</span>
             <el-input 
               v-model="searchKeyword" 
-              placeholder="" 
+              placeholder="请输入项目名称关键词" 
               class="search-input"
               clearable
+              @keyup.enter="searchFilter()"
             >
               <template #suffix>
-                <el-icon><Search /></el-icon>
+                <el-icon @click="searchFilter()" style="cursor: pointer;"><Search /></el-icon>
               </template>
             </el-input>
           </div>

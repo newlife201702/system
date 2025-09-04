@@ -1294,297 +1294,297 @@ const taskList = ref<any>([
     y: 150,
     shape: 'circle'
   },
-  {
-    id: 'task1',
-    name: '体系需求管理系统任务',
-    type: 'analysis',
-    nodeType: 'task',
-    assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
-    assigneeName: ['张三'],
-    taskStats: { up: 1, down: 1 },
-    dateRange: ['2024-01-06', '2024-01-16'],
-    executionDays: 10,
-    toolAssociation:"体系需求满足度评估系统",
-    toolAssociationUrl:"http://www.baidu.com",
-    x: 200,
-    y: 80,
-    expanded: false,
-    // 输入输出数据
-    inputs: [
-      {
-         id: '',
-        name: '体系需求',
-         taskId: 'task1',
-        sortNo: 1,
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'xxx需求.Req',
-        isEditing: false
-      }
-    ],
-    outputs: [
-      {
-         id: '',
-        name: '体系需求Req',
-         taskId: 'task1',
-        sortNo: 1,
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'xxx需求.Req',
-        isEditing: false
-      }
-     ],
-    // 体系需求满足度评估系统特有字段
-    satisfactionTaskType: '',
-    satisfactionTaskCategory: '',
-    satisfactionDirection: '',
-    satisfactionScenario: '',
-    satisfactionSource: '',
-    satisfactionRequirement: '',
-    satisfactionDescription: '',
-    // 体系效能评估系统特有字段
-    efficiencyEvalTime: null,
-    efficiencyEvaluator: [],
-    efficiencyCondition: '',
-    efficiencyType: '',
-    efficiencyTarget: '',
-    efficiencyObject: '',
-    efficiencyScope: ''
-  },
-  {
-    id: 'task2',
-    name: '体系架构设计任务',
-    type: 'design',
-    nodeType: 'task',
-    assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
-    assigneeName: ['张三'],
-    taskStats: { up: 0, down: 0 },
-    dateRange: ['2024-01-06', '2024-01-16'],
-    executionDays: 10,
-    toolAssociation:"体系架构设计系统",
-    toolAssociationUrl:"http://www.baidu.com",
-    x: 420,
-    y: 180,
-    expanded: false,
-    inputs: [
-      {
-         id: '',
-        name: '体系需求Req',
-         taskId: 'task2',
-        sortNo: 1,
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'xxx需求.Req',
-        isEditing: false
-      }
-    ],
-    outputs: [
-      {
-         id: '',
-        name: '体系模型',
-         taskId: 'task2',
-        sortNo: 1,
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'dodaf',
-        isEditing: false
-      }
-     ],
-    // 体系需求满足度评估系统特有字段
-    satisfactionTaskType: '',
-    satisfactionTaskCategory: '',
-    satisfactionDirection: '',
-    satisfactionScenario: '',
-    satisfactionSource: '',
-    satisfactionRequirement: '',
-    satisfactionDescription: '',
-    // 体系效能评估系统特有字段
-    efficiencyEvalTime: null,
-    efficiencyEvaluator: [],
-    efficiencyCondition: '',
-    efficiencyType: '',
-    efficiencyTarget: '',
-    efficiencyObject: '',
-    efficiencyScope: ''
-  },
-  {
-    id: 'task3',
-    name: '体系需求满足度评估任务',
-    type: 'evaluation',
-    nodeType: 'task',
-    assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
-    assigneeName: ['张三'],
-    taskStats: { up: 1, down: 2 },
-    dateRange: ['2024-01-06', '2024-01-16'],
-    executionDays: 10,
-    toolAssociation: "体系需求满足度评估系统",
-    toolAssociationUrl:"http://www.baidu.com",
-    x: 220,
-    y: 320,
-    expanded: false,
-    inputs: [
-      {
-         id: '',
-        name: '体系模型',
-         taskId: 'task3',
-        sortNo: 1,
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'dodaf',
-        isEditing: false
-      }
-    ],
-    outputs: [
-      {
-         id: '',
-        name: '体系需求满足度评估报告',
-         taskId: 'task3',
-        sortNo: 1,
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: '评估报告',
-        isEditing: false
-      }
-     ],
-    // 体系需求满足度评估系统特有字段
-    satisfactionTaskType: '',
-    satisfactionTaskCategory: '',
-    satisfactionDirection: '',
-    satisfactionScenario: '',
-    satisfactionSource: '',
-    satisfactionRequirement: '',
-    satisfactionDescription: '',
-    // 体系效能评估系统特有字段
-    efficiencyEvalTime: null,
-    efficiencyEvaluator: [],
-    efficiencyCondition: '',
-    efficiencyType: '',
-    efficiencyTarget: '',
-    efficiencyObject: '',
-    efficiencyScope: ''
-  },
-  {
-    id: 'task4',
-    name: '体系对抗仿真任务',
-    type: 'simulation',
-    nodeType: 'task',
-    assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
-    assigneeName: ['张三'],
-    taskStats: { up: 1, down: 1 },
-    dateRange: ['2024-01-06', '2024-01-16'],
-    executionDays: 10,
-    toolAssociation: "体系对抗仿真系统",
-    toolAssociationUrl:"http://www.baidu.com",
-    x: 590,
-    y: 320,
-    expanded: false,
-    inputs: [
-       {
-         id: '',
-        name: '想定文件',
-         taskId: 'task4',
-        sortNo: 1,
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: '想定文件',
-        isEditing: false
-      }
-    ],
-    outputs: [
-      {
-         id: '',
-        name: '仿真场景截图',
-         taskId: 'task4',
-        sortNo: 1,
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: '仿真场景截图',
-        isEditing: false
-      }
-     ],
-    // 体系需求满足度评估系统特有字段
-    satisfactionTaskType: '',
-    satisfactionTaskCategory: '',
-    satisfactionDirection: '',
-    satisfactionScenario: '',
-    satisfactionSource: '',
-    satisfactionRequirement: '',
-    satisfactionDescription: '',
-    // 体系效能评估系统特有字段
-    efficiencyEvalTime: null,
-    efficiencyEvaluator: [],
-    efficiencyCondition: '',
-    efficiencyType: '',
-    efficiencyTarget: '',
-    efficiencyObject: '',
-    efficiencyScope: ''
-  },
-  {
-    id: 'task5',
-    name: '体系效能评估任务',
-    type: 'performance',
-    nodeType: 'task',
-    assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
-    assigneeName: ['张三'],
-    taskStats: { up: 1, down: 1 },
-    dateRange: ['2024-01-06', '2024-01-16'],
-    executionDays: 10,
-    toolAssociation: "体系效能评估系统",
-    toolAssociationUrl:"http://www.baidu.com",
-    x: 590,
-    y: 450,
-    expanded: false,
-    inputs: [
-      {
-         id: '',
-        name: '体系模型',
-         taskId: 'task5',
-        sortNo: 1,
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: 'dodaf',
-        isEditing: false
-      }
-    ],
-    outputs: [
-      {
-         id: '',
-        name: '效能评估报告',
-         taskId: 'task5',
-        sortNo: 1,
-        securityLevelCode: 'SECRET_LEVEL_INTERNAL',
-        securityLevelName: '内部',
-        dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
-        dataTypeValue: '效能评估报告',
-        isEditing: false
-      }
-     ],
-    // 体系需求满足度评估系统特有字段
-    satisfactionTaskType: '',
-    satisfactionTaskCategory: '',
-    satisfactionDirection: '',
-    satisfactionScenario: '',
-    satisfactionSource: '',
-    satisfactionRequirement: '',
-    satisfactionDescription: '',
-    // 体系效能评估系统特有字段
-    efficiencyEvalTime: null,
-    efficiencyEvaluator: [],
-    efficiencyCondition: '',
-    efficiencyType: '',
-    efficiencyTarget: '',
-    efficiencyObject: '',
-    efficiencyScope: ''
-  },
+  // {
+  //   id: 'task1',
+  //   name: '体系需求管理系统任务',
+  //   type: 'analysis',
+  //   nodeType: 'task',
+  //   assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+  //   assigneeName: ['张三'],
+  //   taskStats: { up: 1, down: 1 },
+  //   dateRange: ['2024-01-06', '2024-01-16'],
+  //   executionDays: 10,
+  //   toolAssociation:"体系需求满足度评估系统",
+  //   toolAssociationUrl:"http://www.baidu.com",
+  //   x: 200,
+  //   y: 80,
+  //   expanded: false,
+  //   // 输入输出数据
+  //   inputs: [
+  //     {
+  //        id: '',
+  //       name: '体系需求',
+  //        taskId: 'task1',
+  //       sortNo: 1,
+  //       securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+  //       securityLevelName: '内部',
+  //       dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+  //       dataTypeValue: 'xxx需求.Req',
+  //       isEditing: false
+  //     }
+  //   ],
+  //   outputs: [
+  //     {
+  //        id: '',
+  //       name: '体系需求Req',
+  //        taskId: 'task1',
+  //       sortNo: 1,
+  //       securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+  //       securityLevelName: '内部',
+  //       dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+  //       dataTypeValue: 'xxx需求.Req',
+  //       isEditing: false
+  //     }
+  //    ],
+  //   // 体系需求满足度评估系统特有字段
+  //   satisfactionTaskType: '',
+  //   satisfactionTaskCategory: '',
+  //   satisfactionDirection: '',
+  //   satisfactionScenario: '',
+  //   satisfactionSource: '',
+  //   satisfactionRequirement: '',
+  //   satisfactionDescription: '',
+  //   // 体系效能评估系统特有字段
+  //   efficiencyEvalTime: null,
+  //   efficiencyEvaluator: [],
+  //   efficiencyCondition: '',
+  //   efficiencyType: '',
+  //   efficiencyTarget: '',
+  //   efficiencyObject: '',
+  //   efficiencyScope: ''
+  // },
+  // {
+  //   id: 'task2',
+  //   name: '体系架构设计任务',
+  //   type: 'design',
+  //   nodeType: 'task',
+  //   assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+  //   assigneeName: ['张三'],
+  //   taskStats: { up: 0, down: 0 },
+  //   dateRange: ['2024-01-06', '2024-01-16'],
+  //   executionDays: 10,
+  //   toolAssociation:"体系架构设计系统",
+  //   toolAssociationUrl:"http://www.baidu.com",
+  //   x: 420,
+  //   y: 180,
+  //   expanded: false,
+  //   inputs: [
+  //     {
+  //        id: '',
+  //       name: '体系需求Req',
+  //        taskId: 'task2',
+  //       sortNo: 1,
+  //       securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+  //       securityLevelName: '内部',
+  //       dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+  //       dataTypeValue: 'xxx需求.Req',
+  //       isEditing: false
+  //     }
+  //   ],
+  //   outputs: [
+  //     {
+  //        id: '',
+  //       name: '体系模型',
+  //        taskId: 'task2',
+  //       sortNo: 1,
+  //       securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+  //       securityLevelName: '内部',
+  //       dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+  //       dataTypeValue: 'dodaf',
+  //       isEditing: false
+  //     }
+  //    ],
+  //   // 体系需求满足度评估系统特有字段
+  //   satisfactionTaskType: '',
+  //   satisfactionTaskCategory: '',
+  //   satisfactionDirection: '',
+  //   satisfactionScenario: '',
+  //   satisfactionSource: '',
+  //   satisfactionRequirement: '',
+  //   satisfactionDescription: '',
+  //   // 体系效能评估系统特有字段
+  //   efficiencyEvalTime: null,
+  //   efficiencyEvaluator: [],
+  //   efficiencyCondition: '',
+  //   efficiencyType: '',
+  //   efficiencyTarget: '',
+  //   efficiencyObject: '',
+  //   efficiencyScope: ''
+  // },
+  // {
+  //   id: 'task3',
+  //   name: '体系需求满足度评估任务',
+  //   type: 'evaluation',
+  //   nodeType: 'task',
+  //   assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+  //   assigneeName: ['张三'],
+  //   taskStats: { up: 1, down: 2 },
+  //   dateRange: ['2024-01-06', '2024-01-16'],
+  //   executionDays: 10,
+  //   toolAssociation: "体系需求满足度评估系统",
+  //   toolAssociationUrl:"http://www.baidu.com",
+  //   x: 220,
+  //   y: 320,
+  //   expanded: false,
+  //   inputs: [
+  //     {
+  //        id: '',
+  //       name: '体系模型',
+  //        taskId: 'task3',
+  //       sortNo: 1,
+  //       securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+  //       securityLevelName: '内部',
+  //       dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+  //       dataTypeValue: 'dodaf',
+  //       isEditing: false
+  //     }
+  //   ],
+  //   outputs: [
+  //     {
+  //        id: '',
+  //       name: '体系需求满足度评估报告',
+  //        taskId: 'task3',
+  //       sortNo: 1,
+  //       securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+  //       securityLevelName: '内部',
+  //       dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+  //       dataTypeValue: '评估报告',
+  //       isEditing: false
+  //     }
+  //    ],
+  //   // 体系需求满足度评估系统特有字段
+  //   satisfactionTaskType: '',
+  //   satisfactionTaskCategory: '',
+  //   satisfactionDirection: '',
+  //   satisfactionScenario: '',
+  //   satisfactionSource: '',
+  //   satisfactionRequirement: '',
+  //   satisfactionDescription: '',
+  //   // 体系效能评估系统特有字段
+  //   efficiencyEvalTime: null,
+  //   efficiencyEvaluator: [],
+  //   efficiencyCondition: '',
+  //   efficiencyType: '',
+  //   efficiencyTarget: '',
+  //   efficiencyObject: '',
+  //   efficiencyScope: ''
+  // },
+  // {
+  //   id: 'task4',
+  //   name: '体系对抗仿真任务',
+  //   type: 'simulation',
+  //   nodeType: 'task',
+  //   assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+  //   assigneeName: ['张三'],
+  //   taskStats: { up: 1, down: 1 },
+  //   dateRange: ['2024-01-06', '2024-01-16'],
+  //   executionDays: 10,
+  //   toolAssociation: "体系对抗仿真系统",
+  //   toolAssociationUrl:"http://www.baidu.com",
+  //   x: 590,
+  //   y: 320,
+  //   expanded: false,
+  //   inputs: [
+  //      {
+  //        id: '',
+  //       name: '想定文件',
+  //        taskId: 'task4',
+  //       sortNo: 1,
+  //       securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+  //       securityLevelName: '内部',
+  //       dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+  //       dataTypeValue: '想定文件',
+  //       isEditing: false
+  //     }
+  //   ],
+  //   outputs: [
+  //     {
+  //        id: '',
+  //       name: '仿真场景截图',
+  //        taskId: 'task4',
+  //       sortNo: 1,
+  //       securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+  //       securityLevelName: '内部',
+  //       dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+  //       dataTypeValue: '仿真场景截图',
+  //       isEditing: false
+  //     }
+  //    ],
+  //   // 体系需求满足度评估系统特有字段
+  //   satisfactionTaskType: '',
+  //   satisfactionTaskCategory: '',
+  //   satisfactionDirection: '',
+  //   satisfactionScenario: '',
+  //   satisfactionSource: '',
+  //   satisfactionRequirement: '',
+  //   satisfactionDescription: '',
+  //   // 体系效能评估系统特有字段
+  //   efficiencyEvalTime: null,
+  //   efficiencyEvaluator: [],
+  //   efficiencyCondition: '',
+  //   efficiencyType: '',
+  //   efficiencyTarget: '',
+  //   efficiencyObject: '',
+  //   efficiencyScope: ''
+  // },
+  // {
+  //   id: 'task5',
+  //   name: '体系效能评估任务',
+  //   type: 'performance',
+  //   nodeType: 'task',
+  //   assignee: ['8c0e1a26402c49278031861ebb8d28bb'],
+  //   assigneeName: ['张三'],
+  //   taskStats: { up: 1, down: 1 },
+  //   dateRange: ['2024-01-06', '2024-01-16'],
+  //   executionDays: 10,
+  //   toolAssociation: "体系效能评估系统",
+  //   toolAssociationUrl:"http://www.baidu.com",
+  //   x: 590,
+  //   y: 450,
+  //   expanded: false,
+  //   inputs: [
+  //     {
+  //        id: '',
+  //       name: '体系模型',
+  //        taskId: 'task5',
+  //       sortNo: 1,
+  //       securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+  //       securityLevelName: '内部',
+  //       dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+  //       dataTypeValue: 'dodaf',
+  //       isEditing: false
+  //     }
+  //   ],
+  //   outputs: [
+  //     {
+  //        id: '',
+  //       name: '效能评估报告',
+  //        taskId: 'task5',
+  //       sortNo: 1,
+  //       securityLevelCode: 'SECRET_LEVEL_INTERNAL',
+  //       securityLevelName: '内部',
+  //       dataTypeCode: 'TASK_INOUTPUT_DATA_TYPE_CODE_FILE',
+  //       dataTypeValue: '效能评估报告',
+  //       isEditing: false
+  //     }
+  //    ],
+  //   // 体系需求满足度评估系统特有字段
+  //   satisfactionTaskType: '',
+  //   satisfactionTaskCategory: '',
+  //   satisfactionDirection: '',
+  //   satisfactionScenario: '',
+  //   satisfactionSource: '',
+  //   satisfactionRequirement: '',
+  //   satisfactionDescription: '',
+  //   // 体系效能评估系统特有字段
+  //   efficiencyEvalTime: null,
+  //   efficiencyEvaluator: [],
+  //   efficiencyCondition: '',
+  //   efficiencyType: '',
+  //   efficiencyTarget: '',
+  //   efficiencyObject: '',
+  //   efficiencyScope: ''
+  // },
   {
     id: 'end',
     name: '结束',
@@ -1598,55 +1598,55 @@ const taskList = ref<any>([
 
 // 任务连线数据
 const taskConnections = ref([
-  {
-    id: 'start-to-task1',
-    source: 'start',
-    target: 'task1',
-    sourceAnchor: 'bottom',
-    targetAnchor: 'top'
-  },
-  {
-    id: 'task1-to-task2',
-    source: 'task1',
-    target: 'task2',
-    sourceAnchor: 'bottom',
-    targetAnchor: 'top'
-  },
-  {
-    id: 'task1-to-task3',
-    source: 'task1',
-    target: 'task3',
-    sourceAnchor: 'bottom',
-    targetAnchor: 'top'
-  },
-  {
-    id: 'task2-to-task4',
-    source: 'task2',
-    target: 'task4',
-    sourceAnchor: 'bottom',
-    targetAnchor: 'top'
-  },
-  {
-    id: 'task3-to-task5',
-    source: 'task3',
-    target: 'task5',
-    sourceAnchor: 'bottom',
-    targetAnchor: 'top'
-  },
-  {
-    id: 'task4-to-end',
-    source: 'task4',
-    target: 'end',
-    sourceAnchor: 'bottom',
-    targetAnchor: 'top'
-  },
-  {
-    id: 'task5-to-end',
-    source: 'task5',
-    target: 'end',
-    sourceAnchor: 'bottom',
-    targetAnchor: 'top'
-  }
+  // {
+  //   id: 'start-to-task1',
+  //   source: 'start',
+  //   target: 'task1',
+  //   sourceAnchor: 'bottom',
+  //   targetAnchor: 'top'
+  // },
+  // {
+  //   id: 'task1-to-task2',
+  //   source: 'task1',
+  //   target: 'task2',
+  //   sourceAnchor: 'bottom',
+  //   targetAnchor: 'top'
+  // },
+  // {
+  //   id: 'task1-to-task3',
+  //   source: 'task1',
+  //   target: 'task3',
+  //   sourceAnchor: 'bottom',
+  //   targetAnchor: 'top'
+  // },
+  // {
+  //   id: 'task2-to-task4',
+  //   source: 'task2',
+  //   target: 'task4',
+  //   sourceAnchor: 'bottom',
+  //   targetAnchor: 'top'
+  // },
+  // {
+  //   id: 'task3-to-task5',
+  //   source: 'task3',
+  //   target: 'task5',
+  //   sourceAnchor: 'bottom',
+  //   targetAnchor: 'top'
+  // },
+  // {
+  //   id: 'task4-to-end',
+  //   source: 'task4',
+  //   target: 'end',
+  //   sourceAnchor: 'bottom',
+  //   targetAnchor: 'top'
+  // },
+  // {
+  //   id: 'task5-to-end',
+  //   source: 'task5',
+  //   target: 'end',
+  //   sourceAnchor: 'bottom',
+  //   targetAnchor: 'top'
+  // }
 ])
 
 // 格式化数组为字符串

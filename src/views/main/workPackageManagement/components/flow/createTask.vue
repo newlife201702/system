@@ -1696,7 +1696,9 @@ const registerCustomNode = () => {
       { tagName: 'text', selector: 'type-icon' },
       { tagName: 'text', selector: 'title' },
       { tagName: 'circle', selector: 'avatar' },
+      { tagName: 'text', selector: 'assignee-icon' },
       { tagName: 'text', selector: 'assignee' },
+      { tagName: 'text', selector: 'task-days-icon' },
       { tagName: 'text', selector: 'task-days' },
       { tagName: 'text', selector: 'stats-up' },
       { tagName: 'text', selector: 'stats-down' },
@@ -1936,11 +1938,11 @@ const createNormalTaskNode = (task: any) => {
   // 获取任务类型图标
   const getTypeIcon = (type: string) => {
     const iconMap: Record<string, string> = {
-      'analysis': '1',
-      'design': '2', 
-      'evaluation': '3',
-      'simulation': '4',
-      'performance': '5'
+      'analysis': '需求1',
+      'design': '架构2', 
+      'evaluation': '满足3',
+      'simulation': '对抗4',
+      'performance': '效能5'
     }
     return iconMap[type] || '任务'
   }
@@ -1978,7 +1980,7 @@ const createNormalTaskNode = (task: any) => {
       'type-icon-bg': {
         x: 8,
         y: 4,
-        width: 24,
+        width: 36,
         height: 24,
         rx: 6,
         ry: 6,
@@ -1988,7 +1990,7 @@ const createNormalTaskNode = (task: any) => {
       // 任务类型图标
       'type-icon': {
         text: getTypeIcon(task.type),
-        x: 20,
+        x: 27,
         y: 16,
         fontSize: 12,
         fill: '#fff',
@@ -1999,20 +2001,29 @@ const createNormalTaskNode = (task: any) => {
       // 任务标题
       title: {
         text: task.name,
-        x: 45,
+        x: 50,
         y: 20,
         fontSize: 13,
         fontWeight: 'bold',
         fill: '#262626'
       },
       // 负责人头像
-      avatar: {
-        cx: 12,
-        cy: 50,
-        r: 10,
-        fill: '#fa8c16',
-        stroke: '#fff',
-        strokeWidth: 2,
+      // avatar: {
+      //   cx: 12,
+      //   cy: 50,
+      //   r: 10,
+      //   fill: '#fa8c16',
+      //   stroke: '#fff',
+      //   strokeWidth: 2,
+      //   display: task.expanded ? 'block' : 'none'
+      // },
+      // 负责人姓名图标
+      'assignee-icon': {
+        text: '🗓️',
+        x: 12,
+        y: 54,
+        fontSize: 10,
+        fill: '#8c8c8c',
         display: task.expanded ? 'block' : 'none'
       },
       // 负责人姓名
@@ -2022,6 +2033,15 @@ const createNormalTaskNode = (task: any) => {
         y: 54,
         fontSize: 11,
         fill: '#595959'
+      },
+      // 任务时间图标
+      'task-days-icon': {
+        text: '🗓️',
+        x: 12,
+        y: 70,
+        fontSize: 10,
+        fill: '#8c8c8c',
+        display: task.expanded ? 'block' : 'none'
       },
       // 任务时间
       'task-days': {
@@ -2048,8 +2068,8 @@ const createNormalTaskNode = (task: any) => {
            const inputCount = task.inputs ? task.inputs.length : 0
            return inputCount > 0 ? `▲ ${inputCount}` : ''
          })(),
-         x: 150,
-         y: 54,
+         x: 12,
+         y: 88,
          fontSize: 11,
          fill: '#52c41a'
        },
@@ -2060,14 +2080,14 @@ const createNormalTaskNode = (task: any) => {
            const outputCount = task.outputs ? task.outputs.length : 0
            return outputCount > 0 ? `▼ ${outputCount}` : ''
          })(),
-         x: 180,
-         y: 54,
+         x: 48,
+         y: 88,
          fontSize: 11,
          fill: '#ff4d4f'
        },
       // 工具关联信息
       toolLink: {
-        x: 12,
+        x: 206,
         y: 88,
         'xlink:href': task.expanded ? (task.toolAssociationUrl || '') : '',
         href: task.expanded ? (task.toolAssociationUrl || '') : '',
@@ -2076,10 +2096,11 @@ const createNormalTaskNode = (task: any) => {
       },
       toolAssociation: {
         text: task.expanded ? (task.toolAssociation || '') : '',
-        x: 12,
+        x: 206,
         y: 88,
         fontSize: 10,
-        fill: '#52c41a'
+        fill: '#52c41a',
+        textAnchor: 'end'
       },
       // 展开指示符
       'expand-indicator': {
@@ -2245,6 +2266,8 @@ const updateTaskNode = (task: any) => {
       node.attr('toolLink/cursor', task.toolAssociationUrl ? 'pointer' : 'default')
       // 显示头像
       node.attr('avatar/display', 'block')
+      node.attr('assignee-icon/display', 'block')
+      node.attr('task-days-icon/display', 'block')
     } else {
       // 收起状态：隐藏除头部以外的所有内容
       node.attr('assignee/text', '')
@@ -2258,6 +2281,8 @@ const updateTaskNode = (task: any) => {
       node.attr('toolLink/cursor', 'default')
       // 隐藏头像
       node.attr('avatar/display', 'none')
+      node.attr('assignee-icon/display', 'none')
+      node.attr('task-days-icon/display', 'none')
     }
   }
 }

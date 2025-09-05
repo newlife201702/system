@@ -249,30 +249,31 @@
          </div>
        </div>
       
+      <!-- 任务创建按钮组 - 左下角 -->
+      <div v-show="isTaskFlow" class="task-creation-buttons">
+        <el-button size="small" @click="addTask('analysis')" class="task-btn">
+          <el-icon><Plus /></el-icon>
+          体系需求分析任务
+        </el-button>
+        <el-button size="small" @click="addTask('design')" class="task-btn">
+          <el-icon><Plus /></el-icon>
+          体系模型构建任务
+        </el-button>
+        <el-button size="small" @click="addTask('evaluation')" class="task-btn">
+          <el-icon><Plus /></el-icon>
+          需求满足度评估任务
+        </el-button>
+        <el-button size="small" @click="addTask('simulation')" class="task-btn">
+          <el-icon><Plus /></el-icon>
+          体系对抗仿真任务
+        </el-button>
+        <el-button size="small" @click="addTask('performance')" class="task-btn">
+          <el-icon><Plus /></el-icon>
+          体系效能评估任务
+        </el-button>
+      </div>
+      
       <div v-show="isTaskFlow" class="flowchart-canvas" ref="canvasRef" :class="{ 'half-height': isTaskDetailMode }">
-        <!-- 任务创建按钮组 - 左下角 -->
-        <div class="task-creation-buttons">
-          <el-button size="small" @click="addTask('analysis')" class="task-btn">
-            <el-icon><Plus /></el-icon>
-            体系需求分析任务
-          </el-button>
-          <el-button size="small" @click="addTask('design')" class="task-btn">
-            <el-icon><Plus /></el-icon>
-            体系模型构建任务
-          </el-button>
-          <el-button size="small" @click="addTask('evaluation')" class="task-btn">
-            <el-icon><Plus /></el-icon>
-            需求满足度评估任务
-          </el-button>
-          <el-button size="small" @click="addTask('simulation')" class="task-btn">
-            <el-icon><Plus /></el-icon>
-            体系对抗仿真任务
-          </el-button>
-          <el-button size="small" @click="addTask('performance')" class="task-btn">
-            <el-icon><Plus /></el-icon>
-            体系效能评估任务
-          </el-button>
-        </div>
       </div>
       <div v-show="!isTaskFlow" class="er-canvas" ref="erCanvasRef" :class="{ 'half-height': isTaskDetailMode }"></div>
       
@@ -3712,6 +3713,7 @@ function uploada(index: number){
 
   // 中间流程图区域
   .center-flowchart {
+    position: relative;
     margin: 0 48px;
     width: calc(100% - 96px);
     height: 100vh;

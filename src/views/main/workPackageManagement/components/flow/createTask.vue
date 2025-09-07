@@ -2255,6 +2255,9 @@ const updateTaskNode = (task: any) => {
     const height = task.expanded ? 110 : 32
     node.resize(220, height)
     
+    // 更新节点内部存储的数据
+    node.setData(task)
+    
     // 更新展开指示符
     node.attr('expand-indicator/text', task.expanded ? '▼' : '▶')
     
